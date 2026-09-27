@@ -163,11 +163,11 @@ export default function MapContainer({
           scrollWheelZoom={true}
           style={{ width: "100%", height: "100%" }}
         >
-          {/* Tactical CartoDB Voyager Clean Base Layer */}
+          {/* Tactical OpenStreetMap Basemap Layer */}
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-            maxZoom={18}
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
           />
 
           {/* Forecast Cone of Uncertainty Polygon */}

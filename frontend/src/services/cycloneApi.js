@@ -1,33 +1,44 @@
 /**
  * DRISHTI Service Layer - Cyclone API Client
- *
- * NOTE FOR STAGE 2:
- * These functions currently resolve with structured local simulation data.
- * In Stage 2, replace mock handlers with fetch/axios calls to the FastAPI backend:
- * e.g. `const res = await fetch(`${API_BASE_URL}/cyclone/current?step=${stepId}`);`
+ * Connects to FastAPI backend (`/api/cyclone`) with local simulation fallback.
  */
 
 import { CYCLONE_METADATA, TIMELINE_STEPS, TIMELINE_SCENARIOS } from "../data/cycloneData.js";
 
-// Placeholder for future backend URL configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
 
 export const cycloneApi = {
   /**
-   * Fetch system metadata and active cyclone scenario details
+   * Fetch active cyclone metadata
    */
   async getCycloneMetadata() {
+    if (API_BASE_URL) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/cyclone`);
+        if (res.ok) return await res.json();
+      } catch (err) {
+        console.warn("Backend unavailable, using local cyclone metadata:", err);
+      }
+    }
     return Promise.resolve({
       ...CYCLONE_METADATA,
       fetchedAt: new Date().toISOString(),
-      dataSource: "SIMULATED_LOCAL_REPLAY"
+      dataSource: "LOCAL_SIMULATION_FALLBACK"
     });
   },
 
   /**
-   * Get available timeline steps for replay/forecasting
+   * Get available timeline steps for temporal forecasting
    */
   async getTimelineSteps() {
+    if (API_BASE_URL) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/cyclone/timeline`);
+        if (res.ok) return await res.json();
+      } catch (err) {
+        console.warn("Backend unavailable, using local timeline steps:", err);
+      }
+    }
     return Promise.resolve([...TIMELINE_STEPS]);
   },
 
@@ -36,6 +47,14 @@ export const cycloneApi = {
    * @param {string} stepId - e.g. "T-24h", "NOW", "+12h"
    */
   async getScenarioByStep(stepId = "NOW") {
+    if (API_BASE_URL) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/cyclone/scenario/${encodeURIComponent(stepId)}`);
+        if (res.ok) return await res.json();
+      } catch (err) {
+        console.warn("Backend unavailable, using local scenario data:", err);
+      }
+    }
     const scenario = TIMELINE_SCENARIOS[stepId] || TIMELINE_SCENARIOS["NOW"];
     return Promise.resolve({
       success: true,
@@ -54,7 +73,6 @@ export const cycloneApi = {
    * Fetch full historical track points for path rendering
    */
   async getFullHistoricalTrack() {
-    // Collect full past path up to current time
     const currentScenario = TIMELINE_SCENARIOS["NOW"];
     return Promise.resolve({
       track: currentScenario.pastTrack,

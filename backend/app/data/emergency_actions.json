@@ -1,0 +1,107 @@
+{
+  "metrics": {
+    "totalEvacuated": 485000,
+    "targetEvacuation": 540000,
+    "activeShelters": 840,
+    "reliefStocksAvailableDays": 7,
+    "ndrfOdrafTeamsDeployed": 32,
+    "boatsPositioned": 168,
+    "satellitePhonesActive": 44,
+    "warningSignals": [
+      {
+        "port": "Paradip Port",
+        "signal": "Signal 10 (Great Danger)",
+        "status": "Active"
+      },
+      {
+        "port": "Dhamra Port",
+        "signal": "Signal 10 (Great Danger)",
+        "status": "Active"
+      },
+      {
+        "port": "Gopalpur Port",
+        "signal": "Signal 4 (Warning)",
+        "status": "Active"
+      },
+      {
+        "port": "Haldia Dock",
+        "signal": "Signal 9 (Severe Danger)",
+        "status": "Active"
+      }
+    ]
+  },
+  "directives": [
+    {
+      "id": "act-01",
+      "code": "DIR-EVAC-01",
+      "title": "Enforce Mandatory Coastal Evacuation within 5km High-Tide Belt",
+      "target": "Kendrapara, Jagatsinghpur, Balasore, South 24 Parganas",
+      "department": "Revenue & Disaster Management / Police",
+      "priority": "CRITICAL",
+      "status": "IN_PROGRESS",
+      "progressPct": 82,
+      "completionNote": "178,500 / 215,000 residents transferred to designated MPCS.",
+      "actionType": "Evacuation"
+    },
+    {
+      "id": "act-02",
+      "code": "DIR-PORT-02",
+      "title": "Hoist Great Danger Signal No. 10 at Paradip & Dhamra Ports",
+      "target": "Paradip Port Authority, Dhamra Port Co.",
+      "department": "Maritime Board / Port Trusts",
+      "priority": "CRITICAL",
+      "status": "COMPLETED",
+      "progressPct": 100,
+      "completionNote": "Signal 10 active. Berth evacuations complete; shipping channel cleared.",
+      "actionType": "Maritime"
+    },
+    {
+      "id": "act-03",
+      "code": "DIR-NDRF-03",
+      "title": "Pre-position NDRF & ODRAF Battalions with Tree Cutters & Inflatable Boats",
+      "target": "18 Teams in Odisha, 14 Teams in West Bengal",
+      "department": "NDRF HQ / OSDMA / ODRAF",
+      "priority": "HIGH",
+      "status": "DEPLOYED",
+      "progressPct": 95,
+      "completionNote": "32 total teams prepositioned with satellite phones and flood rescue boats.",
+      "actionType": "Deployment"
+    },
+    {
+      "id": "act-04",
+      "code": "DIR-PWR-04",
+      "title": "Execute Pre-emptive Controlled De-energization of 33kV Coastal Feeders",
+      "target": "OPTCL / TPNODL / TPCODL Coastal Grids",
+      "department": "Energy Department / SLDC",
+      "priority": "HIGH",
+      "status": "SCHEDULED",
+      "progressPct": 60,
+      "completionNote": "Automatic trip programmed when surface wind sustained >65 km/h.",
+      "actionType": "Infrastructure"
+    },
+    {
+      "id": "act-05",
+      "code": "DIR-MED-05",
+      "title": "Deploy 50 Mobile Medical Relief Units & Chlorination Supplies",
+      "target": "All coastal Block Primary Health Centers",
+      "department": "Health & Family Welfare",
+      "priority": "HIGH",
+      "status": "IN_PROGRESS",
+      "progressPct": 75,
+      "completionNote": "2.4M water purification tablets, anti-venom and trauma kits delivered.",
+      "actionType": "Healthcare"
+    },
+    {
+      "id": "act-06",
+      "code": "DIR-COM-06",
+      "title": "Activate SATPHONE & High Frequency (HF) Ham Radio Fallback Network",
+      "target": "District EOCs & Coastal Tehsils",
+      "department": "Electronics & IT / Police Wireless",
+      "priority": "MEDIUM",
+      "status": "ACTIVE",
+      "progressPct": 100,
+      "completionNote": "ISAT-2 phones operational across all 14 coastal control rooms.",
+      "actionType": "Communications"
+    }
+  ]
+}
