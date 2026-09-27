@@ -1,0 +1,1046 @@
+/**
+ * DRISHTI - District Hazard & Vulnerability Matrix Data
+ * Data Layer: Coastal Odisha & West Bengal Districts [DEMO / SIMULATED]
+ * Provenance: Simulated OSDMA / NDMA Risk Engine Profiles
+ *
+ * NOTE: For demonstration & system verification purposes only.
+ * Prepared for plug-and-play replacement by FastAPI `/api/risk/districts`
+ */
+
+export const COASTAL_DISTRICTS = [
+  {
+    id: "od_kendrapara",
+    name: "Kendrapara",
+    state: "Odisha",
+    headquarters: "Kendrapara",
+    lat: 20.50,
+    lon: 86.42,
+    coastalLineKm: 68,
+    population: 1440000,
+    vulnerablePopulation: 420000,
+    totalShelters: 124,
+    shelterCapacityPersons: 74000,
+    criticalAssets: ["Rajnagar Marine Sanctuary Buffer", "Bhitarkanika Polders", "Barunei Embankment"],
+    bounds: [
+      [20.30, 86.20],
+      [20.75, 87.05]
+    ]
+  },
+  {
+    id: "od_jagatsinghpur",
+    name: "Jagatsinghpur",
+    state: "Odisha",
+    headquarters: "Jagatsinghpur",
+    lat: 20.26,
+    lon: 86.17,
+    coastalLineKm: 48,
+    population: 1136000,
+    vulnerablePopulation: 385000,
+    totalShelters: 112,
+    shelterCapacityPersons: 68000,
+    criticalAssets: ["Paradip Major Deepwater Port", "IOCL Refinery Complex", "Erasama Coastal Belt"],
+    bounds: [
+      [19.98, 86.05],
+      [20.40, 86.75]
+    ]
+  },
+  {
+    id: "od_balasore",
+    name: "Balasore",
+    state: "Odisha",
+    headquarters: "Balasore",
+    lat: 21.49,
+    lon: 86.93,
+    coastalLineKm: 81,
+    population: 2320000,
+    vulnerablePopulation: 510000,
+    totalShelters: 156,
+    shelterCapacityPersons: 92000,
+    criticalAssets: ["Chandipur Defence Range (ITR)", "Subarnarekha Estuary", "Balaramgadi Fishing Harbor"],
+    bounds: [
+      [21.15, 86.55],
+      [21.85, 87.35]
+    ]
+  },
+  {
+    id: "od_bhadrak",
+    name: "Bhadrak",
+    state: "Odisha",
+    headquarters: "Bhadrak",
+    lat: 20.90,
+    lon: 86.50,
+    coastalLineKm: 56,
+    population: 1506000,
+    vulnerablePopulation: 360000,
+    totalShelters: 108,
+    shelterCapacityPersons: 65000,
+    criticalAssets: ["Dhamra Port LNG Terminal", "Chudamani Fishing Base", "Salandi River Basin"],
+    bounds: [
+      [20.70, 86.30],
+      [21.15, 87.05]
+    ]
+  },
+  {
+    id: "od_puri",
+    name: "Puri",
+    state: "Odisha",
+    headquarters: "Puri",
+    lat: 19.81,
+    lon: 85.83,
+    coastalLineKm: 155,
+    population: 1698000,
+    vulnerablePopulation: 290000,
+    totalShelters: 140,
+    shelterCapacityPersons: 82000,
+    criticalAssets: ["Chilika Lagoon Mouth", "Astaranga Fishing Harbor", "Konark Heritage Buffer"],
+    bounds: [
+      [19.45, 85.10],
+      [20.10, 86.30]
+    ]
+  },
+  {
+    id: "wb_s24parganas",
+    name: "South 24 Parganas",
+    state: "West Bengal",
+    headquarters: "Alipore",
+    lat: 21.85,
+    lon: 88.45,
+    coastalLineKm: 145,
+    population: 8165000,
+    vulnerablePopulation: 1450000,
+    totalShelters: 245,
+    shelterCapacityPersons: 185000,
+    criticalAssets: ["Sundarbans Delta Mangroves", "Sagar Island Pilgrimage Hub", "Kakdwip Trawler Base"],
+    bounds: [
+      [21.50, 88.00],
+      [22.40, 89.15]
+    ]
+  },
+  {
+    id: "wb_eastmidnapore",
+    name: "East Midnapore",
+    state: "West Bengal",
+    headquarters: "Tamluk",
+    lat: 21.90,
+    lon: 87.78,
+    coastalLineKm: 65,
+    population: 5095000,
+    vulnerablePopulation: 780000,
+    totalShelters: 135,
+    shelterCapacityPersons: 88000,
+    criticalAssets: ["Haldia Petrochemical Complex & Port", "Digha-Shankarpur Coastal Wall", "Khejuri Embankments"],
+    bounds: [
+      [21.60, 87.40],
+      [22.35, 88.20]
+    ]
+  },
+  {
+    id: "od_ganjam",
+    name: "Ganjam",
+    state: "Odisha",
+    headquarters: "Chhatrapur",
+    lat: 19.35,
+    lon: 85.00,
+    coastalLineKm: 60,
+    population: 3529000,
+    vulnerablePopulation: 210000,
+    totalShelters: 110,
+    shelterCapacityPersons: 62000,
+    criticalAssets: ["Gopalpur All-Weather Port", "Rushikulya Olive Ridley Rookery", "Chhatrapur Industrial Belt"],
+    bounds: [
+      [19.00, 84.60],
+      [19.70, 85.30]
+    ]
+  }
+];
+
+export const DISTRICT_RISK_BY_TIMELINE = {
+  "T-24h": {
+    od_kendrapara: {
+      riskScore: 68,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.4,
+      rainMm24h: 95,
+      windKmh: 65,
+      gustKmh: 80,
+      inundationProbPct: 45,
+      evacuatedCount: 22400,
+      evacuationTarget: 115000,
+      shelterOccupancyPct: 28,
+      primaryDrivers: [
+        "Swell wave height exceeding 3.8m along sea face",
+        "Breach danger along vulnerable mud dykes in Rajnagar block",
+        "Moderate rainfall saturating Brahmani-Baitarani drainage channels"
+      ]
+    },
+    od_jagatsinghpur: {
+      riskScore: 72,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.6,
+      rainMm24h: 110,
+      windKmh: 70,
+      gustKmh: 85,
+      inundationProbPct: 52,
+      evacuatedCount: 28000,
+      evacuationTarget: 120000,
+      shelterOccupancyPct: 35,
+      primaryDrivers: [
+        "Paradip outer anchorage rough seas advisory active",
+        "Vulnerable fishing hamlets at Erasama in alert readiness",
+        "High tidal surge coincident with full moon spring cycle"
+      ]
+    },
+    od_balasore: {
+      riskScore: 62,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.2,
+      rainMm24h: 80,
+      windKmh: 58,
+      gustKmh: 75,
+      inundationProbPct: 38,
+      evacuatedCount: 15400,
+      evacuationTarget: 95000,
+      shelterOccupancyPct: 22,
+      primaryDrivers: [
+        "Subarnarekha backwater swell hazard",
+        "Thatched housing exposure in coastal Bhograi block",
+        "Intermittent heavy squalls recorded at Chandipur"
+      ]
+    },
+    od_bhadrak: {
+      riskScore: 65,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.3,
+      rainMm24h: 85,
+      windKmh: 62,
+      gustKmh: 78,
+      inundationProbPct: 40,
+      evacuatedCount: 16800,
+      evacuationTarget: 88000,
+      shelterOccupancyPct: 25,
+      primaryDrivers: [
+        "Dhamra port cautionary signal hoisting",
+        "Low-lying saline aquaculture bunds at risk",
+        "Basudebpur coastal settlements under advisory"
+      ]
+    },
+    od_puri: {
+      riskScore: 50,
+      riskBand: "MODERATE",
+      color: "#eab308",
+      surgeMeters: 0.9,
+      rainMm24h: 65,
+      windKmh: 52,
+      gustKmh: 68,
+      inundationProbPct: 25,
+      evacuatedCount: 9200,
+      evacuationTarget: 60000,
+      shelterOccupancyPct: 15,
+      primaryDrivers: [
+        "Beach erosion and wave runup along Marine Drive",
+        "Fishermen warned against deep sea venture",
+        "Moderate rainfall expected in Chilika periphery"
+      ]
+    },
+    wb_s24parganas: {
+      riskScore: 78,
+      riskBand: "VERY HIGH",
+      color: "#ea580c",
+      surgeMeters: 2.1,
+      rainMm24h: 130,
+      windKmh: 75,
+      gustKmh: 95,
+      inundationProbPct: 62,
+      evacuatedCount: 52000,
+      evacuationTarget: 240000,
+      shelterOccupancyPct: 40,
+      primaryDrivers: [
+        "Direct trajectory corridor towards Sundarbans delta",
+        "Critical embankment fragility across Gosaba and Basanti",
+        "Astronomical high tide amplification factor"
+      ]
+    },
+    wb_eastmidnapore: {
+      riskScore: 70,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.7,
+      rainMm24h: 105,
+      windKmh: 68,
+      gustKmh: 85,
+      inundationProbPct: 48,
+      evacuatedCount: 31000,
+      evacuationTarget: 140000,
+      shelterOccupancyPct: 32,
+      primaryDrivers: [
+        "Digha sea wall overtopping threat during high tide",
+        "Haldia port cargo handling precautionary restrictions",
+        "Khejuri saline embankment watch"
+      ]
+    },
+    od_ganjam: {
+      riskScore: 38,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.5,
+      rainMm24h: 40,
+      windKmh: 42,
+      gustKmh: 55,
+      inundationProbPct: 12,
+      evacuatedCount: 3200,
+      evacuationTarget: 30000,
+      shelterOccupancyPct: 8,
+      primaryDrivers: [
+        "Outside direct strike envelope; distant feeder band squalls",
+        "Rough sea warning for Gopalpur port",
+        "Minimal storm surge risk"
+      ]
+    }
+  },
+  "NOW": {
+    od_kendrapara: {
+      riskScore: 88,
+      riskBand: "EXTREME",
+      color: "#dc2626",
+      surgeMeters: 2.8,
+      rainMm24h: 210,
+      windKmh: 95,
+      gustKmh: 120,
+      inundationProbPct: 78,
+      evacuatedCount: 94500,
+      evacuationTarget: 115000,
+      shelterOccupancyPct: 82,
+      primaryDrivers: [
+        "High surge inundation predicted for Rajnagar & Mahakalapada",
+        "Saline embankments waterlogged with 1.8m wave overwash",
+        "Heavy gale force winds uprooting power feeders and trees"
+      ]
+    },
+    od_jagatsinghpur: {
+      riskScore: 84,
+      riskBand: "EXTREME",
+      color: "#dc2626",
+      surgeMeters: 2.6,
+      rainMm24h: 195,
+      windKmh: 92,
+      gustKmh: 115,
+      inundationProbPct: 74,
+      evacuatedCount: 98000,
+      evacuationTarget: 120000,
+      shelterOccupancyPct: 84,
+      primaryDrivers: [
+        "Paradip Port operations completely halted (Signal 10)",
+        "Erasama vulnerable habitations successfully 80% evacuated",
+        "Risk of saline intrusion into paddy lands"
+      ]
+    },
+    od_balasore: {
+      riskScore: 86,
+      riskBand: "EXTREME",
+      color: "#dc2626",
+      surgeMeters: 2.7,
+      rainMm24h: 220,
+      windKmh: 90,
+      gustKmh: 115,
+      inundationProbPct: 76,
+      evacuatedCount: 78000,
+      evacuationTarget: 95000,
+      shelterOccupancyPct: 81,
+      primaryDrivers: [
+        "Chandipur and Bhograi coastal blocks directly in core swath",
+        "Subarnarekha flood warning triggered due to upper catchment rain",
+        "High thatched structure damage probability (>65%)"
+      ]
+    },
+    od_bhadrak: {
+      riskScore: 85,
+      riskBand: "EXTREME",
+      color: "#dc2626",
+      surgeMeters: 2.5,
+      rainMm24h: 200,
+      windKmh: 88,
+      gustKmh: 110,
+      inundationProbPct: 72,
+      evacuatedCount: 72000,
+      evacuationTarget: 88000,
+      shelterOccupancyPct: 80,
+      primaryDrivers: [
+        "Dhamra port anchorage cleared, berths secured",
+        "Overwash on low embankments in Chandbali block",
+        "Road connectivity to 14 coastal villages snapped"
+      ]
+    },
+    od_puri: {
+      riskScore: 56,
+      riskBand: "MODERATE",
+      color: "#eab308",
+      surgeMeters: 1.1,
+      rainMm24h: 90,
+      windKmh: 60,
+      gustKmh: 75,
+      inundationProbPct: 30,
+      evacuatedCount: 22000,
+      evacuationTarget: 60000,
+      shelterOccupancyPct: 32,
+      primaryDrivers: [
+        "Sea water entered low-lying beachfront stalls in Puri town",
+        "Strong squalls; tree branches falling on arterial roads",
+        "Chilika mouth silt deposition and high chop"
+      ]
+    },
+    wb_s24parganas: {
+      riskScore: 96,
+      riskBand: "CRITICAL",
+      color: "#991b1b",
+      surgeMeters: 3.8,
+      rainMm24h: 290,
+      windKmh: 115,
+      gustKmh: 135,
+      inundationProbPct: 92,
+      evacuatedCount: 215000,
+      evacuationTarget: 240000,
+      shelterOccupancyPct: 94,
+      primaryDrivers: [
+        "PRIMARY LANDFALL SECTOR: Sagar Island & Khepupara corridor",
+        "Catastrophic storm surge 3.5m - 4.0m threatening Sundarbans dykes",
+        "Severe destructive winds expected to flatten kutcha dwellings"
+      ]
+    },
+    wb_eastmidnapore: {
+      riskScore: 91,
+      riskBand: "CRITICAL",
+      color: "#991b1b",
+      surgeMeters: 3.2,
+      rainMm24h: 260,
+      windKmh: 105,
+      gustKmh: 125,
+      inundationProbPct: 86,
+      evacuatedCount: 124000,
+      evacuationTarget: 140000,
+      shelterOccupancyPct: 89,
+      primaryDrivers: [
+        "Digha and Mandarmani tourist belt totally restricted",
+        "Massive waves overtopping 4.5m seawall at high tide",
+        "Haldia industrial port on complete emergency shutdown"
+      ]
+    },
+    od_ganjam: {
+      riskScore: 32,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.4,
+      rainMm24h: 35,
+      windKmh: 38,
+      gustKmh: 50,
+      inundationProbPct: 10,
+      evacuatedCount: 4500,
+      evacuationTarget: 30000,
+      shelterOccupancyPct: 10,
+      primaryDrivers: [
+        "Peripheral wave action only; system moving northeastwards away",
+        "Minor beach erosion at Gopalpur",
+        "SDRF units redeployed north to Kendrapara / Balasore"
+      ]
+    }
+  },
+  "+12h": {
+    od_kendrapara: {
+      riskScore: 92,
+      riskBand: "CRITICAL",
+      color: "#991b1b",
+      surgeMeters: 3.2,
+      rainMm24h: 260,
+      windKmh: 105,
+      gustKmh: 130,
+      inundationProbPct: 85,
+      evacuatedCount: 108000,
+      evacuationTarget: 115000,
+      shelterOccupancyPct: 95,
+      primaryDrivers: [
+        "Near-peak landfall surge impact along northern sea face",
+        "Multiple saline embankment breaches reported at Rajnagar",
+        "Telecom towers on diesel generator backup"
+      ]
+    },
+    od_jagatsinghpur: {
+      riskScore: 86,
+      riskBand: "EXTREME",
+      color: "#dc2626",
+      surgeMeters: 2.8,
+      rainMm24h: 230,
+      windKmh: 98,
+      gustKmh: 125,
+      inundationProbPct: 78,
+      evacuatedCount: 112000,
+      evacuationTarget: 120000,
+      shelterOccupancyPct: 93,
+      primaryDrivers: [
+        "Heavy sea swell overtopping Paradip breakwaters",
+        "Flash inundation in low-lying Erasama blocks",
+        "All marine traffic suspended; fishing boats secured inland"
+      ]
+    },
+    od_balasore: {
+      riskScore: 94,
+      riskBand: "CRITICAL",
+      color: "#991b1b",
+      surgeMeters: 3.4,
+      rainMm24h: 280,
+      windKmh: 110,
+      gustKmh: 135,
+      inundationProbPct: 88,
+      evacuatedCount: 91000,
+      evacuationTarget: 95000,
+      shelterOccupancyPct: 96,
+      primaryDrivers: [
+        "Direct impact from western eyewall core swath",
+        "Subarnarekha and Budhabalanga river levels above warning marks",
+        "Major power feeder outages across 8 blocks"
+      ]
+    },
+    od_bhadrak: {
+      riskScore: 90,
+      riskBand: "CRITICAL",
+      color: "#991b1b",
+      surgeMeters: 3.0,
+      rainMm24h: 245,
+      windKmh: 102,
+      gustKmh: 128,
+      inundationProbPct: 82,
+      evacuatedCount: 84000,
+      evacuationTarget: 88000,
+      shelterOccupancyPct: 95,
+      primaryDrivers: [
+        "Severe tidal surge at Dhamra mouth coinciding with peak winds",
+        "Agricultural polder flooding in Chandbali & Tihidi",
+        "Heavy debris blocking NH-16 feeder routes"
+      ]
+    },
+    od_puri: {
+      riskScore: 48,
+      riskBand: "MODERATE",
+      color: "#eab308",
+      surgeMeters: 0.8,
+      rainMm24h: 75,
+      windKmh: 55,
+      gustKmh: 70,
+      inundationProbPct: 22,
+      evacuatedCount: 24000,
+      evacuationTarget: 60000,
+      shelterOccupancyPct: 35,
+      primaryDrivers: [
+        "Conditions improving slowly as eye shifts northeast",
+        "Drainage clearance underway in Puri urban areas",
+        "Relief teams on standby for northern district dispatch"
+      ]
+    },
+    wb_s24parganas: {
+      riskScore: 98,
+      riskBand: "CRITICAL",
+      color: "#991b1b",
+      surgeMeters: 4.2,
+      rainMm24h: 340,
+      windKmh: 125,
+      gustKmh: 145,
+      inundationProbPct: 96,
+      evacuatedCount: 236000,
+      evacuationTarget: 240000,
+      shelterOccupancyPct: 98,
+      primaryDrivers: [
+        "LANDFALL IN PROGRESS: Extreme catastrophic surge & winds",
+        "Extensive dyke collapses across Kakdwip, Namkhana & Patharpratima",
+        "Complete power shutdown; emergency satellite phones operational"
+      ]
+    },
+    wb_eastmidnapore: {
+      riskScore: 95,
+      riskBand: "CRITICAL",
+      color: "#991b1b",
+      surgeMeters: 3.6,
+      rainMm24h: 310,
+      windKmh: 115,
+      gustKmh: 135,
+      inundationProbPct: 91,
+      evacuatedCount: 136000,
+      evacuationTarget: 140000,
+      shelterOccupancyPct: 97,
+      primaryDrivers: [
+        "Landfall eyewall battering coastline; widespread destruction of kutcha houses",
+        "Sea water ingress up to 2.5km inland from Digha coastline",
+        "Haldia industrial assets operating on storm shutdown protocol"
+      ]
+    },
+    od_ganjam: {
+      riskScore: 24,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.3,
+      rainMm24h: 20,
+      windKmh: 30,
+      gustKmh: 42,
+      inundationProbPct: 5,
+      evacuatedCount: 4500,
+      evacuationTarget: 30000,
+      shelterOccupancyPct: 10,
+      primaryDrivers: [
+        "System completely passed; skies clearing",
+        "Normal port operations resuming at Gopalpur",
+        "Standby relief units demobilized"
+      ]
+    }
+  },
+  "+24h": {
+    od_kendrapara: {
+      riskScore: 70,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.2,
+      rainMm24h: 120,
+      windKmh: 60,
+      gustKmh: 75,
+      inundationProbPct: 55,
+      evacuatedCount: 108000,
+      evacuationTarget: 115000,
+      shelterOccupancyPct: 92,
+      primaryDrivers: [
+        "Post-landfall waterlogging in low-lying polders",
+        "Restoration of power transmission lines initiated",
+        "Relief distribution in progress across 42 shelters"
+      ]
+    },
+    od_jagatsinghpur: {
+      riskScore: 65,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.0,
+      rainMm24h: 95,
+      windKmh: 55,
+      gustKmh: 70,
+      inundationProbPct: 48,
+      evacuatedCount: 112000,
+      evacuationTarget: 120000,
+      shelterOccupancyPct: 88,
+      primaryDrivers: [
+        "Paradip Port damage assessment teams deployed",
+        "Road clearing crews removing fallen trees from SH-12",
+        "No major petrochemical facility breach reported"
+      ]
+    },
+    od_balasore: {
+      riskScore: 75,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.5,
+      rainMm24h: 150,
+      windKmh: 68,
+      gustKmh: 82,
+      inundationProbPct: 60,
+      evacuatedCount: 91000,
+      evacuationTarget: 95000,
+      shelterOccupancyPct: 94,
+      primaryDrivers: [
+        "Riverine flood monitoring for Subarnarekha & Jalaka rivers",
+        "Saline water pumping operations underway in agricultural belts",
+        "Food packet drops initiated in isolated hamlets"
+      ]
+    },
+    od_bhadrak: {
+      riskScore: 72,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.3,
+      rainMm24h: 135,
+      windKmh: 64,
+      gustKmh: 78,
+      inundationProbPct: 56,
+      evacuatedCount: 84000,
+      evacuationTarget: 88000,
+      shelterOccupancyPct: 92,
+      primaryDrivers: [
+        "Dhamra port access road debris clearance underway",
+        "Waterlogged shelters receiving drinking water tanker supplies",
+        "Submerged paddy field desalinization assessment queued"
+      ]
+    },
+    od_puri: {
+      riskScore: 30,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.4,
+      rainMm24h: 30,
+      windKmh: 35,
+      gustKmh: 48,
+      inundationProbPct: 10,
+      evacuatedCount: 18000,
+      evacuationTarget: 60000,
+      shelterOccupancyPct: 20,
+      primaryDrivers: [
+        "Evacuees beginning return to safe areas",
+        "All tourism and beach restrictions lifted",
+        "Chilika fishing operations to resume within 24h"
+      ]
+    },
+    wb_s24parganas: {
+      riskScore: 88,
+      riskBand: "EXTREME",
+      color: "#dc2626",
+      surgeMeters: 2.2,
+      rainMm24h: 190,
+      windKmh: 75,
+      gustKmh: 95,
+      inundationProbPct: 82,
+      evacuatedCount: 236000,
+      evacuationTarget: 240000,
+      shelterOccupancyPct: 98,
+      primaryDrivers: [
+        "Post-landfall extensive saline submergence of Sundarbans islands",
+        "Breached river dykes requiring immediate sandbagging & armoring",
+        "Massive tree uprooting and grid disruption across all southern blocks"
+      ]
+    },
+    wb_eastmidnapore: {
+      riskScore: 82,
+      riskBand: "EXTREME",
+      color: "#dc2626",
+      surgeMeters: 1.8,
+      rainMm24h: 175,
+      windKmh: 70,
+      gustKmh: 90,
+      inundationProbPct: 75,
+      evacuatedCount: 136000,
+      evacuationTarget: 140000,
+      shelterOccupancyPct: 95,
+      primaryDrivers: [
+        "Heavy freshwater ponding combined with trapped seawater",
+        "Digha coastal highway damaged in 3 sections",
+        "Haldia port resuming limited operations following inspection"
+      ]
+    },
+    od_ganjam: {
+      riskScore: 18,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.2,
+      rainMm24h: 10,
+      windKmh: 24,
+      gustKmh: 32,
+      inundationProbPct: 2,
+      evacuatedCount: 1200,
+      evacuationTarget: 30000,
+      shelterOccupancyPct: 2,
+      primaryDrivers: [
+        "Completely normal conditions; clear skies",
+        "Shelters vacated and cleaned",
+        "District emergency operations center returning to standard watch"
+      ]
+    }
+  },
+  "+48h": {
+    od_kendrapara: {
+      riskScore: 48,
+      riskBand: "MODERATE",
+      color: "#eab308",
+      surgeMeters: 0.6,
+      rainMm24h: 45,
+      windKmh: 35,
+      gustKmh: 45,
+      inundationProbPct: 28,
+      evacuatedCount: 65000,
+      evacuationTarget: 115000,
+      shelterOccupancyPct: 55,
+      primaryDrivers: [
+        "Flood waters receding in Rajnagar and Aul blocks",
+        "Power restored to 70% of district headquarters",
+        "Medical teams addressing waterborne disease prevention"
+      ]
+    },
+    od_jagatsinghpur: {
+      riskScore: 42,
+      riskBand: "MODERATE",
+      color: "#eab308",
+      surgeMeters: 0.4,
+      rainMm24h: 35,
+      windKmh: 30,
+      gustKmh: 40,
+      inundationProbPct: 22,
+      evacuatedCount: 58000,
+      evacuationTarget: 120000,
+      shelterOccupancyPct: 48,
+      primaryDrivers: [
+        "Paradip Port normal shipping channel cleared",
+        "Refinery operations ramped back to full capacity",
+        "Controlled return of non-inundated village residents"
+      ]
+    },
+    od_balasore: {
+      riskScore: 54,
+      riskBand: "MODERATE",
+      color: "#eab308",
+      surgeMeters: 0.7,
+      rainMm24h: 60,
+      windKmh: 40,
+      gustKmh: 50,
+      inundationProbPct: 35,
+      evacuatedCount: 52000,
+      evacuationTarget: 95000,
+      shelterOccupancyPct: 54,
+      primaryDrivers: [
+        "Subarnarekha river receding below danger level",
+        "Chandipur range infrastructure verified intact",
+        "Mobile connectivity restored across 90% of towers"
+      ]
+    },
+    od_bhadrak: {
+      riskScore: 49,
+      riskBand: "MODERATE",
+      color: "#eab308",
+      surgeMeters: 0.5,
+      rainMm24h: 50,
+      windKmh: 36,
+      gustKmh: 46,
+      inundationProbPct: 30,
+      evacuatedCount: 46000,
+      evacuationTarget: 88000,
+      shelterOccupancyPct: 52,
+      primaryDrivers: [
+        "Dhamra port commercial loading resumed",
+        "Temporary culverts constructed to restore rural links",
+        "Chlorination of rural open wells in progress"
+      ]
+    },
+    od_puri: {
+      riskScore: 20,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.2,
+      rainMm24h: 15,
+      windKmh: 25,
+      gustKmh: 35,
+      inundationProbPct: 4,
+      evacuatedCount: 4000,
+      evacuationTarget: 60000,
+      shelterOccupancyPct: 5,
+      primaryDrivers: [
+        "Routine municipal operations",
+        "Tourism activities fully restored",
+        "Coast Guard patrols reporting tranquil sea condition"
+      ]
+    },
+    wb_s24parganas: {
+      riskScore: 68,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 1.1,
+      rainMm24h: 90,
+      windKmh: 45,
+      gustKmh: 60,
+      inundationProbPct: 55,
+      evacuatedCount: 160000,
+      evacuationTarget: 240000,
+      shelterOccupancyPct: 75,
+      primaryDrivers: [
+        "Prolonged waterlogging in deltaic islands",
+        "Emergency army engineering columns deploying bailey bridges",
+        "Massive distribution of water purification units"
+      ]
+    },
+    wb_eastmidnapore: {
+      riskScore: 60,
+      riskBand: "HIGH",
+      color: "#f59e0b",
+      surgeMeters: 0.9,
+      rainMm24h: 75,
+      windKmh: 42,
+      gustKmh: 55,
+      inundationProbPct: 45,
+      evacuatedCount: 85000,
+      evacuationTarget: 140000,
+      shelterOccupancyPct: 65,
+      primaryDrivers: [
+        "Pumping operations continuing in Tamluk and Haldia municipal areas",
+        "Relief camps operating on full rations",
+        "Electricity restored to hospital feeders"
+      ]
+    },
+    od_ganjam: {
+      riskScore: 12,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.1,
+      rainMm24h: 5,
+      windKmh: 18,
+      gustKmh: 25,
+      inundationProbPct: 1,
+      evacuatedCount: 0,
+      evacuationTarget: 30000,
+      shelterOccupancyPct: 0,
+      primaryDrivers: [
+        "Normal baseline status",
+        "No residual storm impact",
+        "Fishermen advisory withdrawn"
+      ]
+    }
+  },
+  "+72h": {
+    od_kendrapara: {
+      riskScore: 28,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.2,
+      rainMm24h: 15,
+      windKmh: 20,
+      gustKmh: 30,
+      inundationProbPct: 12,
+      evacuatedCount: 18000,
+      evacuationTarget: 115000,
+      shelterOccupancyPct: 16,
+      primaryDrivers: [
+        "Recovery and rehabilitation phase active",
+        "Disaster relief grant distribution commenced",
+        "All arterial roads open for commercial traffic"
+      ]
+    },
+    od_jagatsinghpur: {
+      riskScore: 25,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.2,
+      rainMm24h: 10,
+      windKmh: 18,
+      gustKmh: 28,
+      inundationProbPct: 10,
+      evacuatedCount: 12000,
+      evacuationTarget: 120000,
+      shelterOccupancyPct: 11,
+      primaryDrivers: [
+        "Port and industrial zone operating normally",
+        "Drinking water quality tests cleared across 95% of tube wells",
+        "Standard contingency posture restored"
+      ]
+    },
+    od_balasore: {
+      riskScore: 32,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.3,
+      rainMm24h: 20,
+      windKmh: 22,
+      gustKmh: 32,
+      inundationProbPct: 15,
+      evacuatedCount: 15000,
+      evacuationTarget: 95000,
+      shelterOccupancyPct: 17,
+      primaryDrivers: [
+        "Rivers within banks",
+        "Paddy crop damage enumeration underway",
+        "Permanent dyke repair sanction expedited"
+      ]
+    },
+    od_bhadrak: {
+      riskScore: 30,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.2,
+      rainMm24h: 18,
+      windKmh: 20,
+      gustKmh: 30,
+      inundationProbPct: 14,
+      evacuatedCount: 14000,
+      evacuationTarget: 88000,
+      shelterOccupancyPct: 15,
+      primaryDrivers: [
+        "Residual field pooling draining naturally",
+        "Primary health centers resuming OPD services",
+        "No epidemic outbreak reported"
+      ]
+    },
+    od_puri: {
+      riskScore: 15,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.1,
+      rainMm24h: 5,
+      windKmh: 18,
+      gustKmh: 25,
+      inundationProbPct: 2,
+      evacuatedCount: 0,
+      evacuationTarget: 60000,
+      shelterOccupancyPct: 0,
+      primaryDrivers: [
+        "Standard weather patterns restored",
+        "Sea calm, fishing fleet authorized for launch",
+        "Tourism at normal capacity"
+      ]
+    },
+    wb_s24parganas: {
+      riskScore: 45,
+      riskBand: "MODERATE",
+      color: "#eab308",
+      surgeMeters: 0.5,
+      rainMm24h: 40,
+      windKmh: 28,
+      gustKmh: 40,
+      inundationProbPct: 30,
+      evacuatedCount: 75000,
+      evacuationTarget: 240000,
+      shelterOccupancyPct: 35,
+      primaryDrivers: [
+        "Major dewatering ongoing in remote islands",
+        "Permanent embankment reconstruction planning initiated",
+        "Public health sanitization campaign in progress"
+      ]
+    },
+    wb_eastmidnapore: {
+      riskScore: 38,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.4,
+      rainMm24h: 30,
+      windKmh: 25,
+      gustKmh: 35,
+      inundationProbPct: 20,
+      evacuatedCount: 38000,
+      evacuationTarget: 140000,
+      shelterOccupancyPct: 28,
+      primaryDrivers: [
+        "National highway corridor fully cleared and operational",
+        "Port operating at 100% throughput",
+        "Shelter depopulation safely managing return journeys"
+      ]
+    },
+    od_ganjam: {
+      riskScore: 10,
+      riskBand: "LOW",
+      color: "#10b981",
+      surgeMeters: 0.1,
+      rainMm24h: 2,
+      windKmh: 15,
+      gustKmh: 22,
+      inundationProbPct: 1,
+      evacuatedCount: 0,
+      evacuationTarget: 30000,
+      shelterOccupancyPct: 0,
+      primaryDrivers: [
+        "Normal baseline conditions",
+        "Nil weather hazard",
+        "Routine coastal watch"
+      ]
+    }
+  }
+};
+
+// Also copy T-12h from T-24h with slight increase for timeline continuity
+DISTRICT_RISK_BY_TIMELINE["T-12h"] = {
+  od_kendrapara: { ...DISTRICT_RISK_BY_TIMELINE["T-24h"].od_kendrapara, riskScore: 78, riskBand: "VERY HIGH", color: "#ea580c", surgeMeters: 1.9, rainMm24h: 140, windKmh: 78, gustKmh: 95, inundationProbPct: 60, evacuatedCount: 52000, shelterOccupancyPct: 52 },
+  od_jagatsinghpur: { ...DISTRICT_RISK_BY_TIMELINE["T-24h"].od_jagatsinghpur, riskScore: 80, riskBand: "VERY HIGH", color: "#ea580c", surgeMeters: 2.1, rainMm24h: 150, windKmh: 82, gustKmh: 100, inundationProbPct: 65, evacuatedCount: 61000, shelterOccupancyPct: 58 },
+  od_balasore: { ...DISTRICT_RISK_BY_TIMELINE["T-24h"].od_balasore, riskScore: 74, riskBand: "HIGH", color: "#f59e0b", surgeMeters: 1.8, rainMm24h: 130, windKmh: 72, gustKmh: 90, inundationProbPct: 55, evacuatedCount: 38000, shelterOccupancyPct: 45 },
+  od_bhadrak: { ...DISTRICT_RISK_BY_TIMELINE["T-24h"].od_bhadrak, riskScore: 75, riskBand: "HIGH", color: "#f59e0b", surgeMeters: 1.7, rainMm24h: 135, windKmh: 74, gustKmh: 92, inundationProbPct: 58, evacuatedCount: 41000, shelterOccupancyPct: 48 },
+  od_puri: { ...DISTRICT_RISK_BY_TIMELINE["T-24h"].od_puri, riskScore: 54, riskBand: "MODERATE", color: "#eab308", surgeMeters: 1.0, rainMm24h: 75, windKmh: 58, gustKmh: 72, inundationProbPct: 28, evacuatedCount: 16000, shelterOccupancyPct: 22 },
+  wb_s24parganas: { ...DISTRICT_RISK_BY_TIMELINE["T-24h"].wb_s24parganas, riskScore: 90, riskBand: "CRITICAL", color: "#991b1b", surgeMeters: 3.1, rainMm24h: 220, windKmh: 98, gustKmh: 120, inundationProbPct: 82, evacuatedCount: 135000, shelterOccupancyPct: 68 },
+  wb_eastmidnapore: { ...DISTRICT_RISK_BY_TIMELINE["T-24h"].wb_eastmidnapore, riskScore: 84, riskBand: "EXTREME", color: "#dc2626", surgeMeters: 2.5, rainMm24h: 180, windKmh: 88, gustKmh: 110, inundationProbPct: 70, evacuatedCount: 78000, shelterOccupancyPct: 62 },
+  od_ganjam: { ...DISTRICT_RISK_BY_TIMELINE["T-24h"].od_ganjam, riskScore: 35, riskBand: "LOW", color: "#10b981", surgeMeters: 0.5, rainMm24h: 35, windKmh: 40, gustKmh: 52, inundationProbPct: 10, evacuatedCount: 4000, shelterOccupancyPct: 9 }
+};

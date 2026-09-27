@@ -1,0 +1,240 @@
+import React, { useState, useEffect, useCallback } from "react";
+import Header from "./components/header/Header";
+import ScenarioBar from "./components/hero/ScenarioBar";
+import MapContainer from "./components/map/MapContainer";
+import TimelineControl from "./components/map/TimelineControl";
+import RiskPanel from "./components/insights/RiskPanel";
+import PreparednessActions from "./components/actions/PreparednessActions";
+import Footer from "./components/footer/Footer";
+
+import cycloneApi from "./services/cycloneApi";
+import riskApi from "./services/riskApi";
+import weatherApi from "./services/weatherApi";
+
+import "./App.css";
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeStepId, setActiveStepId] = useState("NOW");
+  const [currentScenario, setCurrentScenario] = useState(null);
+  const [districtsData, setDistrictsData] = useState([]);
+  const [infraData, setInfraData] = useState([]);
+  const [directives, setDirectives] = useState([]);
+  const [prepMetrics, setPrepMetrics] = useState({});
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [bulletin, setBulletin] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load static infrastructure once
+  useEffect(() => {
+    async function loadStaticAssets() {
+      try {
+        const infraRes = await riskApi.getInfrastructureExposure();
+        setInfraData(infraRes.assets || []);
+
+        const directivesRes = await riskApi.getEmergencyDirectives();
+        setDirectives(directivesRes.directives || []);
+        setPrepMetrics(directivesRes.metrics || {});
+
+        const bulletinRes = await weatherApi.getMarineBulletin();
+        setBulletin(bulletinRes);
+      } catch (err) {
+        console.error("Error loading baseline emergency data:", err);
+      }
+    }
+    loadStaticAssets();
+  }, []);
+
+  // Fetch temporal scenario and district risk whenever timeline step changes
+  useEffect(() => {
+    async function loadTemporalData() {
+      setIsLoading(true);
+      try {
+        const [scenarioRes, riskRes] = await Promise.all([
+          cycloneApi.getScenarioByStep(activeStepId),
+          riskApi.getDistrictRiskMatrix(activeStepId)
+        ]);
+
+        setCurrentScenario(scenarioRes.data);
+        const districts = riskRes.districts || [];
+        setDistrictsData(districts);
+
+        // Keep existing selected district updated with new risk data for the timestep
+        setSelectedDistrict((prev) => {
+          if (!prev) return districts[0] || null;
+          const updated = districts.find((d) => d.id === prev.id);
+          return updated || districts[0] || null;
+        });
+      } catch (err) {
+        console.error("Error loading timestep data:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadTemporalData();
+  }, [activeStepId]);
+
+  const handleStepChange = useCallback((stepId) => {
+    setActiveStepId(stepId);
+  }, []);
+
+  const handleToggleDirective = async (directiveId) => {
+    const directive = directives.find((d) => d.id === directiveId);
+    if (!directive) return;
+    const newStatus = directive.status === "COMPLETED" ? "IN_PROGRESS" : "COMPLETED";
+    await riskApi.updateDirectiveStatus(directiveId, newStatus);
+    setDirectives((prev) =>
+      prev.map((d) =>
+        d.id === directiveId
+          ? { ...d, status: newStatus, progressPct: newStatus === "COMPLETED" ? 100 : 75 }
+          : d
+      )
+    );
+  };
+
+  return (
+    <div className="drishti-app">
+      {/* Top Header & Government Branding */}
+      <Header 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        currentScenario={currentScenario} 
+      />
+
+      {/* Hero Scenario Telemetry Bar */}
+      <ScenarioBar 
+        currentScenario={currentScenario} 
+        activeStepId={activeStepId} 
+      />
+
+      {/* Main Command Center Workspace */}
+      <main className="drishti-main-workspace">
+        {/* DASHBOARD TAB */}
+        {activeTab === "dashboard" && (
+          <>
+            <div className="workspace-grid-upper">
+              {/* Map & Timeline Column */}
+              <div className="map-view-column">
+                <MapContainer
+                  currentScenario={currentScenario}
+                  districtsData={districtsData}
+                  infraData={infraData}
+                  selectedDistrict={selectedDistrict}
+                  onSelectDistrict={setSelectedDistrict}
+                />
+                <TimelineControl
+                  activeStepId={activeStepId}
+                  onStepChange={handleStepChange}
+                />
+              </div>
+
+              {/* District Risk & Vulnerability Matrix Panel */}
+              <RiskPanel
+                districtsData={districtsData}
+                selectedDistrict={selectedDistrict}
+                onSelectDistrict={setSelectedDistrict}
+                activeStepId={activeStepId}
+              />
+            </div>
+
+            {/* Bottom Preparedness & Emergency SOP Directives Section */}
+            <PreparednessActions
+              directives={directives}
+              metrics={prepMetrics}
+              onToggleDirective={handleToggleDirective}
+            />
+          </>
+        )}
+
+        {/* DISTRICT RISK TAB */}
+        {activeTab === "risk" && (
+          <div className="flex flex-col gap-4">
+            <TimelineControl
+              activeStepId={activeStepId}
+              onStepChange={handleStepChange}
+            />
+            <RiskPanel
+              districtsData={districtsData}
+              selectedDistrict={selectedDistrict}
+              onSelectDistrict={setSelectedDistrict}
+              activeStepId={activeStepId}
+            />
+          </div>
+        )}
+
+        {/* ACTIONS TAB */}
+        {activeTab === "actions" && (
+          <div className="flex flex-col gap-4">
+            <PreparednessActions
+              directives={directives}
+              metrics={prepMetrics}
+              onToggleDirective={handleToggleDirective}
+            />
+          </div>
+        )}
+
+        {/* SCENARIOS TAB */}
+        {activeTab === "scenarios" && (
+          <div className="risk-panel-container p-6">
+            <div className="panel-header mb-4">
+              <h2 className="panel-title text-base">HISTORICAL SCENARIO ARCHIVE & BENCHMARKING</h2>
+              <span className="badge-provenance">DEMO DATABASE</span>
+            </div>
+            <div className="text-sm text-slate-600 mb-4 font-medium">
+              DRISHTI provides comparative trajectory analysis against notable Bay of Bengal tropical cyclones to evaluate coastal resilience models:
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+              <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-sm">
+                <div className="text-red-600 font-bold text-sm mb-1">Cyclone REMAL (2024) [ACTIVE REPLAY]</div>
+                <div className="text-slate-600">Peak Category: Severe Cyclonic Storm (110 km/h)</div>
+                <div className="text-slate-500">Landfall: Sagar Island & Khepupara</div>
+                <div className="text-orange-700 font-bold mt-2">Active in DRISHTI MVP Stage 1</div>
+              </div>
+              <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-sm">
+                <div className="text-amber-700 font-bold text-sm mb-1">Cyclone FANI (2019) [ARCHIVE]</div>
+                <div className="text-slate-600">Peak Category: Extremely Severe (215 km/h)</div>
+                <div className="text-slate-500">Landfall: Puri Coast (Odisha)</div>
+                <div className="text-slate-400 mt-2">Scheduled for Stage 2 Ingestion</div>
+              </div>
+              <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-sm">
+                <div className="text-slate-800 font-bold text-sm mb-1">Cyclone YAAS (2021) [ARCHIVE]</div>
+                <div className="text-slate-600">Peak Category: Very Severe (140 km/h)</div>
+                <div className="text-slate-500">Landfall: Dhamra Port / Balasore</div>
+                <div className="text-slate-400 mt-2">Scheduled for Stage 2 Ingestion</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ADVISORIES TAB */}
+        {activeTab === "advisories" && (
+          <div className="risk-panel-container p-6">
+            <div className="panel-header mb-4">
+              <h2 className="panel-title text-base">METEOROLOGICAL BULLETINS & MARINE ADVISORIES</h2>
+              <span className="badge-provenance">IMD HISTORICAL ARCHIVE</span>
+            </div>
+            {bulletin ? (
+              <div className="flex flex-col gap-3 font-mono text-xs text-slate-800">
+                <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
+                  <div className="text-slate-900 font-bold text-sm mb-1">BULLETIN ID: {bulletin.bulletinNo}</div>
+                  <div className="text-slate-500 mb-3 font-medium">ISSUED: {bulletin.issuedAt} ({bulletin.provenance})</div>
+                  <div className="text-orange-700 mb-2 font-bold text-sm">SEA CONDITION: {bulletin.seaCondition}</div>
+                  <div className="mb-2 text-slate-700 font-medium">SIGNIFICANT WAVE HEIGHT: {bulletin.significantWaveHeightMeters} meters ({bulletin.waveDirection})</div>
+                  <div className="mb-3 text-red-700 font-bold">SQUALL WARNING: {bulletin.squallWarning}</div>
+                  <div className="p-3 bg-red-50 border border-red-200 rounded text-red-800 font-medium">
+                    ADVISORY TO FISHERMEN: {bulletin.fishermenAdvisory}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-slate-500 text-xs font-mono">Loading advisory data...</div>
+            )}
+          </div>
+        )}
+      </main>
+
+      {/* Government Footer */}
+      <Footer />
+    </div>
+  );
+}
