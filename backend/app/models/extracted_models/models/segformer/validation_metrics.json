@@ -1,0 +1,23 @@
+{
+  "Pixel Accuracy": 0.935496609090567,
+  "Balanced Accuracy": 0.9053423709257213,
+  "Mean IoU": 0.7604856114334326,
+  "Non-Flood IoU": 0.9288319211900362,
+  "Flood IoU": 0.5921393016768289,
+  "Macro F1": 0.8534657630938127,
+  "Weighted F1": 0.9394152046908917,
+  "Non-Flood Precision": 0.9832043282708451,
+  "Non-Flood Recall": 0.9438071683857973,
+  "Non-Flood Dice": 0.9631030168942585,
+  "Flood Precision": 0.6513697365992565,
+  "Flood Recall": 0.8668775734656455,
+  "Flood Dice": 0.7438285092933669,
+  "Specificity": 0.9438071683857973,
+  "Sensitivity": 0.8668775734656455,
+  "TN": 15545832,
+  "FP": 925575,
+  "FN": 265563,
+  "TP": 1729315,
+  "Valid Pixels": 18466285,
+  "Validation Samples": 78
+}

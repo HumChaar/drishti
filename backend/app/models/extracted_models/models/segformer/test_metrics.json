@@ -1,0 +1,35 @@
+{
+    "dataset": "Sen1Floods11 clean test set",
+    "model": "SegFormer-B0",
+    "input_channels": 2,
+    "channels": [
+        "VV",
+        "VH"
+    ],
+    "classes": {
+        "0": "NON_FLOOD",
+        "1": "FLOOD"
+    },
+    "test_samples": 82,
+    "valid_pixels": 19342758,
+    "test_loss": 0.310491004368154,
+    "pixel_accuracy": 0.9139682148740113,
+    "balanced_accuracy": 0.8394853582064445,
+    "mean_iou": 0.7081828994909665,
+    "non_flood_iou": 0.9054737553643802,
+    "flood_iou": 0.5108920436175528,
+    "macro_f1": 0.8133354739508593,
+    "weighted_f1": 0.9171567328636941,
+    "non_flood_precision": 0.9633147760565988,
+    "non_flood_recall": 0.9378118583431765,
+    "non_flood_dice": 0.9503922610482013,
+    "flood_precision": 0.6218432620183304,
+    "flood_recall": 0.7411588580697126,
+    "flood_dice": 0.6762786868535172,
+    "specificity": 0.9378118583431765,
+    "sensitivity": 0.7411588580697126,
+    "TN": 15940458,
+    "FP": 1057043,
+    "FN": 607049,
+    "TP": 1738208
+}

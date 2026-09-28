@@ -1,0 +1,23 @@
+{
+  "model": "SegFormer-B0",
+  "base_model": "nvidia/mit-b0",
+  "input_channels": 2,
+  "input_bands": [
+    "VV",
+    "VH"
+  ],
+  "classes": {
+    "0": "NON_FLOOD",
+    "1": "FLOOD"
+  },
+  "ignore_index": -1,
+  "learning_rate": 1e-05,
+  "weight_decay": 0.01,
+  "batch_size": 2,
+  "epochs": 8,
+  "precision": "FP32",
+  "clean_train_samples": 228,
+  "clean_validation_samples": 78,
+  "clean_test_samples": 83,
+  "best_validation_iou": 0.5921393016768269
+}

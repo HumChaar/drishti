@@ -157,6 +157,14 @@ ENV/
 env.bak/
 venv.bak/
 
+# Model Checkpoints & Large Training Artifacts
+*.zip
+*.pt
+*.pth
+**/optimizer.pt
+**/best_optimizer.pt
+
+
 # Spyder project settings
 .spyderproject
 .spyproject

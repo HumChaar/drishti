@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     PORT: int = int(os.getenv("PORT", "8000"))
 
+    # Stage 6: Gemini Reasoning Configuration (Key retrieved via environment variable only)
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+
     # CORS origins: configurable via comma-separated string or list in env
     ALLOWED_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
