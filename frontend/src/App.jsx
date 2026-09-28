@@ -5,6 +5,7 @@ import MapContainer from "./components/map/MapContainer";
 import TimelineControl from "./components/map/TimelineControl";
 import RiskPanel from "./components/insights/RiskPanel";
 import AdvisoryPanel from "./components/insights/AdvisoryPanel";
+import ActivityLog from "./components/activity/ActivityLog";
 import PreparednessActions from "./components/actions/PreparednessActions";
 import Footer from "./components/footer/Footer";
 
@@ -305,6 +306,9 @@ export default function App() {
                 <div className="text-slate-500 text-xs font-mono">Loading advisory data...</div>
               )}
             </div>
+
+            {/* Truthful Session Command Activity Log */}
+            <ActivityLog entries={sessionActivity} />
           </div>
         )}
       </main>

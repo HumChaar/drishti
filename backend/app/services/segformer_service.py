@@ -15,16 +15,31 @@ measurable flood extent percentage, binary mask, and provenance metadata.
 Strictly CPU-compatible (Render free tier safe).
 """
 
+from __future__ import annotations
 import os
+os.environ["USE_TF"] = "0"
+os.environ["USE_TORCH"] = "1"
 import time
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple, Union, Any
 
 import numpy as np
-import torch
-import torch.nn.functional as F
-from safetensors.torch import load_file
-from transformers import SegformerConfig, SegformerForSemanticSegmentation
+
+try:
+    import torch
+    import torch.nn.functional as F
+    from safetensors.torch import load_file
+    from transformers import SegformerConfig, SegformerForSemanticSegmentation
+    _TorchModule = torch.nn.Module
+    HAS_TORCH = True
+except (ImportError, Exception):
+    torch = None
+    F = None
+    load_file = None
+    SegformerConfig = None
+    SegformerForSemanticSegmentation = None
+    _TorchModule = object
+    HAS_TORCH = False
 
 from app.models.schemas import (
     FloodInferenceEvidence,
@@ -42,12 +57,12 @@ METADATA_PATH = os.path.join(CHECKPOINT_DIR, "metadata.json")
 ONNX_EXPORT_PATH = os.path.join(CHECKPOINT_DIR, "model.onnx")
 
 
-class SegformerONNXWrapper(torch.nn.Module):
-    def __init__(self, model: torch.nn.Module):
+class SegformerONNXWrapper(_TorchModule):
+    def __init__(self, model: Any):
         super().__init__()
         self.model = model
 
-    def forward(self, pixel_values: torch.Tensor) -> torch.Tensor:
+    def forward(self, pixel_values: Any) -> Any:
         outputs = self.model(pixel_values=pixel_values)
         return outputs.logits
 
@@ -72,14 +87,17 @@ class SegformerService:
         self.input_resolution = (224, 224)
 
     def is_checkpoint_ready(self) -> bool:
-        return os.path.exists(self.weights_path) and os.path.exists(self.config_path)
+        return HAS_TORCH and os.path.exists(self.weights_path) and os.path.exists(self.config_path)
 
-    def load_model(self) -> SegformerForSemanticSegmentation:
+    def load_model(self) -> Any:
         """
         Loads the best_clean SegFormer checkpoint with verified state-dict remapping:
         decode_head.linear_projections.* -> decode_head.linear_c.*
         Ensures strict=True loading with 100% parameter initialization.
         """
+        if not HAS_TORCH:
+            raise ImportError("PyTorch/Transformers not installed in runtime environment.")
+
         if self._model is not None:
             return self._model
 

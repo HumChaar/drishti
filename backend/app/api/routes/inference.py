@@ -5,7 +5,6 @@ Independent from the risk engine and frontend.
 """
 
 from fastapi import APIRouter, HTTPException, Query
-import torch
 import numpy as np
 
 from app.models.schemas import (

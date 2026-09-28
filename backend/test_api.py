@@ -2,6 +2,9 @@
 DRISHTI FastAPI Backend Test Suite
 Validates all required endpoints, schemas, CORS, and error handling.
 """
+import os
+os.environ["USE_TF"] = "0"
+os.environ["USE_TORCH"] = "1"
 from fastapi.testclient import TestClient
 from app.main import app
 
