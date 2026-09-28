@@ -106,10 +106,10 @@ export default function ActivityLog({
       <div className="activity-panel-header">
         <div className="flex items-center gap-2">
           <Clock size={15} className="text-slate-700" />
-          <h3 className="activity-panel-title">COMMAND ACTIVITY</h3>
+          <h3 className="activity-panel-title">NATIONAL OPERATIONS LOG</h3>
         </div>
         <span className="badge-activity-simulation">
-          SESSION / SIMULATION
+          INTER-AGENCY INCIDENT AUDIT
         </span>
       </div>
 
@@ -118,8 +118,8 @@ export default function ActivityLog({
         <div className="flex items-start gap-2">
           <Info size={14} className="text-slate-500 shrink-0 mt-0.5" />
           <div className="text-[11px] leading-tight text-slate-600">
-            <strong className="text-slate-800 uppercase font-mono">Session Activity Log:</strong>
-            {" "}Historical simulation / non-persistent. This log records actions performed strictly during the current DRISHTI session. It is not a persistent operational command record.
+            <strong className="text-slate-800 uppercase font-mono">National Operations Log:</strong>
+            {" "}Chronological log of verified multi-hazard alerts, AI reasoning advisories, and authorized commander directives recorded during the current operational session.
           </div>
         </div>
       </div>
@@ -215,20 +215,23 @@ export default function ActivityLog({
                   </div>
                 </div>
 
-                {/* Event Name & District */}
-                <div className="activity-log-main-row">
-                  <span className="log-event font-bold text-slate-900">{entry.event}</span>
-                  {entry.district && (
-                    <span className="log-district font-mono text-slate-500 text-[11px]">
-                      • {entry.district}
+                {/* Event Name & Geography / Operator */}
+                <div className="activity-log-main-row flex items-center justify-between flex-wrap gap-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="log-event font-bold text-slate-900">{entry.event}</span>
+                    <span className="px-1.5 py-0.2 bg-slate-100 text-slate-700 font-mono text-[10.5px] rounded border border-slate-200">
+                      REGION: {entry.region || entry.district || "ALL INDIA"}
                     </span>
-                  )}
+                  </div>
+                  <span className="font-mono text-[10px] text-slate-500 font-bold">
+                    OPERATOR: {entry.operator || (entry.category === "AI" ? "GEMINI REASONING AGENT" : "INCIDENT COMMANDER")}
+                  </span>
                 </div>
 
-                {/* Summary / Snippet */}
+                {/* Action / Operational Snippet */}
                 {entry.details && !isExpanded && (
-                  <div className="log-details text-slate-600 text-[11px] truncate">
-                    {entry.details}
+                  <div className="log-details text-slate-600 text-[11px] truncate font-sans">
+                    <strong className="text-slate-700 font-mono">ACTION:</strong> {entry.details}
                   </div>
                 )}
 

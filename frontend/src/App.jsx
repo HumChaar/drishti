@@ -1,20 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Header from "./components/header/Header";
-import HeroCarousel from "./components/hero/HeroCarousel";
-import MetricStrip from "./components/hero/MetricStrip";
 import MapContainer from "./components/map/MapContainer";
 import TimelineControl from "./components/map/TimelineControl";
-import RiskPanel from "./components/insights/RiskPanel";
 import AdvisoryPanel from "./components/insights/AdvisoryPanel";
 import ActivityLog from "./components/activity/ActivityLog";
 import PreparednessActions from "./components/actions/PreparednessActions";
-import NormalKpiStrip from "./components/normal/NormalKpiStrip";
-import NormalReadinessPanel from "./components/normal/NormalReadinessPanel";
+import NationalHazardMatrix from "./components/national/NationalHazardMatrix";
+import StateReadinessMatrix from "./components/national/StateReadinessMatrix";
+import DistrictIntelligenceExplorer from "./components/districts/DistrictIntelligenceExplorer";
+import CriticalInfrastructureExplorer from "./components/infrastructure/CriticalInfrastructureExplorer";
+import NationalEvidenceCenter from "./components/evidence/NationalEvidenceCenter";
+import HistoricalSimulationCenter from "./components/scenarios/HistoricalSimulationCenter";
 import Footer from "./components/footer/Footer";
+
+// Meteorological Command Center & Overlay Architecture
+import EmergencyAlertBanner from "./components/alert/EmergencyAlertBanner";
+import OperationalLeftRail from "./components/rail/OperationalLeftRail";
+import RightIntelligencePanel from "./components/intelligence/RightIntelligencePanel";
+import BulletinTickerBar from "./components/bulletin/BulletinTickerBar";
+import OverlayManager from "./components/modals/OverlayManager";
+import LiveMeteorologicalCarousel from "./components/carousel/LiveMeteorologicalCarousel";
 
 import cycloneApi from "./services/cycloneApi";
 import riskApi from "./services/riskApi";
 import weatherApi from "./services/weatherApi";
+import { getNormalizedMeteorology } from "./services/meteorologicalDataService";
 
 import "./App.css";
 
@@ -28,10 +38,31 @@ export default function App() {
   const [directives, setDirectives] = useState([]);
   const [prepMetrics, setPrepMetrics] = useState({});
   const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
   const [bulletin, setBulletin] = useState(null);
   const [timelineSteps, setTimelineSteps] = useState([]);
   const [backendStatus, setBackendStatus] = useState("CHECKING");
   const [_isLoading, setIsLoading] = useState(true);
+
+  // Unified Normalized Meteorological Data Layer
+  const [normalizedData, setNormalizedData] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
+
+  // Single Overlay Manager System (Only ONE overlay open at any time)
+  const [activeOverlay, setActiveOverlay] = useState(null);
+
+  // Rail & Layer states
+  const [activeRailItem, setActiveRailItem] = useState("warnings");
+  const [layerStates, setLayerStates] = useState({
+    wind: true,
+    rain: true,
+    track: true,
+    inundation: true
+  });
+
+  const handleToggleLayer = (layerKey) => {
+    setLayerStates((prev) => ({ ...prev, [layerKey]: !prev[layerKey] }));
+  };
 
   // Truthful non-persistent session activity log
   const [sessionActivity, setSessionActivity] = useState([]);
@@ -48,10 +79,36 @@ export default function App() {
     const newEntry = {
       id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       timestamp,
+      region: entry.region || (selectedState ? selectedState.name : "ALL INDIA"),
       ...entry
     };
     setSessionActivity((prev) => [newEntry, ...prev.slice(0, 49)]);
-  }, []);
+  }, [selectedState]);
+
+  // Load and periodically refresh normalized meteorological data layer
+  useEffect(() => {
+    let isMounted = true;
+    async function loadData() {
+      try {
+        const norm = await getNormalizedMeteorology(operatingMode, currentScenario, infraData);
+        if (isMounted) {
+          setNormalizedData(norm);
+          if (norm?.weather) {
+            setWeatherData(norm.weather);
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load normalized meteorological data:", err);
+      }
+    }
+
+    loadData();
+    const interval = setInterval(loadData, 5 * 60 * 1000); // 5 minutes refresh
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [operatingMode, currentScenario, infraData]);
 
   // Load static infrastructure and backend metadata once
   useEffect(() => {
@@ -138,7 +195,7 @@ export default function App() {
       )
     );
 
-    // Record directive acknowledgement/update in truthful session log (Step 8)
+    // Record directive acknowledgement/update in truthful session log
     logSessionActivity({
       event: newStatus === "COMPLETED" ? "DIRECTIVE ACKNOWLEDGED" : "DIRECTIVE STATUS UPDATED",
       category: "COMMAND",
@@ -148,10 +205,34 @@ export default function App() {
     });
   };
 
+  // Centralized single overlay handler: opening one automatically closes any other
+  const handleOpenOverlay = (overlayKey) => {
+    setActiveOverlay(overlayKey);
+  };
+
+  const handleSelectRailItem = (itemId) => {
+    setActiveRailItem(itemId);
+    if (["warnings", "bulletins", "satellite", "radar", "observations"].includes(itemId)) {
+      handleOpenOverlay(itemId);
+    } else if (itemId === "risk") {
+      setActiveTab("risk");
+    } else if (itemId === "infra") {
+      setActiveTab("infra");
+    } else if (itemId === "evidence") {
+      setActiveTab("evidence");
+    } else if (itemId === "advisory") {
+      setActiveTab("advisories");
+    }
+  };
+
+  // Dynamic unread notification count
+  const unreadNotificationsCount = (normalizedData?.notifications || []).filter(
+    (n) => !n.isRead
+  ).length;
 
   return (
     <div className="drishti-app">
-      {/* Top Header & Government Branding */}
+      {/* 1. Top Header & Institutional Branding */}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -159,9 +240,24 @@ export default function App() {
         backendStatus={backendStatus}
         operatingMode={operatingMode}
         onModeChange={setOperatingMode}
+        selectedState={selectedState}
+        onSelectState={setSelectedState}
+        onOpenDrawer={handleOpenOverlay}
+        unreadNotificationsCount={unreadNotificationsCount}
       />
 
-      {/* Operational Posture Banner */}
+      {/* 2. Compact Warning Ticker (Never obscures screen on startup) */}
+      <EmergencyAlertBanner
+        alerts={normalizedData?.warnings}
+        onSelectState={setSelectedState}
+        onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+        onFocusSituation={() => {
+          setActiveTab("dashboard");
+          handleOpenOverlay("warning");
+        }}
+      />
+
+      {/* 3. Operational Posture Bar */}
       {operatingMode === "NORMAL" ? (
         <div className="operational-posture-banner posture-normal">
           <div className="posture-banner-inner">
@@ -170,12 +266,20 @@ export default function App() {
                 <span className="status-dot-green"></span>
                 NORMAL OPERATIONS
               </span>
-              <span className="posture-title">REGIONAL HAZARD MONITORING &amp; PREPAREDNESS</span>
+              <span className="posture-title">
+                {selectedState
+                  ? `${selectedState.name.toUpperCase()} SYNOPTIC SURVEILLANCE & READINESS`
+                  : "NATIONAL METEOROLOGICAL MONITORING • ALL 36 STATES & UTs"}
+              </span>
               <span className="posture-divider-dot">•</span>
-              <span className="posture-meta">Bay of Bengal Coastal Sector Routine Surveillance</span>
+              <span className="posture-meta">
+                Routine Regional Surveillance • Open-Meteo Surface Vectors &amp; IMD Synoptic Bulletins
+              </span>
             </div>
             <div className="posture-right">
-              <span className="posture-tag font-mono">STATUS: LEVEL 1 (ALL CLEAR • ROUTINE VIGILANCE)</span>
+              <span className="posture-tag font-mono">
+                MONITORING POSTURE: LEVEL 1 (ROUTINE SURVEILLANCE)
+              </span>
             </div>
           </div>
         </div>
@@ -185,184 +289,166 @@ export default function App() {
             <div className="posture-left">
               <span className="posture-indicator-badge disaster">
                 <span className="status-dot-amber"></span>
-                ⚠ ACTIVE CYCLONE RESPONSE
+                ⚠ ACTIVE DISASTER RESPONSE
               </span>
-              <span className="posture-title">CYCLONE REMAL (BOB/01/2024)</span>
+              <span className="posture-title">
+                CYCLONE REMAL (BOB/01/2024) • BAY OF BENGAL ARC
+              </span>
               <span className="posture-divider-dot">•</span>
-              <span className="posture-meta">Severe Cyclonic Storm (SCS) • Peak Intensity 110 km/h</span>
+              <span className="posture-meta">
+                Severe Cyclonic Storm (SCS) • Affected States: West Bengal &amp; Odisha
+              </span>
             </div>
             <div className="posture-right">
-              <span className="posture-tag font-mono">HISTORICAL SIMULATION • MAY 2024 (NOT A LIVE WARNING)</span>
+              <span className="posture-tag font-mono">
+                CALIBRATED HISTORICAL EXERCISE • NOT A LIVE WARNING
+              </span>
             </div>
           </div>
         </div>
       )}
 
-      {/* Mode-Specific KPI / Telemetry Strip */}
-      {operatingMode === "NORMAL" ? (
-        <NormalKpiStrip
-          infraCount={infraData.length || 11}
-          districtCount={districtsData.length || 8}
-        />
-      ) : (
-        <>
-          <HeroCarousel
-            currentScenario={currentScenario}
-            activeStepId={activeStepId}
-            districtsData={districtsData}
-            onNavigateTab={setActiveTab}
-          />
-          <MetricStrip
-            currentScenario={currentScenario}
-            districtsData={districtsData}
-            activeStepId={activeStepId}
-          />
-        </>
-      )}
-
-      {/* Main Command Center Workspace */}
+      {/* 4. Main Command Center Workspace */}
       <main className="drishti-main-workspace">
-        {/* DASHBOARD TAB */}
+        {/* 1. COMMAND CENTRE TAB (3-COLUMN IMD PANEL ARCHITECTURE) */}
         {activeTab === "dashboard" && (
-          <>
-            {operatingMode === "NORMAL" ? (
-              /* Normal Operations: Regional Surveillance Map + District Readiness Dossier & Audit */
-              <div className="workspace-grid-upper">
-                <div className="map-view-column">
-                  <MapContainer
-                    currentScenario={currentScenario}
-                    districtsData={districtsData}
-                    infraData={infraData}
-                    selectedDistrict={selectedDistrict}
-                    onSelectDistrict={setSelectedDistrict}
-                    operatingMode={operatingMode}
-                  />
-                </div>
-                <NormalReadinessPanel
-                  districtsData={districtsData}
-                  infraData={infraData}
-                  selectedDistrict={selectedDistrict}
-                  onSelectDistrict={setSelectedDistrict}
-                  onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
-                />
-              </div>
-            ) : (
-              /* Disaster Response: Tactical Map + Risk Matrix + Timeline + Directives */
-              <>
-                <div className="workspace-grid-upper">
-                  <div className="map-view-column">
-                    <MapContainer
-                      currentScenario={currentScenario}
-                      districtsData={districtsData}
-                      infraData={infraData}
-                      selectedDistrict={selectedDistrict}
-                      onSelectDistrict={setSelectedDistrict}
-                      operatingMode={operatingMode}
-                    />
-                  </div>
-
-                  <RiskPanel
-                    districtsData={districtsData}
-                    selectedDistrict={selectedDistrict}
-                    onSelectDistrict={setSelectedDistrict}
-                    activeStepId={activeStepId}
-                    onNavigateTab={setActiveTab}
-                    currentScenario={currentScenario}
-                    infraData={infraData}
-                  />
-                </div>
-
-                <TimelineControl
-                  activeStepId={activeStepId}
-                  onStepChange={handleStepChange}
-                  timelineSteps={timelineSteps}
-                />
-
-                <PreparednessActions
-                  directives={directives}
-                  metrics={prepMetrics}
-                  onToggleDirective={handleToggleDirective}
-                />
-              </>
-            )}
-          </>
-        )}
-
-        {/* DISTRICT RISK TAB */}
-        {activeTab === "risk" && (
-          operatingMode === "NORMAL" ? (
-            <NormalReadinessPanel
-              districtsData={districtsData}
-              infraData={infraData}
-              selectedDistrict={selectedDistrict}
-              onSelectDistrict={setSelectedDistrict}
-              onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+          <div className="imd-command-center-layout">
+            {/* Left Operational Rail */}
+            <OperationalLeftRail
+              operatingMode={operatingMode}
+              activeRailItem={activeRailItem}
+              onSelectRailItem={handleSelectRailItem}
+              layerStates={layerStates}
+              onToggleLayer={handleToggleLayer}
             />
-          ) : (
-            <div className="flex flex-col gap-4">
-              <TimelineControl
-                activeStepId={activeStepId}
-                onStepChange={handleStepChange}
-                timelineSteps={timelineSteps}
-              />
-              <RiskPanel
+
+            {/* Central Dominant India Map */}
+            <div className="map-view-column">
+              <MapContainer
+                currentScenario={currentScenario}
                 districtsData={districtsData}
+                infraData={infraData}
                 selectedDistrict={selectedDistrict}
                 onSelectDistrict={setSelectedDistrict}
-                activeStepId={activeStepId}
-                onNavigateTab={setActiveTab}
-                currentScenario={currentScenario}
-                infraData={infraData}
+                operatingMode={operatingMode}
+                selectedState={selectedState}
+                onSelectState={setSelectedState}
+                weatherData={weatherData}
               />
-            </div>
-          )
-        )}
 
-        {/* ACTIONS TAB */}
-        {activeTab === "actions" && (
-          <div className="flex flex-col gap-4">
-            <PreparednessActions
-              directives={directives}
-              metrics={prepMetrics}
-              onToggleDirective={handleToggleDirective}
+              {/* Disaster Mode Timeline & Directives */}
+              {operatingMode === "DISASTER" && (
+                <div className="mt-3 flex flex-col gap-3">
+                  <TimelineControl
+                    activeStepId={activeStepId}
+                    onStepChange={handleStepChange}
+                    timelineSteps={timelineSteps}
+                  />
+
+                  <PreparednessActions
+                    directives={directives}
+                    metrics={prepMetrics}
+                    onToggleDirective={handleToggleDirective}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Right Intelligence Dossier */}
+            <RightIntelligencePanel
+              operatingMode={operatingMode}
+              selectedState={selectedState}
+              onSelectState={setSelectedState}
+              weatherData={weatherData}
+              districtsData={districtsData}
+              selectedDistrict={selectedDistrict}
+              onSelectDistrict={setSelectedDistrict}
+              infraData={infraData}
+              currentScenario={currentScenario}
+              activeStepId={activeStepId}
+              onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+              onOpenDrawer={handleOpenOverlay}
             />
           </div>
         )}
 
-        {/* SCENARIOS TAB */}
-        {activeTab === "scenarios" && (
-          <div className="risk-panel-container p-6">
-            <div className="panel-header mb-4">
-              <h2 className="panel-title text-base">HISTORICAL SCENARIO ARCHIVE & BENCHMARKING</h2>
-              <span className="badge-provenance">DEMO DATABASE</span>
-            </div>
-            <div className="text-sm text-slate-600 mb-4 font-medium">
-              DRISHTI provides comparative trajectory analysis against notable Bay of Bengal tropical cyclones to evaluate coastal resilience models:
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
-              <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-sm">
-                <div className="text-red-600 font-bold text-sm mb-1">Cyclone REMAL (2024) [ACTIVE REPLAY]</div>
-                <div className="text-slate-600">Peak Category: Severe Cyclonic Storm (110 km/h)</div>
-                <div className="text-slate-500">Landfall: Sagar Island & Khepupara</div>
-                <div className="text-orange-700 font-bold mt-2">Active in DRISHTI MVP Stage 1</div>
-              </div>
-              <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-sm">
-                <div className="text-amber-700 font-bold text-sm mb-1">Cyclone FANI (2019) [ARCHIVE]</div>
-                <div className="text-slate-600">Peak Category: Extremely Severe (215 km/h)</div>
-                <div className="text-slate-500">Landfall: Puri Coast (Odisha)</div>
-                <div className="text-slate-400 mt-2">Scheduled for Stage 2 Ingestion</div>
-              </div>
-              <div className="bg-white border border-slate-200 p-4 rounded-lg shadow-sm">
-                <div className="text-slate-800 font-bold text-sm mb-1">Cyclone YAAS (2021) [ARCHIVE]</div>
-                <div className="text-slate-600">Peak Category: Very Severe (140 km/h)</div>
-                <div className="text-slate-500">Landfall: Dhamra Port / Balasore</div>
-                <div className="text-slate-400 mt-2">Scheduled for Stage 2 Ingestion</div>
-              </div>
+        {/* 2. WEATHER TAB */}
+        {activeTab === "weather" && (
+          <div className="p-4 bg-white rounded-lg border border-slate-200">
+            <h2 className="text-base font-bold font-mono text-slate-900 mb-2">
+              SURFACE WEATHER &amp; WIND TELEMETRY (36 STATES &amp; UTs)
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {weatherData?.states ? (
+                Object.values(weatherData.states).map((st) => (
+                  <div key={st.id} className="p-3 bg-slate-50 border border-slate-200 rounded font-mono text-xs">
+                    <div className="font-bold text-slate-900 mb-1">{st.name}</div>
+                    <div className="text-teal-700">Wind: {st.windSpeed != null ? `${st.windSpeed} km/h` : "N/A"} (Gusts {st.windGust != null ? `${st.windGust}` : "N/A"})</div>
+                    <div className="text-blue-700">Rain: {st.rain != null ? `${st.rain} mm` : "N/A"}</div>
+                    <div className="text-amber-700">Temp: {st.temperature != null ? `${st.temperature}°C` : "N/A"} (Humidity {st.humidity != null ? `${st.humidity}%` : "N/A"})</div>
+                    <div className="text-orange-700 font-bold mt-1">Depression Influence: {st.depressionInfluencePct != null ? `${st.depressionInfluencePct}%` : "N/A"}</div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 text-slate-500 font-mono text-xs col-span-3">
+                  Loading surface meteorological observations...
+                </div>
+              )}
             </div>
           </div>
         )}
 
-        {/* ADVISORIES TAB */}
+        {/* 3. NATIONAL HAZARD MONITOR TAB */}
+        {activeTab === "hazards" && (
+          <NationalHazardMatrix
+            operatingMode={operatingMode}
+            onLaunchSimulation={() => setOperatingMode("DISASTER")}
+          />
+        )}
+
+        {/* 4. STATE & UT READINESS MATRIX TAB */}
+        {activeTab === "states" && (
+          <StateReadinessMatrix
+            selectedState={selectedState}
+            onSelectState={setSelectedState}
+            onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+          />
+        )}
+
+        {/* 5. DISTRICT RISK & INTELLIGENCE TAB */}
+        {activeTab === "risk" && (
+          <DistrictIntelligenceExplorer
+            districtsData={districtsData}
+            infraData={infraData}
+            selectedDistrict={selectedDistrict}
+            onSelectDistrict={setSelectedDistrict}
+            onNavigateTab={setActiveTab}
+            onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+            selectedState={selectedState}
+            onSelectState={setSelectedState}
+          />
+        )}
+
+        {/* 6. CRITICAL INFRASTRUCTURE ASSETS TAB */}
+        {activeTab === "infra" && (
+          <CriticalInfrastructureExplorer infraData={infraData} />
+        )}
+
+        {/* 7. NATIONAL EVIDENCE CENTER TAB */}
+        {activeTab === "evidence" && (
+          <NationalEvidenceCenter />
+        )}
+
+        {/* 8. HISTORICAL SCENARIO ARCHIVE TAB */}
+        {activeTab === "scenarios" && (
+          <HistoricalSimulationCenter
+            onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+            activeStepId={activeStepId}
+            onStepChange={handleStepChange}
+          />
+        )}
+
+        {/* 9. AI ADVISORIES & SOP TAB */}
         {activeTab === "advisories" && (
           <div className="flex flex-col gap-4">
             <TimelineControl
@@ -380,7 +466,7 @@ export default function App() {
             {/* IMD Meteorological Bulletins */}
             <div className="risk-panel-container p-6">
               <div className="panel-header mb-4">
-                <h2 className="panel-title text-base">METEOROLOGICAL BULLETINS & MARINE ADVISORIES</h2>
+                <h2 className="panel-title text-base">METEOROLOGICAL BULLETINS &amp; MARINE ADVISORIES</h2>
                 <span className="badge-provenance">IMD HISTORICAL ARCHIVE</span>
               </div>
               {bulletin ? (
@@ -405,9 +491,40 @@ export default function App() {
             <ActivityLog entries={sessionActivity} />
           </div>
         )}
+
+        {/* 10. NATIONAL OPERATIONS LOG TAB */}
+        {activeTab === "activity" && (
+          <div className="flex flex-col gap-4">
+            <ActivityLog entries={sessionActivity} />
+          </div>
+        )}
       </main>
 
-      {/* Government Footer */}
+      {/* 5. Live Meteorological Carousel (Normal in-page component placed below workspace) */}
+      <LiveMeteorologicalCarousel
+        data={normalizedData}
+        onOpenOverlay={handleOpenOverlay}
+        onNavigateTab={setActiveTab}
+      />
+
+      {/* 6. Bottom Meteorological Bulletin Ticker & Command Bar */}
+      <BulletinTickerBar
+        onOpenDrawer={handleOpenOverlay}
+        lastUpdatedFormatted={normalizedData?.timestamp?.timeShort || weatherData?.lastUpdatedFormatted || "IST"}
+        nextRefreshMinutes={weatherData?.nextRefreshMinutes || 10}
+        activeDepression={normalizedData?.activeSystem || weatherData?.activeSystem}
+      />
+
+      {/* 7. Centralized Single Overlay Manager (Only 1 overlay active at any time) */}
+      <OverlayManager
+        activeOverlay={activeOverlay}
+        onClose={() => setActiveOverlay(null)}
+        data={normalizedData}
+        onSelectState={setSelectedState}
+        onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+      />
+
+      {/* 8. Government Institutional Footer */}
       <Footer />
     </div>
   );

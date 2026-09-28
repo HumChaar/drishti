@@ -5,18 +5,31 @@ import {
   Radio,
   Layers,
   Compass,
-  CheckSquare,
-  Globe,
-  Sparkles
+  AlertTriangle,
+  Building2,
+  Anchor,
+  Sparkles,
+  Database,
+  ClipboardList,
+  Satellite,
+  Zap,
+  Wind,
+  CloudRain
 } from "lucide-react";
+import StateSelector from "../national/StateSelector";
+import NotificationCenter from "./NotificationCenter";
 
 export default function Header({
   activeTab,
   setActiveTab,
   currentScenario: _currentScenario,
   backendStatus = "ONLINE",
-  operatingMode = "DISASTER",
-  onModeChange
+  operatingMode = "NORMAL",
+  onModeChange,
+  selectedState,
+  onSelectState,
+  onOpenDrawer,
+  unreadNotificationsCount = 0
 }) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -25,24 +38,58 @@ export default function Header({
     return () => clearInterval(timer);
   }, []);
 
-  const formatIST = (date) => {
-    return date.toLocaleTimeString("en-IN", {
+  const formatISTDate = (date) => {
+    const day = date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      timeZone: "Asia/Kolkata"
+    }).toUpperCase();
+    const time = date.toLocaleTimeString("en-IN", {
       timeZone: "Asia/Kolkata",
       hour12: false,
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit"
     });
+    return `${day} • ${time} IST`;
   };
 
-  const formatUTC = (date) => {
-    return date.toLocaleTimeString("en-GB", {
-      timeZone: "UTC",
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    });
+  const isNormal = operatingMode === "NORMAL";
+
+  // IMD-Style Primary Navigation Items per Operating Mode
+  const normalNavItems = [
+    { id: "dashboard", label: "COMMAND CENTRE", icon: Activity },
+    { id: "weather", label: "WEATHER", icon: Wind },
+    { id: "hazards", label: "HAZARDS", icon: AlertTriangle },
+    { id: "states", label: "STATE MONITOR", icon: Building2 },
+    { id: "satellite", label: "SATELLITE", icon: Satellite, isDrawer: true },
+    { id: "radar", label: "RADAR", icon: Compass, isDrawer: true },
+    { id: "observations", label: "OBSERVATIONS", icon: Zap, isDrawer: true },
+    { id: "scenarios", label: "SCENARIOS", icon: Compass },
+    { id: "advisories", label: "ADVISORIES", icon: Sparkles }
+  ];
+
+  const disasterNavItems = [
+    { id: "dashboard", label: "SITUATION", icon: Activity },
+    { id: "track", label: "TRACK", icon: Compass, isLayerSwitch: true },
+    { id: "wind", label: "WIND", icon: Wind, isLayerSwitch: true },
+    { id: "rain", label: "RAIN", icon: CloudRain, isLayerSwitch: true },
+    { id: "risk", label: "RISK", icon: Layers },
+    { id: "infra", label: "INFRASTRUCTURE", icon: Anchor },
+    { id: "evidence", label: "EVIDENCE", icon: Database },
+    { id: "advisories", label: "ADVISORY", icon: Sparkles },
+    { id: "activity", label: "OPERATIONS", icon: ClipboardList }
+  ];
+
+  const navItems = isNormal ? normalNavItems : disasterNavItems;
+
+  const handleNavClick = (item) => {
+    if (item.isDrawer && onOpenDrawer) {
+      onOpenDrawer(item.id);
+    } else {
+      setActiveTab(item.id);
+    }
   };
 
   return (
@@ -54,39 +101,38 @@ export default function Header({
         <div className="tricolour-green" />
       </div>
 
-      {/* 2. Top Government Authority & Time Utility Strip */}
+      {/* 2. Top Government Authority & Dynamic IST Clock Strip */}
       <div className="gov-top-bar">
         <div className="gov-title-wrap">
           <span className="gov-national-tag">GOVERNMENT OF INDIA</span>
           <span className="gov-separator">|</span>
           <span className="gov-subtag">MINISTRY OF EARTH SCIENCES (MoES)</span>
           <span className="gov-separator">|</span>
-          <span className="gov-portal-tag">METEOROLOGICAL HAZARD SURVEILLANCE CELL</span>
+          <span className="gov-portal-tag">INDIA METEOROLOGICAL DEPARTMENT (IMD)</span>
         </div>
+
         <div className="gov-meta-wrap">
           {operatingMode === "DISASTER" ? (
             <div className="badge-provenance">
               <Radio size={11} className="text-amber-600 animate-pulse" />
-              <span>HISTORICAL SIMULATION • CYCLONE REMAL 2024</span>
+              <span>ACTIVE EVENT: CYCLONE REMAL 2024 (HISTORICAL SIMULATION • BAY OF BENGAL ARC)</span>
             </div>
           ) : (
             <div className="badge-normal-status">
               <span className="normal-pulse-dot" />
-              <span>NORMAL OPERATIONS • REGIONAL HAZARD MONITORING</span>
+              <span>NATIONAL MONITORING • ALL INDIA • ROUTINE SURVEILLANCE</span>
             </div>
           )}
           <div className="eoc-clock">
             <Clock size={11} />
-            <span>IST: {formatIST(currentTime)}</span>
-            <span className="text-slate-400">•</span>
-            <span>UTC: {formatUTC(currentTime)}</span>
+            <span>{formatISTDate(currentTime)}</span>
           </div>
         </div>
       </div>
 
       {/* 3. Official Institutional Masthead */}
       <div className="institutional-masthead">
-        {/* Left Column (30%): Primary Government Identity (GOI + IMD) */}
+        {/* Left Column: Primary Government Identity (GOI + IMD) */}
         <div className="masthead-col masthead-left">
           {/* Government of India National Emblem */}
           <div className="entity-block" title="Government of India">
@@ -118,7 +164,7 @@ export default function Header({
           </div>
         </div>
 
-        {/* Center Column (40%): DRISHTI Project Identity */}
+        {/* Center Column: DRISHTI Project Identity */}
         <div className="masthead-col masthead-center">
           <div className="drishti-brand-wrap">
             <div className="brand-header-line">
@@ -131,12 +177,12 @@ export default function Header({
               Disaster Risk Intelligence &amp; Spatial Threat Insights
             </div>
             <div className="brand-caption font-mono">
-              Decision-support prototype for cyclone risk intelligence
+              National Multi-Hazard Decision Support System • MoES &amp; IMD Standards
             </div>
           </div>
         </div>
 
-        {/* Right Column (30%): Disaster Management Partners (NDMA + OSDMA) */}
+        {/* Right Column: Disaster Management Partners & Utilities */}
         <div className="masthead-col masthead-right">
           {/* National Disaster Management Authority (NDMA) */}
           <div className="entity-block" title="National Disaster Management Authority">
@@ -154,22 +200,11 @@ export default function Header({
 
           <div className="masthead-divider" aria-hidden="true" />
 
-          {/* Odisha State Disaster Management Authority (OSDMA) */}
-          <div className="entity-block" title="Odisha State Disaster Management Authority">
-            <img
-              src="/assets/logos/osdma-crest.png"
-              alt="Odisha State Disaster Management Authority"
-              className="inst-logo logo-osdma"
-              onError={(e) => {
-                e.currentTarget.src = "/assets/logos/osdma-logo.png";
-              }}
-            />
-            <div className="entity-text">
-              <span className="entity-hindi">ଓଡ଼ିଶା ରାଜ୍ୟ ବିପର୍ଯ୍ୟୟ ପରିଚାଳନା</span>
-              <span className="entity-en-primary font-bold">OSDMA</span>
-              <span className="entity-en-sub">Govt. of Odisha</span>
-            </div>
-          </div>
+          {/* Notification Centre Trigger */}
+          <NotificationCenter
+            unreadCount={unreadNotificationsCount}
+            onOpenNotifications={() => onOpenDrawer && onOpenDrawer("notifications")}
+          />
 
           <div className="masthead-divider" aria-hidden="true" />
 
@@ -183,78 +218,59 @@ export default function Header({
         </div>
       </div>
 
-      {/* 4. DRISHTI Navigation Bar */}
-      <nav className="drishti-nav">
+      {/* 4. IMD-Style Primary Operational Navigation Bar */}
+      <nav className="drishti-nav" aria-label="Command Centre Navigation">
         <div className="nav-items">
-          <button
-            className={`nav-btn ${activeTab === "dashboard" ? "active" : ""}`}
-            onClick={() => setActiveTab("dashboard")}
-          >
-            <Activity size={14} />
-            <span>Command Center</span>
-          </button>
-          <button
-            className={`nav-btn ${activeTab === "risk" ? "active" : ""}`}
-            onClick={() => setActiveTab("risk")}
-          >
-            <Layers size={14} />
-            <span>District Risk Matrix</span>
-          </button>
-          <button
-            className={`nav-btn ${activeTab === "actions" ? "active" : ""}`}
-            onClick={() => setActiveTab("actions")}
-          >
-            <CheckSquare size={14} />
-            <span>Emergency SOP Directives</span>
-          </button>
-          <button
-            className={`nav-btn ${activeTab === "scenarios" ? "active" : ""}`}
-            onClick={() => setActiveTab("scenarios")}
-          >
-            <Compass size={14} />
-            <span>Scenario Archive</span>
-          </button>
-          <button
-            className={`nav-btn ${activeTab === "advisories" ? "active" : ""}`}
-            onClick={() => setActiveTab("advisories")}
-          >
-            <Sparkles size={14} className={activeTab === "advisories" ? "text-orange-500" : ""} />
-            <span>AI Advisories &amp; SOP</span>
-          </button>
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isCurrent = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={`nav-btn ${isCurrent ? "active" : ""}`}
+                onClick={() => handleNavClick(item)}
+                title={`${item.label} Operational Workspace`}
+              >
+                <Icon size={13} />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="nav-secondary">
-          {/* Government Operating Mode Selector */}
-          <div className="operating-mode-selector" role="group" aria-label="Operating Posture Selector">
-            <span className="mode-selector-label font-mono">POSTURE:</span>
+          {/* Pan-India State / UT Selector */}
+          <StateSelector
+            selectedState={selectedState}
+            onSelectState={onSelectState}
+          />
+
+          {/* Highly Visible Government Operating Mode Switch */}
+          <div className="operating-mode-selector" role="group" aria-label="Operational Mode Selector">
             <div className="mode-toggle-pill">
               <button
                 type="button"
-                className={`mode-btn ${operatingMode === "NORMAL" ? "active-normal" : ""}`}
+                className={`mode-btn ${isNormal ? "active-normal font-bold" : ""}`}
                 onClick={() => onModeChange && onModeChange("NORMAL")}
-                aria-pressed={operatingMode === "NORMAL"}
-                title="Normal Operations: Routine regional hazard monitoring & preparedness"
+                aria-pressed={isNormal}
+                title="Normal Operations: Routine National Hazard Monitoring & Preparedness"
               >
                 <span className="mode-dot normal-dot" />
                 <span>NORMAL OPERATIONS</span>
               </button>
               <button
                 type="button"
-                className={`mode-btn ${operatingMode === "DISASTER" ? "active-disaster" : ""}`}
+                className={`mode-btn ${!isNormal ? "active-disaster font-bold" : ""}`}
                 onClick={() => onModeChange && onModeChange("DISASTER")}
-                aria-pressed={operatingMode === "DISASTER"}
-                title="Cyclone Response: Active emergency warning & decision support"
+                aria-pressed={!isNormal}
+                title="Cyclone / Disaster Response: Active Emergency Early Warning & Decision Support"
               >
                 <span className="mode-dot disaster-dot" />
-                <span>CYCLONE RESPONSE</span>
+                <span>⚠ CYCLONE / DISASTER RESPONSE</span>
               </button>
             </div>
           </div>
-
-          <span className="nav-info-pill">
-            <Globe size={12} className="text-orange-600" />
-            <span>Bay of Bengal / Odisha-WB Arc</span>
-          </span>
         </div>
       </nav>
     </header>

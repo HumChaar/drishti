@@ -1,5 +1,4 @@
-import React from "react";
-import { ShieldCheck, AlertCircle, Cpu, Globe, Server } from "lucide-react";
+import { AlertCircle, Cpu, Globe, Server } from "lucide-react";
 
 export default function Footer() {
   return (
