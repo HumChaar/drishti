@@ -5,9 +5,28 @@
 
 import { CYCLONE_METADATA, TIMELINE_STEPS, TIMELINE_SCENARIOS } from "../data/cycloneData.js";
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+export const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL !== undefined && import.meta.env.VITE_API_BASE_URL !== ""
+    ? import.meta.env.VITE_API_BASE_URL
+    : "http://localhost:8000"
+).replace(/\/+$/, "");
 
 export const cycloneApi = {
+  /**
+   * Check connection to FastAPI backend
+   */
+  async checkHealth() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/health`);
+      if (res.ok) return await res.json();
+      const resApi = await fetch(`${API_BASE_URL}/api/health`);
+      if (resApi.ok) return await resApi.json();
+    } catch (err) {
+      console.warn("Backend health check unreachable:", err);
+    }
+    return null;
+  },
+
   /**
    * Fetch active cyclone metadata
    */

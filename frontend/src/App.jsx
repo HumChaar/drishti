@@ -23,12 +23,26 @@ export default function App() {
   const [prepMetrics, setPrepMetrics] = useState({});
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [bulletin, setBulletin] = useState(null);
+  const [timelineSteps, setTimelineSteps] = useState([]);
+  const [backendStatus, setBackendStatus] = useState("CHECKING");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load static infrastructure once
+  // Load static infrastructure and backend metadata once
   useEffect(() => {
     async function loadStaticAssets() {
       try {
+        const health = await cycloneApi.checkHealth();
+        setBackendStatus(health ? "ONLINE" : "FALLBACK");
+      } catch {
+        setBackendStatus("FALLBACK");
+      }
+
+      try {
+        const stepsRes = await cycloneApi.getTimelineSteps();
+        if (stepsRes && stepsRes.length > 0) {
+          setTimelineSteps(stepsRes);
+        }
+
         const infraRes = await riskApi.getInfrastructureExposure();
         setInfraData(infraRes.assets || []);
 
@@ -55,6 +69,12 @@ export default function App() {
           riskApi.getDistrictRiskMatrix(activeStepId)
         ]);
 
+        if (scenarioRes?.metadata?.dataSource === "LOCAL_SIMULATION_FALLBACK") {
+          setBackendStatus("FALLBACK");
+        } else if (scenarioRes?.success) {
+          setBackendStatus("ONLINE");
+        }
+
         setCurrentScenario(scenarioRes.data);
         const districts = riskRes.districts || [];
         setDistrictsData(districts);
@@ -67,6 +87,7 @@ export default function App() {
         });
       } catch (err) {
         console.error("Error loading timestep data:", err);
+        setBackendStatus("FALLBACK");
       } finally {
         setIsLoading(false);
       }
@@ -98,7 +119,8 @@ export default function App() {
       <Header 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        currentScenario={currentScenario} 
+        currentScenario={currentScenario}
+        backendStatus={backendStatus}
       />
 
       {/* Hero Scenario Telemetry Bar */}
@@ -125,6 +147,7 @@ export default function App() {
                 <TimelineControl
                   activeStepId={activeStepId}
                   onStepChange={handleStepChange}
+                  timelineSteps={timelineSteps}
                 />
               </div>
 
@@ -152,6 +175,7 @@ export default function App() {
             <TimelineControl
               activeStepId={activeStepId}
               onStepChange={handleStepChange}
+              timelineSteps={timelineSteps}
             />
             <RiskPanel
               districtsData={districtsData}

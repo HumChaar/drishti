@@ -12,13 +12,23 @@ def run_tests():
     print("RUNNING DRISHTI FASTAPI ENDPOINT TESTS")
     print("========================================")
 
-    # 1. Health Endpoint
+    # 1. Health Endpoints (Root /health and /api/health)
+    res_root = client.get("/health")
+    assert res_root.status_code == 200, f"Root /health check failed: {res_root.status_code}"
+    assert res_root.json()["status"] == "healthy"
+    print("PASS: /health ->", res_root.json()["status"])
+
     res = client.get("/api/health")
     assert res.status_code == 200, f"Health check failed: {res.status_code}"
     data = res.json()
     assert data["status"] == "healthy"
-    assert "provenance" in data
+    assert "HISTORICAL SIMULATION" in data["provenance"]
     print("PASS: /api/health ->", data["status"], f"(provenance: {data['provenance']})")
+
+    # 1b. OpenAPI Docs
+    res_docs = client.get("/docs")
+    assert res_docs.status_code == 200
+    print("PASS: /docs -> 200 OK")
 
     # 2. Cyclone Metadata
     res = client.get("/api/cyclone")
@@ -43,7 +53,17 @@ def run_tests():
     sc_now = res.json()
     assert sc_now["success"] is True
     assert sc_now["data"]["current"]["category"] == "Severe Cyclonic Storm (SCS)"
+    # Check isSimulated flags
+    assert len(sc_now["data"]["forecastTrack"]) > 0
+    assert sc_now["data"]["forecastTrack"][0]["isSimulated"] is True
+    assert sc_now["data"]["pastTrack"][0]["isSimulated"] is False
     print("PASS: /api/cyclone/scenario/NOW ->", sc_now["data"]["current"]["latitude"], sc_now["data"]["current"]["longitude"])
+
+    # 4a. Support CURRENT as alias for NOW
+    res_curr = client.get("/api/cyclone/scenario/CURRENT")
+    assert res_curr.status_code == 200
+    assert res_curr.json()["data"]["current"]["pressureMb"] == 984
+    print("PASS: /api/cyclone/scenario/CURRENT -> alias for NOW resolved successfully")
 
     res = client.get("/api/cyclone/scenario/+12h")
     assert res.status_code == 200

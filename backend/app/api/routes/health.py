@@ -15,6 +15,6 @@ async def get_health():
         app_name=settings.PROJECT_NAME,
         version=settings.VERSION,
         environment=settings.ENVIRONMENT,
-        provenance="HISTORICAL SIMULATION (REMAL 2024)",
+        provenance="HISTORICAL SIMULATION — CYCLONE REMAL 2024",
         timestamp=datetime.now(timezone.utc).isoformat()
     )

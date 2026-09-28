@@ -27,6 +27,13 @@ app.add_middleware(
 # Mount all API endpoints under /api
 app.include_router(api_router, prefix=settings.API_PREFIX)
 
+from app.api.routes.health import get_health
+from app.models.schemas import HealthResponse
+
+@app.get("/health", response_model=HealthResponse, tags=["Health"], summary="System Health & Diagnostic Check (Root)")
+async def root_health():
+    return await get_health()
+
 @app.get("/", tags=["Root"])
 async def root():
     return {

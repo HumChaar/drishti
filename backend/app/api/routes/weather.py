@@ -11,7 +11,7 @@ async def get_marine_bulletin():
     return MarineBulletinResponse(
         bulletinNo="IMD-SEA-BOB-2024-44",
         issuedAt="26 May 06:00 IST",
-        provenance="SIMULATED / HISTORICAL ARCHIVE",
+        provenance="HISTORICAL SIMULATION — CYCLONE REMAL 2024",
         seaCondition="Phenomenal to Very High over North & Adjoining Westcentral Bay of Bengal",
         significantWaveHeightMeters=7.5,
         waveDirection="South-Southeasterly",

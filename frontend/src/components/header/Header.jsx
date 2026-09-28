@@ -12,7 +12,7 @@ import {
   Globe
 } from "lucide-react";
 
-export default function Header({ activeTab, setActiveTab, currentScenario }) {
+export default function Header({ activeTab, setActiveTab, currentScenario, backendStatus = "ONLINE" }) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function Header({ activeTab, setActiveTab, currentScenario }) {
         <div className="gov-meta-wrap">
           <div className="badge-provenance">
             <Radio size={12} className="text-amber-600 animate-pulse" />
-            <span>DATA PROVENANCE: HISTORICAL SIMULATION (REMAL 2024)</span>
+            <span>DATA PROVENANCE: HISTORICAL SIMULATION — CYCLONE REMAL 2024</span>
           </div>
           <div className="eoc-clock">
             <Clock size={12} />
@@ -120,11 +120,23 @@ export default function Header({ activeTab, setActiveTab, currentScenario }) {
           </div>
           <div className="status-divider"></div>
           <div className="status-item">
-            <span className="status-label">SYSTEM STATE</span>
-            <span className="status-value text-emerald-700 font-mono flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span>
-              ACTIVE SIMULATION
-            </span>
+            <span className="status-label">BACKEND API</span>
+            {backendStatus === "ONLINE" ? (
+              <span className="status-value text-emerald-700 font-mono flex items-center gap-1" title="Connected to FastAPI backend">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block animate-pulse"></span>
+                FASTAPI ONLINE
+              </span>
+            ) : backendStatus === "CHECKING" ? (
+              <span className="status-value text-slate-500 font-mono flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-slate-400 inline-block animate-pulse"></span>
+                CONNECTING...
+              </span>
+            ) : (
+              <span className="status-value text-amber-700 font-mono flex items-center gap-1" title="FastAPI unavailable, using local simulation fallback">
+                <span className="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+                DEMO FALLBACK
+              </span>
+            )}
           </div>
         </div>
       </div>

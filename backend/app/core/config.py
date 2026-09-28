@@ -24,13 +24,16 @@ class Settings(BaseSettings):
     @field_validator("ALLOWED_ORIGINS", mode="before")
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
         if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",") if i.strip()]
-        elif isinstance(v, list):
+            origins = [i.strip() for i in v.split(",") if i.strip()]
+            if origins:
+                return origins
+        elif isinstance(v, list) and v:
             return v
         return [
             "http://localhost:5173",
             "http://127.0.0.1:5173",
-            "http://localhost:3000"
+            "http://localhost:3000",
+            "https://drishti.vercel.app"
         ]
 
     class Config:

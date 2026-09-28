@@ -12,7 +12,7 @@ CYCLONE_METADATA = {
     "basin": "Bay of Bengal (North)",
     "category": "Severe Cyclonic Storm (SCS)",
     "classificationCode": "IMD-SCS-T3.5",
-    "provenance": "HISTORICAL DEMO / IMD ARCHIVE REPLAY",
+    "provenance": "HISTORICAL SIMULATION — CYCLONE REMAL 2024",
     "isSimulated": True,
     "advisoryNumber": "IMD-BOB-07",
     "targetRegion": "Odisha - West Bengal - Bangladesh Coastal Arc",
@@ -299,9 +299,16 @@ class CycloneService:
     @staticmethod
     def get_scenario(step_id: str) -> Optional[dict]:
         normalized_step = step_id.strip()
+        if normalized_step.upper() == "CURRENT":
+            normalized_step = "NOW"
         # Direct lookup or fallback to NOW
         if normalized_step in TIMELINE_SCENARIOS:
-            return TIMELINE_SCENARIOS[normalized_step]
+            sc = TIMELINE_SCENARIOS[normalized_step]
+            return {
+                **sc,
+                "pastTrack": [{**p, "isSimulated": False} for p in sc.get("pastTrack", [])],
+                "forecastTrack": [{**p, "isSimulated": True} for p in sc.get("forecastTrack", [])]
+            }
         return None
 
     @staticmethod

@@ -11,35 +11,36 @@ import {
 } from "lucide-react";
 import { TIMELINE_STEPS } from "../../data/cycloneData.js";
 
-export default function TimelineControl({ activeStepId, onStepChange }) {
+export default function TimelineControl({ activeStepId, onStepChange, timelineSteps = TIMELINE_STEPS }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const currentIndex = TIMELINE_STEPS.findIndex((s) => s.id === activeStepId);
+  const steps = timelineSteps && timelineSteps.length > 0 ? timelineSteps : TIMELINE_STEPS;
+  const currentIndex = steps.findIndex((s) => s.id === activeStepId);
 
   useEffect(() => {
     let timer;
     if (isPlaying) {
       timer = setInterval(() => {
-        const nextIndex = (currentIndex + 1) % TIMELINE_STEPS.length;
-        onStepChange(TIMELINE_STEPS[nextIndex].id);
+        const nextIndex = (currentIndex + 1) % steps.length;
+        onStepChange(steps[nextIndex].id);
       }, 3000);
     }
     return () => clearInterval(timer);
-  }, [isPlaying, currentIndex, onStepChange]);
+  }, [isPlaying, currentIndex, onStepChange, steps]);
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      onStepChange(TIMELINE_STEPS[currentIndex - 1].id);
+      onStepChange(steps[currentIndex - 1].id);
     }
   };
 
   const handleNext = () => {
-    if (currentIndex < TIMELINE_STEPS.length - 1) {
-      onStepChange(TIMELINE_STEPS[currentIndex + 1].id);
+    if (currentIndex < steps.length - 1) {
+      onStepChange(steps[currentIndex + 1].id);
     }
   };
 
-  const currentStep = TIMELINE_STEPS[currentIndex] || TIMELINE_STEPS[2];
+  const currentStep = steps[currentIndex] || steps[2] || steps[0];
 
   return (
     <div className="timeline-control-panel">
@@ -105,12 +106,12 @@ export default function TimelineControl({ activeStepId, onStepChange }) {
           {/* Progress fill */}
           <div 
             className="timeline-track-progress"
-            style={{ width: `${(currentIndex / (TIMELINE_STEPS.length - 1)) * 100}%` }}
+            style={{ width: `${(currentIndex / Math.max(1, steps.length - 1)) * 100}%` }}
           ></div>
         </div>
 
         <div className="timeline-steps-grid">
-          {TIMELINE_STEPS.map((step, idx) => {
+          {steps.map((step, idx) => {
             const isActive = step.id === activeStepId;
             const isPast = idx < currentIndex;
             const isLandfallZone = step.id === "+12h" || step.id === "+24h";

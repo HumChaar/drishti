@@ -3,7 +3,11 @@
  * Connects to FastAPI backend (`/api/weather/bulletin`) with resilient fallback.
  */
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+export const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL !== undefined && import.meta.env.VITE_API_BASE_URL !== ""
+    ? import.meta.env.VITE_API_BASE_URL
+    : "http://localhost:8000"
+).replace(/\/+$/, "");
 
 export const weatherApi = {
   /**

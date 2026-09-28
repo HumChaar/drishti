@@ -26,10 +26,11 @@ class RiskService:
             self._infra_data = {"assets": []}
 
     def get_district_risk_matrix(self, step_id: str = "NOW") -> List[Dict[str, Any]]:
+        normalized_step = "NOW" if step_id.upper() == "CURRENT" else step_id
         districts = self._district_data.get("districts", [])
         timeline_risk = self._district_data.get("timeline_risk", {})
         
-        step_risk = timeline_risk.get(step_id) or timeline_risk.get("NOW", {})
+        step_risk = timeline_risk.get(normalized_step) or timeline_risk.get("NOW", {})
 
         compiled = []
         for d in districts:
@@ -55,13 +56,14 @@ class RiskService:
         return compiled
 
     def get_district_by_id(self, district_id: str, step_id: str = "NOW") -> Optional[Dict[str, Any]]:
+        normalized_step = "NOW" if step_id.upper() == "CURRENT" else step_id
         districts = self._district_data.get("districts", [])
         district = next((d for d in districts if d["id"] == district_id), None)
         if not district:
             return None
 
         timeline_risk = self._district_data.get("timeline_risk", {})
-        step_risk = timeline_risk.get(step_id) or timeline_risk.get("NOW", {})
+        step_risk = timeline_risk.get(normalized_step) or timeline_risk.get("NOW", {})
         risk = step_risk.get(district_id)
 
         if not risk:

@@ -7,7 +7,7 @@ class HealthResponse(BaseModel):
     app_name: str = Field(..., example="DRISHTI FastAPI Backend")
     version: str = Field(..., example="1.0.0-rc1")
     environment: str = Field(..., example="development")
-    provenance: str = Field(..., example="HISTORICAL SIMULATION (REMAL 2024)")
+    provenance: str = Field(..., example="HISTORICAL SIMULATION — CYCLONE REMAL 2024")
     timestamp: str
 
 # Cyclone Models
@@ -35,6 +35,7 @@ class TrackPoint(BaseModel):
     lon: float
     label: str
     windKt: int
+    isSimulated: bool = False
 
 class CurrentCycloneState(BaseModel):
     latitude: float
