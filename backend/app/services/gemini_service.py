@@ -250,7 +250,14 @@ class GeminiReasoningService:
             provenance="[GEMINI REASONING] Grounded AI Advisory (gemini-2.5-flash)",
             generated_at=now_iso,
             model=model_name,
-            is_mock=False
+            is_mock=False,
+            provenance_chain={
+                "historical_simulation": "HISTORICAL SIMULATION — CYCLONE REMAL 2024",
+                "perception_ai": "[AI INFERENCE] SegFormer-B0 SAR Flood Perception",
+                "risk_engine": "[DETERMINISTIC RISK ENGINE] Transparent Multi-Factor Attribution",
+                "decision_intelligence": "[JEV DECISION INTELLIGENCE] Deterministic Rule Engine (TypeSafe JEV)",
+                "advisory_reasoning": "[GEMINI REASONING] Grounded AI Advisory (gemini-2.5-flash)"
+            }
         )
 
     def _build_mock_advisory(self, request: GeminiReasoningRequest) -> GeminiAdvisory:
@@ -335,13 +342,21 @@ class GeminiReasoningService:
             "ingestion is required for post-landfall ground truth. Timeline track reflects standard forecast cone margin."
         )
 
-        # 7. Evidence References
+        # 7. Evidence References with explicit 5-tier pipeline citations
         evidence_refs = [
-            f"Risk Engine: Score {score}/100 ({band})",
-            "Perception: [AI INFERENCE] SegFormer-B0 SAR Flood Extent",
-            f"Meteorology: Surge {surge:.1f}m, Rain {ev.get('rain_mm_24h', 0)}mm",
-            f"Decision Layer: {', '.join(decision_ids[:3])}"
+            f"Risk Engine: Score {score}/100 ({band}) [DETERMINISTIC RISK ENGINE]",
+            "Perception: [AI INFERENCE] SegFormer-B0 SAR Flood Perception",
+            f"Meteorology: Surge {surge:.1f}m, Rain {ev.get('rain_mm_24h', 0)}mm (HISTORICAL SIMULATION — CYCLONE REMAL 2024)",
+            f"Decision Layer: {', '.join(decision_ids[:3])} [JEV DECISION INTELLIGENCE]"
         ]
+
+        provenance_chain = {
+            "historical_simulation": "HISTORICAL SIMULATION — CYCLONE REMAL 2024",
+            "perception_ai": "[AI INFERENCE] SegFormer-B0 SAR Flood Perception",
+            "risk_engine": "[DETERMINISTIC RISK ENGINE] Transparent Multi-Factor Attribution",
+            "decision_intelligence": "[JEV DECISION INTELLIGENCE] Deterministic Rule Engine (TypeSafe JEV)",
+            "advisory_reasoning": "[MOCK GEMINI REASONING] Grounded Synthetic Advisory"
+        }
 
         now_iso = datetime.now(timezone.utc).isoformat()
 
@@ -362,7 +377,8 @@ class GeminiReasoningService:
             provenance="[MOCK GEMINI REASONING] Grounded Synthetic Advisory",
             generated_at=now_iso,
             model="mock-gemini-2.0-flash",
-            is_mock=True
+            is_mock=True,
+            provenance_chain=provenance_chain
         )
 
 

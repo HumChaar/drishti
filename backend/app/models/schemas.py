@@ -713,5 +713,6 @@ class GeminiAdvisory(BaseModel):
     generated_at: str = Field(..., description="ISO 8601 timestamp of generation")
     model: str = Field(..., description="Gemini model name or mock identifier")
     is_mock: bool = Field(..., description="True if generated via deterministic mock mode, False if live Gemini API")
+    provenance_chain: Optional[Dict[str, str]] = Field(None, description="Explicit 5-tier pipeline provenance trace")
 
 
