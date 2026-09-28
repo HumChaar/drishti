@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { 
-  MapContainer as LeafletMap, 
-  TileLayer, 
-  Polyline, 
-  Polygon, 
-  Circle, 
-  Marker, 
-  Popup, 
-  Tooltip 
+import {
+  MapContainer as LeafletMap,
+  TileLayer,
+  Polyline,
+  Polygon,
+  Circle,
+  Marker,
+  Popup,
+  Tooltip
 } from "react-leaflet";
 import L from "leaflet";
 import { Layers } from "lucide-react";
@@ -65,13 +65,16 @@ const createInfraIcon = (type, color) => {
   });
 };
 
-export default function MapContainer({ 
-  currentScenario, 
-  districtsData = [], 
-  infraData = [], 
-  selectedDistrict, 
-  onSelectDistrict 
+export default function MapContainer({
+  currentScenario,
+  districtsData = [],
+  infraData = [],
+  selectedDistrict,
+  onSelectDistrict,
+  operatingMode = "DISASTER"
 }) {
+  const isNormal = operatingMode === "NORMAL";
+
   const [layers, setLayers] = useState({
     cone: true,
     windField: true,
@@ -106,13 +109,26 @@ export default function MapContainer({
       {/* Top Map Layer Control Toolbar */}
       <div className="map-toolbar">
         <div className="toolbar-title-section">
-          <Layers size={14} className="text-orange-600" />
-          <span className="toolbar-heading">INDIAN OPERATIONAL MAP • BAY OF BENGAL</span>
-          <span className="badge-provenance text-[10px] font-bold">HISTORICAL EXERCISE • REMAL • MAY 2024</span>
+          <Layers size={14} className={isNormal ? "text-blue-700" : "text-orange-600"} />
+          <span className="toolbar-heading">
+            {isNormal
+              ? "REGIONAL HAZARD SURVEILLANCE • BAY OF BENGAL / ODISHA-WB ARC"
+              : "INDIAN OPERATIONAL MAP • BAY OF BENGAL"}
+          </span>
+          {isNormal ? (
+            <span className="badge-normal-status text-[10px]">
+              <span className="normal-pulse-dot" />
+              ROUTINE SURVEILLANCE • ALL CLEAR
+            </span>
+          ) : (
+            <span className="badge-provenance text-[10px] font-bold">
+              HISTORICAL EXERCISE • REMAL • MAY 2024
+            </span>
+          )}
         </div>
 
         <div className="map-layer-toggles">
-          <button 
+          <button
             type="button"
             className={`layer-chip ${layers.track ? "active" : ""}`}
             onClick={() => {
@@ -124,7 +140,7 @@ export default function MapContainer({
             <span>TRACK</span>
           </button>
 
-          <button 
+          <button
             type="button"
             className={`layer-chip ${layers.windField ? "active" : ""}`}
             onClick={() => toggleLayer("windField")}
@@ -133,7 +149,7 @@ export default function MapContainer({
             <span>WIND</span>
           </button>
 
-          <button 
+          <button
             type="button"
             className={`layer-chip ${layers.districts ? "active" : ""}`}
             onClick={() => toggleLayer("districts")}
@@ -151,7 +167,7 @@ export default function MapContainer({
             <span>INFRA</span>
           </button>
 
-          <button 
+          <button
             type="button"
             className={`layer-chip ${layers.inundation ? "active" : ""}`}
             onClick={() => toggleLayer("inundation")}
@@ -164,9 +180,9 @@ export default function MapContainer({
 
       {/* Main Map Viewport */}
       <div className="leaflet-map-host">
-        <LeafletMap 
-          center={[20.4, 87.8]} 
-          zoom={6} 
+        <LeafletMap
+          center={[20.4, 87.8]}
+          zoom={6}
           scrollWheelZoom={true}
           style={{ width: "100%", height: "100%" }}
         >
@@ -178,7 +194,7 @@ export default function MapContainer({
           />
 
           {/* Forecast Cone of Uncertainty Polygon */}
-          {layers.cone && coneCoords.length > 0 && (
+          {layers.cone && !isNormal && coneCoords.length > 0 && (
             <Polygon
               positions={coneCoords}
               pathOptions={{
@@ -199,7 +215,7 @@ export default function MapContainer({
           )}
 
           {/* Wind Swaths (34kt gale radius & 50kt storm radius) */}
-          {layers.windField && windRadii.r34Km > 0 && (
+          {layers.windField && !isNormal && windRadii.r34Km > 0 && (
             <Circle
               center={[current.latitude, current.longitude]}
               radius={windRadii.r34Km * 1000}
@@ -217,7 +233,7 @@ export default function MapContainer({
             </Circle>
           )}
 
-          {layers.windField && windRadii.r50Km > 0 && (
+          {layers.windField && !isNormal && windRadii.r50Km > 0 && (
             <Circle
               center={[current.latitude, current.longitude]}
               radius={windRadii.r50Km * 1000}
@@ -235,7 +251,7 @@ export default function MapContainer({
           )}
 
           {/* Hurricane-Force 64-Knot Swath */}
-          {layers.windField && windRadii.r64Km > 0 && (
+          {layers.windField && !isNormal && windRadii.r64Km > 0 && (
             <Circle
               center={[current.latitude, current.longitude]}
               radius={windRadii.r64Km * 1000}
@@ -253,7 +269,7 @@ export default function MapContainer({
           )}
 
           {/* Historical Path Polyline (Solid orange/red) */}
-          {layers.track && pastPathCoords.length > 1 && (
+          {layers.track && !isNormal && pastPathCoords.length > 1 && (
             <Polyline
               positions={pastPathCoords}
               pathOptions={{
@@ -265,7 +281,7 @@ export default function MapContainer({
           )}
 
           {/* Forecast Path Polyline (Dashed red) */}
-          {layers.track && forecastPathCoords.length > 1 && (
+          {layers.track && !isNormal && forecastPathCoords.length > 1 && (
             <Polyline
               positions={forecastPathCoords}
               pathOptions={{
@@ -278,7 +294,7 @@ export default function MapContainer({
           )}
 
           {/* Historical Waypoints */}
-          {layers.track && pastTrack.map((pt, i) => (
+          {layers.track && !isNormal && pastTrack.map((pt, i) => (
             <Circle
               key={`past-pt-${i}`}
               center={[pt.lat, pt.lon]}
@@ -300,7 +316,7 @@ export default function MapContainer({
           ))}
 
           {/* Forecast Waypoints */}
-          {layers.track && forecastTrack.map((pt, i) => (
+          {layers.track && !isNormal && forecastTrack.map((pt, i) => (
             <Circle
               key={`fcst-pt-${i}`}
               center={[pt.lat, pt.lon]}
@@ -322,45 +338,52 @@ export default function MapContainer({
             </Circle>
           ))}
 
-          {/* Current Cyclone Eye Marker */}
-          <Marker
-            position={[current.latitude, current.longitude]}
-            icon={createCycloneIcon(current.category)}
-          >
-            <Popup>
-              <div className="map-popup-card">
-                <div className="popup-title">
-                  <span className="text-red-600 font-bold">CYCLONE REMAL</span>
-                  <span className="badge-provenance ml-2 text-xs">REPLAY</span>
+          {/* Current Cyclone Eye Marker (DISASTER mode only) */}
+          {!isNormal && (
+            <Marker
+              position={[current.latitude, current.longitude]}
+              icon={createCycloneIcon(current.category)}
+            >
+              <Popup>
+                <div className="map-popup-card">
+                  <div className="popup-title">
+                    <span className="text-red-600 font-bold">CYCLONE REMAL</span>
+                    <span className="badge-provenance ml-2 text-xs">REPLAY</span>
+                  </div>
+                  <div className="popup-stage">{current.category}</div>
+                  <div className="popup-details font-mono text-xs">
+                    <div>Position: {current.latitude}°N, {current.longitude}°E</div>
+                    <div>Wind: {current.windKt} kt ({current.windKmh} km/h)</div>
+                    <div>Gusts: {current.gustKmh} km/h</div>
+                    <div>Central Pressure: {current.pressureMb} hPa</div>
+                    <div>Motion: {current.movementDirection} @ {current.movementSpeedKmh} km/h</div>
+                  </div>
                 </div>
-                <div className="popup-stage">{current.category}</div>
-                <div className="popup-details font-mono text-xs">
-                  <div>Position: {current.latitude}°N, {current.longitude}°E</div>
-                  <div>Wind: {current.windKt} kt ({current.windKmh} km/h)</div>
-                  <div>Gusts: {current.gustKmh} km/h</div>
-                  <div>Central Pressure: {current.pressureMb} hPa</div>
-                  <div>Motion: {current.movementDirection} @ {current.movementSpeedKmh} km/h</div>
-                </div>
-              </div>
-            </Popup>
-          </Marker>
+              </Popup>
+            </Marker>
+          )}
 
           {/* District Risk Circles & Badges */}
           {layers.districts && districtsData.map((d) => {
             const isSelected = selectedDistrict?.id === d.id;
-            const risk = d.risk || {};
+            const rawRisk = d.risk || {};
+            const displayScore = isNormal
+              ? Math.min(24, Math.max(16, Math.round((rawRisk.riskScore || 30) * 0.28)))
+              : (rawRisk.riskScore || 0);
+            const displayColor = isNormal ? "#16a34a" : (rawRisk.color || "#0284c7");
+            const displayBand = isNormal ? "READY" : (rawRisk.riskBand || "MODERATE");
 
             return (
               <React.Fragment key={d.id}>
                 {/* Risk Halo Circle around District Headquarter */}
                 <Circle
                   center={[d.lat, d.lon]}
-                  radius={28000}
+                  radius={isNormal ? 22000 : 28000}
                   pathOptions={{
-                    color: risk.color || "#0284c7",
-                    fillColor: risk.color || "#0284c7",
-                    fillOpacity: isSelected ? 0.35 : 0.16,
-                    weight: isSelected ? 3 : 1.5,
+                    color: displayColor,
+                    fillColor: displayColor,
+                    fillOpacity: isSelected ? 0.35 : 0.14,
+                    weight: isSelected ? 2.5 : 1.2,
                     dashArray: isSelected ? undefined : "3 3"
                   }}
                   eventHandlers={{
@@ -370,8 +393,8 @@ export default function MapContainer({
                   <Tooltip direction="top" opacity={0.95}>
                     <div className="font-mono text-xs">
                       <strong>{d.name} ({d.state})</strong>
-                      <br />Risk Score: <span style={{ color: risk.color, fontWeight: "bold" }}>{risk.riskScore}/100 [{risk.riskBand}]</span>
-                      <br />Surge Est: {risk.surgeMeters}m | Rain: {risk.rainMm24h}mm
+                      <br />{isNormal ? "Baseline Status:" : "Risk Score:"} <span style={{ color: displayColor, fontWeight: "bold" }}>{displayScore}/100 [{displayBand}]</span>
+                      <br />{isNormal ? `Shelters: ${d.totalShelters || 120} Units | Coastal: ${d.coastalLineKm || 65} km` : `Surge Est: ${rawRisk.surgeMeters}m | Rain: ${rawRisk.rainMm24h}mm`}
                     </div>
                   </Tooltip>
                 </Circle>
@@ -379,7 +402,7 @@ export default function MapContainer({
                 {/* District Marker Label */}
                 <Marker
                   position={[d.lat, d.lon]}
-                  icon={createDistrictIcon(d.name, risk.riskScore, risk.color)}
+                  icon={createDistrictIcon(d.name, displayScore, displayColor)}
                   eventHandlers={{
                     click: () => onSelectDistrict(d)
                   }}
@@ -389,7 +412,7 @@ export default function MapContainer({
           })}
 
           {/* Derived Coastal Inundation Threat Footprint (Calibrated Simulation Layer) */}
-          {layers.inundation && districtsData
+          {layers.inundation && !isNormal && districtsData
             .filter((d) => (d.risk?.inundationProbPct >= 40) || (d.risk?.surgeMeters >= 1.0))
             .map((d) => {
               const risk = d.risk || {};
@@ -426,7 +449,7 @@ export default function MapContainer({
 
           {/* Infrastructure Markers */}
           {layers.infrastructure && infraData.map((asset) => {
-            const assetColor = 
+            const assetColor =
               asset.riskLevel === "CRITICAL" || asset.riskLevel === "EXTREME" ? "#dc2626" :
               asset.riskLevel === "VERY HIGH" ? "#ea580c" :
               asset.riskLevel === "HIGH" ? "#d97706" : "#0284c7";

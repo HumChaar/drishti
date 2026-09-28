@@ -8,6 +8,8 @@ import RiskPanel from "./components/insights/RiskPanel";
 import AdvisoryPanel from "./components/insights/AdvisoryPanel";
 import ActivityLog from "./components/activity/ActivityLog";
 import PreparednessActions from "./components/actions/PreparednessActions";
+import NormalKpiStrip from "./components/normal/NormalKpiStrip";
+import NormalReadinessPanel from "./components/normal/NormalReadinessPanel";
 import Footer from "./components/footer/Footer";
 
 import cycloneApi from "./services/cycloneApi";
@@ -17,6 +19,7 @@ import weatherApi from "./services/weatherApi";
 import "./App.css";
 
 export default function App() {
+  const [operatingMode, setOperatingMode] = useState("NORMAL");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [activeStepId, setActiveStepId] = useState("NOW");
   const [currentScenario, setCurrentScenario] = useState(null);
@@ -149,46 +152,159 @@ export default function App() {
   return (
     <div className="drishti-app">
       {/* Top Header & Government Branding */}
-      <Header 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+      <Header
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         currentScenario={currentScenario}
         backendStatus={backendStatus}
+        operatingMode={operatingMode}
+        onModeChange={setOperatingMode}
       />
 
-      {/* Compact Hero Carousel */}
-      <HeroCarousel 
-        currentScenario={currentScenario}
-        activeStepId={activeStepId}
-        districtsData={districtsData}
-        onNavigateTab={setActiveTab}
-      />
+      {/* Operational Posture Banner */}
+      {operatingMode === "NORMAL" ? (
+        <div className="operational-posture-banner posture-normal">
+          <div className="posture-banner-inner">
+            <div className="posture-left">
+              <span className="posture-indicator-badge normal">
+                <span className="status-dot-green"></span>
+                NORMAL OPERATIONS
+              </span>
+              <span className="posture-title">REGIONAL HAZARD MONITORING &amp; PREPAREDNESS</span>
+              <span className="posture-divider-dot">•</span>
+              <span className="posture-meta">Bay of Bengal Coastal Sector Routine Surveillance</span>
+            </div>
+            <div className="posture-right">
+              <span className="posture-tag font-mono">STATUS: LEVEL 1 (ALL CLEAR • ROUTINE VIGILANCE)</span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="operational-posture-banner posture-disaster">
+          <div className="posture-banner-inner">
+            <div className="posture-left">
+              <span className="posture-indicator-badge disaster">
+                <span className="status-dot-amber"></span>
+                ⚠ ACTIVE CYCLONE RESPONSE
+              </span>
+              <span className="posture-title">CYCLONE REMAL (BOB/01/2024)</span>
+              <span className="posture-divider-dot">•</span>
+              <span className="posture-meta">Severe Cyclonic Storm (SCS) • Peak Intensity 110 km/h</span>
+            </div>
+            <div className="posture-right">
+              <span className="posture-tag font-mono">HISTORICAL SIMULATION • MAY 2024 (NOT A LIVE WARNING)</span>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* Clean 5-Metric Telemetry Strip */}
-      <MetricStrip 
-        currentScenario={currentScenario}
-        districtsData={districtsData}
-        activeStepId={activeStepId}
-      />
+      {/* Mode-Specific KPI / Telemetry Strip */}
+      {operatingMode === "NORMAL" ? (
+        <NormalKpiStrip
+          infraCount={infraData.length || 11}
+          districtCount={districtsData.length || 8}
+        />
+      ) : (
+        <>
+          <HeroCarousel
+            currentScenario={currentScenario}
+            activeStepId={activeStepId}
+            districtsData={districtsData}
+            onNavigateTab={setActiveTab}
+          />
+          <MetricStrip
+            currentScenario={currentScenario}
+            districtsData={districtsData}
+            activeStepId={activeStepId}
+          />
+        </>
+      )}
 
       {/* Main Command Center Workspace */}
       <main className="drishti-main-workspace">
         {/* DASHBOARD TAB */}
         {activeTab === "dashboard" && (
           <>
-            {/* Operational 2-Column Grid: Large Map (68%) + Small Risk Panel (32%) */}
-            <div className="workspace-grid-upper">
-              <div className="map-view-column">
-                <MapContainer
-                  currentScenario={currentScenario}
+            {operatingMode === "NORMAL" ? (
+              /* Normal Operations: Regional Surveillance Map + District Readiness Dossier & Audit */
+              <div className="workspace-grid-upper">
+                <div className="map-view-column">
+                  <MapContainer
+                    currentScenario={currentScenario}
+                    districtsData={districtsData}
+                    infraData={infraData}
+                    selectedDistrict={selectedDistrict}
+                    onSelectDistrict={setSelectedDistrict}
+                    operatingMode={operatingMode}
+                  />
+                </div>
+                <NormalReadinessPanel
                   districtsData={districtsData}
                   infraData={infraData}
                   selectedDistrict={selectedDistrict}
                   onSelectDistrict={setSelectedDistrict}
+                  onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
                 />
               </div>
+            ) : (
+              /* Disaster Response: Tactical Map + Risk Matrix + Timeline + Directives */
+              <>
+                <div className="workspace-grid-upper">
+                  <div className="map-view-column">
+                    <MapContainer
+                      currentScenario={currentScenario}
+                      districtsData={districtsData}
+                      infraData={infraData}
+                      selectedDistrict={selectedDistrict}
+                      onSelectDistrict={setSelectedDistrict}
+                      operatingMode={operatingMode}
+                    />
+                  </div>
 
-              {/* District Risk & Vulnerability Matrix Panel */}
+                  <RiskPanel
+                    districtsData={districtsData}
+                    selectedDistrict={selectedDistrict}
+                    onSelectDistrict={setSelectedDistrict}
+                    activeStepId={activeStepId}
+                    onNavigateTab={setActiveTab}
+                    currentScenario={currentScenario}
+                    infraData={infraData}
+                  />
+                </div>
+
+                <TimelineControl
+                  activeStepId={activeStepId}
+                  onStepChange={handleStepChange}
+                  timelineSteps={timelineSteps}
+                />
+
+                <PreparednessActions
+                  directives={directives}
+                  metrics={prepMetrics}
+                  onToggleDirective={handleToggleDirective}
+                />
+              </>
+            )}
+          </>
+        )}
+
+        {/* DISTRICT RISK TAB */}
+        {activeTab === "risk" && (
+          operatingMode === "NORMAL" ? (
+            <NormalReadinessPanel
+              districtsData={districtsData}
+              infraData={infraData}
+              selectedDistrict={selectedDistrict}
+              onSelectDistrict={setSelectedDistrict}
+              onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+            />
+          ) : (
+            <div className="flex flex-col gap-4">
+              <TimelineControl
+                activeStepId={activeStepId}
+                onStepChange={handleStepChange}
+                timelineSteps={timelineSteps}
+              />
               <RiskPanel
                 districtsData={districtsData}
                 selectedDistrict={selectedDistrict}
@@ -199,41 +315,7 @@ export default function App() {
                 infraData={infraData}
               />
             </div>
-
-            {/* Clean Compact Timeline Control (Full-Width Span) */}
-            <TimelineControl
-              activeStepId={activeStepId}
-              onStepChange={handleStepChange}
-              timelineSteps={timelineSteps}
-            />
-
-            {/* Bottom Preparedness & Emergency SOP Directives Section */}
-            <PreparednessActions
-              directives={directives}
-              metrics={prepMetrics}
-              onToggleDirective={handleToggleDirective}
-            />
-          </>
-        )}
-
-        {/* DISTRICT RISK TAB */}
-        {activeTab === "risk" && (
-          <div className="flex flex-col gap-4">
-            <TimelineControl
-              activeStepId={activeStepId}
-              onStepChange={handleStepChange}
-              timelineSteps={timelineSteps}
-            />
-            <RiskPanel
-              districtsData={districtsData}
-              selectedDistrict={selectedDistrict}
-              onSelectDistrict={setSelectedDistrict}
-              activeStepId={activeStepId}
-              onNavigateTab={setActiveTab}
-              currentScenario={currentScenario}
-              infraData={infraData}
-            />
-          </div>
+          )
         )}
 
         {/* ACTIONS TAB */}
