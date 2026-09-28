@@ -1,28 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { 
   AlertTriangle, 
   Waves, 
   CloudRain, 
   Wind, 
   Users, 
-  Home, 
-  ShieldCheck, 
   ChevronRight, 
   Search, 
-  Filter,
-  CheckCircle2,
   Building2,
-  Activity
+  Activity,
+  Sparkles,
+  ShieldCheck,
+  Database
 } from "lucide-react";
+import EvidencePanel from "../evidence/EvidencePanel";
+import { normalizeDistrictEvidence } from "../../services/evidenceAdapter";
 
 export default function RiskPanel({ 
   districtsData = [], 
   selectedDistrict, 
   onSelectDistrict,
-  activeStepId 
+  activeStepId,
+  onNavigateTab,
+  currentScenario = null,
+  infraData = []
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterBand, setFilterBand] = useState("ALL");
+  const [inspectorView, setInspectorView] = useState("evidence"); // "evidence" | "dossier"
 
   const filteredDistricts = districtsData.filter((d) => {
     const matchesSearch = d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -33,6 +38,11 @@ export default function RiskPanel({
 
   const activeDistrict = selectedDistrict || districtsData[0] || null;
   const activeRisk = activeDistrict?.risk || {};
+
+  // Compute normalized evidence dossier for selected district
+  const districtEvidence = useMemo(() => {
+    return normalizeDistrictEvidence(activeDistrict, currentScenario, infraData, activeStepId);
+  }, [activeDistrict, currentScenario, infraData, activeStepId]);
 
   return (
     <div className="risk-panel-container">
@@ -128,32 +138,64 @@ export default function RiskPanel({
         {/* Selected District Deep Dive */}
         {activeDistrict && (
           <div className="district-inspector-card">
-            <div className="inspector-header">
-              <div>
-                <div className="inspector-pretitle text-slate-500 text-xs flex items-center gap-1.5 font-mono">
-                  <span>DISTRICT IMPACT DOSSIER</span>
-                  <span>•</span>
-                  <span>{activeDistrict.state.toUpperCase()}</span>
-                </div>
-                <h3 className="inspector-title text-xl font-bold text-slate-900 flex items-center gap-2 mt-0.5">
-                  {activeDistrict.name}
-                  <span 
-                    className="risk-tag-inline text-xs px-2 py-0.5 rounded font-mono font-bold"
-                    style={{ 
-                      backgroundColor: `${activeRisk.color}18`, 
-                      color: activeRisk.color,
-                      border: `1.5px solid ${activeRisk.color}`
-                    }}
-                  >
-                    SCORE {activeRisk.riskScore}/100 [{activeRisk.riskBand}]
-                  </span>
-                </h3>
-              </div>
-
-              <div className="coastal-length-tag font-mono text-xs text-slate-600 font-semibold bg-white border border-slate-200 px-2 py-1 rounded">
-                Coastline: {activeDistrict.coastalLineKm} km
-              </div>
+            {/* Subview Navigation: EVIDENCE & RISK FACTORS vs IMPACT DOSSIER */}
+            <div className="inspector-subview-nav">
+              <button
+                type="button"
+                className={`inspector-nav-tab ${inspectorView === "evidence" ? "active" : ""}`}
+                onClick={() => setInspectorView("evidence")}
+              >
+                <Database size={13} className={inspectorView === "evidence" ? "text-indigo-600" : "text-slate-400"} />
+                <span>EVIDENCE & RISK FACTORS</span>
+                <span className="badge-tab-indicator">6 FACTORS</span>
+              </button>
+              <button
+                type="button"
+                className={`inspector-nav-tab ${inspectorView === "dossier" ? "active" : ""}`}
+                onClick={() => setInspectorView("dossier")}
+              >
+                <ShieldCheck size={13} className={inspectorView === "dossier" ? "text-orange-600" : "text-slate-400"} />
+                <span>IMPACT DOSSIER</span>
+              </button>
             </div>
+
+            {/* View 1: Evidence & Risk Factor Decomposition */}
+            {inspectorView === "evidence" && (
+              <EvidencePanel
+                evidence={districtEvidence}
+                onNavigateTab={onNavigateTab}
+              />
+            )}
+
+            {/* View 2: Impact Dossier (Overview) */}
+            {inspectorView === "dossier" && (
+              <div className="dossier-view-content">
+                <div className="inspector-header">
+                  <div>
+                    <div className="inspector-pretitle text-slate-500 text-xs flex items-center gap-1.5 font-mono">
+                      <span>DISTRICT IMPACT DOSSIER</span>
+                      <span>•</span>
+                      <span>{activeDistrict.state.toUpperCase()}</span>
+                    </div>
+                    <h3 className="inspector-title text-xl font-bold text-slate-900 flex items-center gap-2 mt-0.5">
+                      {activeDistrict.name}
+                      <span
+                        className="risk-tag-inline text-xs px-2 py-0.5 rounded font-mono font-bold"
+                        style={{
+                          backgroundColor: `${activeRisk.color}18`,
+                          color: activeRisk.color,
+                          border: `1.5px solid ${activeRisk.color}`
+                        }}
+                      >
+                        SCORE {activeRisk.riskScore}/100 [{activeRisk.riskBand}]
+                      </span>
+                    </h3>
+                  </div>
+
+                  <div className="coastal-length-tag font-mono text-xs text-slate-600 font-semibold bg-white border border-slate-200 px-2 py-1 rounded">
+                    Coastline: {activeDistrict.coastalLineKm} km
+                  </div>
+                </div>
 
             {/* Risk Gauge Bar */}
             <div className="risk-meter-section">
@@ -304,6 +346,20 @@ export default function RiskPanel({
                 ))}
               </div>
             </div>
+
+            {onNavigateTab && (
+              <button
+                type="button"
+                className="btn-dossier-advisory"
+                onClick={() => onNavigateTab("advisories")}
+                title={`Generate AI advisory for ${activeDistrict.name}`}
+              >
+                <Sparkles size={14} />
+                <span>SYNTHESIZE AI ADVISORY FOR {activeDistrict.name.toUpperCase()}</span>
+              </button>
+            )}
+              </div>
+            )}
           </div>
         )}
       </div>

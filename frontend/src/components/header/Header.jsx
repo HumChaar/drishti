@@ -6,10 +6,10 @@ import {
   Radio, 
   AlertTriangle, 
   Layers, 
-  FileText, 
   Compass, 
   CheckSquare,
-  Globe
+  Globe,
+  Sparkles
 } from "lucide-react";
 
 export default function Header({ activeTab, setActiveTab, currentScenario, backendStatus = "ONLINE" }) {
@@ -176,8 +176,8 @@ export default function Header({ activeTab, setActiveTab, currentScenario, backe
             className={`nav-btn ${activeTab === "advisories" ? "active" : ""}`}
             onClick={() => setActiveTab("advisories")}
           >
-            <FileText size={15} />
-            <span>IMD Advisories</span>
+            <Sparkles size={15} className={activeTab === "advisories" ? "text-orange-500" : ""} />
+            <span>AI Advisories & SOP</span>
           </button>
         </div>
 

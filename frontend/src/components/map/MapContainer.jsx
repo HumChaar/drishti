@@ -10,20 +10,10 @@ import {
   Tooltip 
 } from "react-leaflet";
 import L from "leaflet";
-import { 
-  Layers, 
-  Eye, 
-  Compass, 
-  Anchor, 
-  Shield, 
-  Zap, 
-  Cross, 
-  AlertTriangle,
-  Info
-} from "lucide-react";
+import { Layers } from "lucide-react";
 
 // Custom HTML DivIcons for Light Command Center
-const createCycloneIcon = (category) => {
+const createCycloneIcon = (_category) => {
   return L.divIcon({
     className: "cyclone-eye-icon",
     html: `
@@ -87,7 +77,8 @@ export default function MapContainer({
     windField: true,
     districts: true,
     infrastructure: true,
-    track: true
+    track: true,
+    inundation: true
   });
 
   const toggleLayer = (layerKey) => {
@@ -117,7 +108,7 @@ export default function MapContainer({
         <div className="toolbar-title-section">
           <Layers size={14} className="text-orange-600" />
           <span className="toolbar-heading">BAY OF BENGAL SITUATIONAL MAP</span>
-          <span className="badge-provenance text-xs">MOCK CARTOGRAPHY</span>
+          <span className="badge-provenance text-xs">CALIBRATED REPLAY</span>
         </div>
 
         <div className="map-layer-toggles">
@@ -146,6 +137,14 @@ export default function MapContainer({
           </button>
 
           <button 
+            className={`layer-chip ${layers.inundation ? "active" : ""}`}
+            onClick={() => toggleLayer("inundation")}
+          >
+            <span className="indicator inun-ind"></span>
+            <span>Inundation Threat (Derived)</span>
+          </button>
+
+          <button
             className={`layer-chip ${layers.infrastructure ? "active" : ""}`}
             onClick={() => toggleLayer("infrastructure")}
           >
@@ -223,6 +222,24 @@ export default function MapContainer({
             >
               <Tooltip direction="top" opacity={0.9}>
                 <span className="font-mono text-xs">50-Knot (Storm Force) Swath: {windRadii.r50Km} km</span>
+              </Tooltip>
+            </Circle>
+          )}
+
+          {/* Hurricane-Force 64-Knot Swath */}
+          {layers.windField && windRadii.r64Km > 0 && (
+            <Circle
+              center={[current.latitude, current.longitude]}
+              radius={windRadii.r64Km * 1000}
+              pathOptions={{
+                color: "#b91c1c",
+                fillColor: "#b91c1c",
+                fillOpacity: 0.2,
+                weight: 1.6
+              }}
+            >
+              <Tooltip direction="top" opacity={0.9}>
+                <span className="font-mono text-xs font-bold text-red-700">64-Knot (Hurricane Force) Swath: {windRadii.r64Km} km</span>
               </Tooltip>
             </Circle>
           )}
@@ -363,6 +380,42 @@ export default function MapContainer({
             );
           })}
 
+          {/* Derived Coastal Inundation Threat Footprint (Calibrated Simulation Layer) */}
+          {layers.inundation && districtsData
+            .filter((d) => (d.risk?.inundationProbPct >= 40) || (d.risk?.surgeMeters >= 1.0))
+            .map((d) => {
+              const risk = d.risk || {};
+              const radiusMeters = Math.max(30000, (d.coastalLineKm || 30) * 850);
+              return (
+                <Circle
+                  key={`inun-footprint-${d.id}`}
+                  center={[d.lat, d.lon]}
+                  radius={radiusMeters}
+                  pathOptions={{
+                    color: "#0891b2",
+                    fillColor: "#06b6d4",
+                    fillOpacity: 0.12,
+                    weight: 2,
+                    dashArray: "6 6"
+                  }}
+                  eventHandlers={{
+                    click: () => onSelectDistrict(d)
+                  }}
+                >
+                  <Tooltip direction="bottom" opacity={0.95}>
+                    <div className="font-mono text-xs">
+                      <strong className="text-cyan-800">DERIVED COASTAL INUNDATION FOOTPRINT</strong>
+                      <br />District: <strong>{d.name}</strong> ({d.state})
+                      <br />Surge Est: <strong>{risk.surgeMeters}m</strong> | Inundation Prob: <strong>{risk.inundationProbPct}%</strong>
+                      <div className="text-[10px] text-slate-500 mt-1 border-t border-slate-200 pt-1">
+                        CALIBRATED HISTORICAL SIMULATION (NOT LIVE SATELLITE/GEE FLOOD POLYGON)
+                      </div>
+                    </div>
+                  </Tooltip>
+                </Circle>
+              );
+            })}
+
           {/* Infrastructure Markers */}
           {layers.infrastructure && infraData.map((asset) => {
             const assetColor = 
@@ -396,6 +449,14 @@ export default function MapContainer({
             );
           })}
         </LeafletMap>
+
+        {/* Map Truthful Provenance Watermark */}
+        <div className="map-truthful-watermark">
+          <span className="watermark-tag font-mono font-bold">CALIBRATED HISTORICAL EXERCISE</span>
+          <span className="watermark-text font-mono">
+            REMAL 2024 • INUNDATION & SURGE METRICS ARE DERIVED SIMULATIONS — NOT LIVE FLOOD POLYGONS
+          </span>
+        </div>
 
         {/* Map Legend Overlay */}
         <div className="map-legend-card">
@@ -433,6 +494,14 @@ export default function MapContainer({
             <div className="legend-row">
               <span className="legend-cone-swatch"></span>
               <span>70% Uncertainty Cone</span>
+            </div>
+            <div className="legend-row">
+              <span className="legend-swatch" style={{ background: "#b91c1c", opacity: 0.7 }}></span>
+              <span>64-Knot Hurricane Swath</span>
+            </div>
+            <div className="legend-row">
+              <span className="legend-inun-swatch"></span>
+              <span>Derived Inundation Footprint</span>
             </div>
           </div>
         </div>

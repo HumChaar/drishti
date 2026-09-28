@@ -6,6 +6,7 @@ import TimelineControl from "./components/map/TimelineControl";
 import RiskPanel from "./components/insights/RiskPanel";
 import PreparednessActions from "./components/actions/PreparednessActions";
 import Footer from "./components/footer/Footer";
+import AdvisoryPanel from "./components/advisory/AdvisoryPanel";
 
 import cycloneApi from "./services/cycloneApi";
 import riskApi from "./services/riskApi";
@@ -25,7 +26,27 @@ export default function App() {
   const [bulletin, setBulletin] = useState(null);
   const [timelineSteps, setTimelineSteps] = useState([]);
   const [backendStatus, setBackendStatus] = useState("CHECKING");
-  const [isLoading, setIsLoading] = useState(true);
+  const [_isLoading, setIsLoading] = useState(true);
+
+  // Truthful non-persistent session activity log
+  const [sessionActivity, setSessionActivity] = useState([]);
+
+  const logSessionActivity = useCallback((entry) => {
+    const timestamp = new Date().toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    }) + " IST";
+
+    const newEntry = {
+      id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      timestamp,
+      ...entry
+    };
+    setSessionActivity((prev) => [newEntry, ...prev.slice(0, 49)]);
+  }, []);
 
   // Load static infrastructure and backend metadata once
   useEffect(() => {
@@ -111,7 +132,17 @@ export default function App() {
           : d
       )
     );
+
+    // Record directive acknowledgement/update in truthful session log (Step 8)
+    logSessionActivity({
+      event: newStatus === "COMPLETED" ? "DIRECTIVE ACKNOWLEDGED" : "DIRECTIVE STATUS UPDATED",
+      category: "COMMAND",
+      district: directive.target || "Coastal Command",
+      status: newStatus,
+      details: `Directive [${directive.code}] "${directive.title}" status changed to ${newStatus}`
+    });
   };
+
 
   return (
     <div className="drishti-app">
@@ -157,6 +188,9 @@ export default function App() {
                 selectedDistrict={selectedDistrict}
                 onSelectDistrict={setSelectedDistrict}
                 activeStepId={activeStepId}
+                onNavigateTab={setActiveTab}
+                currentScenario={currentScenario}
+                infraData={infraData}
               />
             </div>
 
@@ -182,6 +216,9 @@ export default function App() {
               selectedDistrict={selectedDistrict}
               onSelectDistrict={setSelectedDistrict}
               activeStepId={activeStepId}
+              onNavigateTab={setActiveTab}
+              currentScenario={currentScenario}
+              infraData={infraData}
             />
           </div>
         )}
@@ -232,28 +269,15 @@ export default function App() {
 
         {/* ADVISORIES TAB */}
         {activeTab === "advisories" && (
-          <div className="risk-panel-container p-6">
-            <div className="panel-header mb-4">
-              <h2 className="panel-title text-base">METEOROLOGICAL BULLETINS & MARINE ADVISORIES</h2>
-              <span className="badge-provenance">IMD HISTORICAL ARCHIVE</span>
-            </div>
-            {bulletin ? (
-              <div className="flex flex-col gap-3 font-mono text-xs text-slate-800">
-                <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
-                  <div className="text-slate-900 font-bold text-sm mb-1">BULLETIN ID: {bulletin.bulletinNo}</div>
-                  <div className="text-slate-500 mb-3 font-medium">ISSUED: {bulletin.issuedAt} ({bulletin.provenance})</div>
-                  <div className="text-orange-700 mb-2 font-bold text-sm">SEA CONDITION: {bulletin.seaCondition}</div>
-                  <div className="mb-2 text-slate-700 font-medium">SIGNIFICANT WAVE HEIGHT: {bulletin.significantWaveHeightMeters} meters ({bulletin.waveDirection})</div>
-                  <div className="mb-3 text-red-700 font-bold">SQUALL WARNING: {bulletin.squallWarning}</div>
-                  <div className="p-3 bg-red-50 border border-red-200 rounded text-red-800 font-medium">
-                    ADVISORY TO FISHERMEN: {bulletin.fishermenAdvisory}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="text-slate-500 text-xs font-mono">Loading advisory data...</div>
-            )}
-          </div>
+          <AdvisoryPanel
+            selectedDistrict={selectedDistrict}
+            activeStepId={activeStepId}
+            districtsData={districtsData}
+            onSelectDistrict={setSelectedDistrict}
+            bulletin={bulletin}
+            sessionActivity={sessionActivity}
+            onLogActivity={logSessionActivity}
+          />
         )}
       </main>
 
