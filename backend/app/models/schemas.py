@@ -606,6 +606,81 @@ DecisionResponse = DecisionRecommendation
 
 
 # ========================================================
+# STAGE 5: JEV (JUDGMENT, EVALUATION & VERIFICATION) SCHEMAS
+# ========================================================
+
+class EvidenceCoverageSummary(BaseModel):
+    total_expected_sources: int = Field(5, description="Number of expected multi-modal evidence modalities")
+    present_sources: int = Field(..., description="Number of successfully bound evidence modalities")
+    coverage_percentage: float = Field(..., description="Evidence coverage percentage (0.0 to 100.0%)")
+    coverage_tier: str = Field(..., description="'COMPLETE', 'ADEQUATE', 'PARTIAL', 'DEFICIENT'")
+    available_modalities: List[str] = Field(default_factory=list)
+    missing_modalities: List[str] = Field(default_factory=list)
+    sar_perception_verified: bool = Field(False, description="True if SegFormer flood perception evidence is present")
+    meteorology_verified: bool = Field(False, description="True if wind and surge telemetry is present")
+    vulnerability_verified: bool = Field(False, description="True if population & shelter deficit metrics are present")
+
+
+class RiskConsistencyCheck(BaseModel):
+    is_consistent: bool = Field(..., description="True if decision urgency aligns with Transparent Risk Engine score")
+    risk_score: int
+    risk_band: str
+    decision_priority: str
+    consistency_score: float = Field(..., description="Quantified score alignment from 0.0 to 1.0")
+    detected_discrepancies: List[str] = Field(default_factory=list, description="Any detected risk-decision priority mismatches")
+    validation_note: str
+
+
+class ConstraintComplianceSummary(BaseModel):
+    total_evaluated_constraints: int
+    satisfied_constraints: int
+    violated_constraints: int
+    compliance_rate_pct: float
+    is_fully_compliant: bool
+    autonomous_execution_blocked: bool = Field(True, description="Safety invariant: confirms direct execution is blocked")
+    human_approval_enforced: bool = Field(True, description="Safety invariant: confirms human approval is required")
+    detailed_constraints: List[DecisionConstraint] = Field(default_factory=list)
+
+
+class JEVEvaluationRequest(BaseModel):
+    district_id: str = Field(..., description="Target coastal district ID, e.g. 'od_balasore'")
+    step_id: Optional[str] = Field("NOW", description="Timeline step, e.g. 'NOW', '+12h'")
+    custom_rain_mm: Optional[float] = None
+    custom_surge_m: Optional[float] = None
+    custom_wind_kmh: Optional[int] = None
+    custom_flood_pct: Optional[float] = None
+    injected_decision_ids: Optional[List[str]] = None
+    test_mode: Optional[str] = Field("STANDARD", description="'STANDARD', 'NEGATIVE_INCONSISTENT_RISK', 'NEGATIVE_DEFICIENT_EVIDENCE', 'NEGATIVE_AUTONOMOUS_ATTEMPT'")
+
+
+class JEVEvaluationReport(BaseModel):
+    evaluation_id: str
+    district_id: str
+    district_name: Optional[str] = None
+    step_id: str = "NOW"
+    evaluation_timestamp: str
+    evaluation_score: float = Field(..., description="Composite JEV evaluation & verification score (0.0 to 1.0)")
+    evaluation_grade: str = Field(..., description="'HIGH_CONFIDENCE', 'MODERATE_CONFIDENCE', 'LOW_CONFIDENCE', 'REJECTED'")
+    
+    # 6 Core Evaluation Pillars
+    decision_evaluation: DecisionRecommendation
+    evidence_coverage: EvidenceCoverageSummary
+    risk_consistency: RiskConsistencyCheck
+    constraint_compliance: ConstraintComplianceSummary
+    auditable_explanation: str
+    provenance_breakdown: Dict[str, str]
+
+    # Explicit Safety & Governance
+    autonomous_execution_prohibited: bool = True
+    human_approval_mandatory: bool = True
+    execution_status: str = "NOT_EXECUTED"
+    provenance: str = Field(
+        "[JEV DECISION INTELLIGENCE] Verified Decision Dossier (Deterministic Rule Engine)",
+        description="Explicit provenance annotation"
+    )
+
+
+# ========================================================
 # STAGE 6: GEMINI REASONING LAYER SCHEMAS
 # ========================================================
 

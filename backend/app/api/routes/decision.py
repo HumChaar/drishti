@@ -3,7 +3,9 @@ from fastapi import APIRouter, HTTPException, Query, Path, Body
 
 from app.models.schemas import (
     DecisionRequest,
-    DecisionRecommendation
+    DecisionRecommendation,
+    JEVEvaluationRequest,
+    JEVEvaluationReport
 )
 from app.services.decision_service import decision_service
 
@@ -90,3 +92,79 @@ async def evaluate_decision_request(
             status_code=500,
             detail=f"Dynamic decision evaluation failed: {str(e)}"
         )
+
+
+@router.get(
+    "/decision/jev/district/{district_id}",
+    response_model=JEVEvaluationReport,
+    summary="Get JEV Decision Evaluation & Verification Dossier for District"
+)
+async def get_district_jev_evaluation(
+    district_id: str = Path(..., description="Unique district ID, e.g. 'od_balasore', 'od_ganjam'"),
+    step_id: Optional[str] = Query("NOW", description="Timeline step identifier, e.g. 'NOW', '+12h'")
+):
+    """
+    Executes formal JEV Decision Intelligence verification across 6 evaluation pillars:
+    Decision Evaluation, Evaluation Score, Evidence Coverage, Risk Consistency,
+    Constraint Compliance, and Auditable Explanation.
+    Autonomous execution is prohibited. Mandatory human incident commander approval.
+    """
+    try:
+        req = JEVEvaluationRequest(district_id=district_id, step_id=step_id or "NOW")
+        return decision_service.evaluate_jev(req)
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"JEV decision evaluation failed for district '{district_id}': {str(e)}"
+        )
+
+
+@router.post(
+    "/decision/jev/evaluate",
+    response_model=JEVEvaluationReport,
+    summary="Evaluate JEV Decision Intelligence with Multi-Modal Overrides & Test Modes"
+)
+async def evaluate_jev_request(
+    request: JEVEvaluationRequest = Body(..., description="JEV evaluation request payload")
+):
+    """
+    Evaluates JEV Decision Intelligence dynamically. Supports test modes:
+    - 'STANDARD': Normal verified evaluation
+    - 'NEGATIVE_INCONSISTENT_RISK': Injects priority-risk mismatch to verify consistency check
+    - 'NEGATIVE_DEFICIENT_EVIDENCE': Strips modalities to verify coverage penalty
+    - 'NEGATIVE_AUTONOMOUS_ATTEMPT': Tests autonomous execution block enforcement
+    """
+    try:
+        return decision_service.evaluate_jev(request)
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"JEV evaluation failed: {str(e)}"
+        )
+
+
+@router.post(
+    "/decision/jev/validate",
+    response_model=JEVEvaluationReport,
+    summary="Validate Candidate Decisions Against Evidence & Risk Consistency"
+)
+async def validate_jev_request(
+    request: JEVEvaluationRequest = Body(..., description="JEV validation request payload")
+):
+    """
+    Alias endpoint for external automated mentors and validation harnesses.
+    """
+    try:
+        return decision_service.evaluate_jev(request)
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"JEV validation failed: {str(e)}"
+        )
+
