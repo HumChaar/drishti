@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Header from "./components/header/Header";
-import ScenarioBar from "./components/hero/ScenarioBar";
+import HeroCarousel from "./components/hero/HeroCarousel";
+import MetricStrip from "./components/hero/MetricStrip";
 import MapContainer from "./components/map/MapContainer";
 import TimelineControl from "./components/map/TimelineControl";
 import RiskPanel from "./components/insights/RiskPanel";
@@ -155,10 +156,19 @@ export default function App() {
         backendStatus={backendStatus}
       />
 
-      {/* Hero Scenario Telemetry Bar */}
-      <ScenarioBar 
-        currentScenario={currentScenario} 
-        activeStepId={activeStepId} 
+      {/* Compact Hero Carousel */}
+      <HeroCarousel 
+        currentScenario={currentScenario}
+        activeStepId={activeStepId}
+        districtsData={districtsData}
+        onNavigateTab={setActiveTab}
+      />
+
+      {/* Clean 5-Metric Telemetry Strip */}
+      <MetricStrip 
+        currentScenario={currentScenario}
+        districtsData={districtsData}
+        activeStepId={activeStepId}
       />
 
       {/* Main Command Center Workspace */}
@@ -166,8 +176,8 @@ export default function App() {
         {/* DASHBOARD TAB */}
         {activeTab === "dashboard" && (
           <>
+            {/* Operational 2-Column Grid: Large Map (68%) + Small Risk Panel (32%) */}
             <div className="workspace-grid-upper">
-              {/* Map & Timeline Column */}
               <div className="map-view-column">
                 <MapContainer
                   currentScenario={currentScenario}
@@ -175,11 +185,6 @@ export default function App() {
                   infraData={infraData}
                   selectedDistrict={selectedDistrict}
                   onSelectDistrict={setSelectedDistrict}
-                />
-                <TimelineControl
-                  activeStepId={activeStepId}
-                  onStepChange={handleStepChange}
-                  timelineSteps={timelineSteps}
                 />
               </div>
 
@@ -194,6 +199,13 @@ export default function App() {
                 infraData={infraData}
               />
             </div>
+
+            {/* Clean Compact Timeline Control (Full-Width Span) */}
+            <TimelineControl
+              activeStepId={activeStepId}
+              onStepChange={handleStepChange}
+              timelineSteps={timelineSteps}
+            />
 
             {/* Bottom Preparedness & Emergency SOP Directives Section */}
             <PreparednessActions

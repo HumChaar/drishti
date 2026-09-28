@@ -107,49 +107,57 @@ export default function MapContainer({
       <div className="map-toolbar">
         <div className="toolbar-title-section">
           <Layers size={14} className="text-orange-600" />
-          <span className="toolbar-heading">BAY OF BENGAL SITUATIONAL MAP</span>
-          <span className="badge-provenance text-xs">CALIBRATED REPLAY</span>
+          <span className="toolbar-heading">INDIAN OPERATIONAL MAP • BAY OF BENGAL</span>
+          <span className="badge-provenance text-[10px] font-bold">HISTORICAL EXERCISE • REMAL • MAY 2024</span>
         </div>
 
         <div className="map-layer-toggles">
           <button 
-            className={`layer-chip ${layers.cone ? "active" : ""}`}
-            onClick={() => toggleLayer("cone")}
+            type="button"
+            className={`layer-chip ${layers.track ? "active" : ""}`}
+            onClick={() => {
+              toggleLayer("track");
+              toggleLayer("cone");
+            }}
           >
             <span className="indicator cone-ind"></span>
-            <span>Forecast Cone</span>
+            <span>TRACK</span>
           </button>
 
           <button 
+            type="button"
             className={`layer-chip ${layers.windField ? "active" : ""}`}
             onClick={() => toggleLayer("windField")}
           >
             <span className="indicator wind-ind"></span>
-            <span>Wind Radii</span>
+            <span>WIND</span>
           </button>
 
           <button 
+            type="button"
             className={`layer-chip ${layers.districts ? "active" : ""}`}
             onClick={() => toggleLayer("districts")}
           >
             <span className="indicator district-ind"></span>
-            <span>District Risk</span>
-          </button>
-
-          <button 
-            className={`layer-chip ${layers.inundation ? "active" : ""}`}
-            onClick={() => toggleLayer("inundation")}
-          >
-            <span className="indicator inun-ind"></span>
-            <span>Inundation Threat (Derived)</span>
+            <span>RISK</span>
           </button>
 
           <button
+            type="button"
             className={`layer-chip ${layers.infrastructure ? "active" : ""}`}
             onClick={() => toggleLayer("infrastructure")}
           >
             <span className="indicator infra-ind"></span>
-            <span>Critical Assets</span>
+            <span>INFRA</span>
+          </button>
+
+          <button 
+            type="button"
+            className={`layer-chip ${layers.inundation ? "active" : ""}`}
+            onClick={() => toggleLayer("inundation")}
+          >
+            <span className="indicator inun-ind"></span>
+            <span>FLOOD</span>
           </button>
         </div>
       </div>

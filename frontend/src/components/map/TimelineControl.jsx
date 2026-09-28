@@ -6,7 +6,6 @@ import {
   ChevronRight, 
   RotateCcw, 
   Clock, 
-  Activity,
   AlertTriangle 
 } from "lucide-react";
 import { TIMELINE_STEPS } from "../../data/cycloneData.js";

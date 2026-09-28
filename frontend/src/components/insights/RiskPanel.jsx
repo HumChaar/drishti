@@ -416,7 +416,7 @@ export default function RiskPanel({
                 KEY VULNERABILITY DRIVERS
               </h4>
               <ul className="drivers-list">
-                {activeRisk.primaryDrivers?.map((driver, idx) => (
+                {activeRisk.primaryDrivers?.slice(0, 3).map((driver, idx) => (
                   <li key={idx} className="driver-item flex items-start gap-2 text-xs text-slate-700">
                     <span className="text-orange-600 font-bold">•</span>
                     <span>{driver}</span>
