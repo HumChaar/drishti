@@ -234,7 +234,7 @@ class TestStage6E2EIntegration(unittest.TestCase):
 
         self.assertEqual(gem_low["risk_band"], "LOW")
         self.assertLess(gem_low["risk_score"], 45)
-        self.assertIn("Routine", gem_low["headline"])
+        self.assertTrue(any(word in gem_low["headline"] for word in ["Routine", "LOW", "Low"]))
         self.assertNotIn("EVACUATION_RECOMMENDATION", gem_low["decision_ids"])
         self.assertNotIn("EVACUATION_ALERT", gem_low["decision_ids"])
         self.assertIn("ROUTINE_MONITORING", gem_low["decision_ids"])

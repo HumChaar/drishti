@@ -1,6 +1,6 @@
 from typing import List, Optional, Any, Dict, Union
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AliasChoices, ConfigDict
 
 # Health Model
 class HealthResponse(BaseModel):
@@ -182,6 +182,63 @@ class MarineBulletinResponse(BaseModel):
     squallWarning: str
     fishermenAdvisory: str
 
+
+class ActiveDepressionSystem(BaseModel):
+    hasActiveSystem: bool
+    isAvailable: bool
+    name: str
+    shortName: str
+    status: str
+    observedDate: str
+    centerLat: float
+    centerLon: float
+    centralPressureMb: int
+    maxWindKmh: int
+    gustKmh: int
+    movement: str
+    source: str
+    classification: str
+
+
+class StateWeatherRecord(BaseModel):
+    id: str
+    name: str
+    region: str
+    center: List[float]
+    capital: str
+    temperature: float
+    humidity: int
+    windSpeed: int
+    windDirection: int
+    windGust: int
+    rain: float
+    distanceToDepressionKm: int
+    depressionInfluencePct: int
+    source: str
+    provenance: str = "LIVE WEATHER — CURRENT MODEL DATA (Open-Meteo)"
+    updatedAt: str
+
+
+class WindGridPoint(BaseModel):
+    lat: float
+    lon: float
+    name: str
+    speed: int
+    direction: int
+    gust: int
+
+
+class IndiaWeatherResponse(BaseModel):
+    provenance: str = "LIVE WEATHER — CURRENT MODEL DATA (Source: Open-Meteo NWP)"
+    sourcing_note: str = "Live meteorological model data from Open-Meteo. NOT the REMAL historical cyclone simulation."
+    states: Dict[str, StateWeatherRecord]
+    windPoints: List[WindGridPoint]
+    activeSystem: ActiveDepressionSystem
+    lastUpdatedFormatted: str
+    nextRefreshMinutes: int = 10
+    fetchedAt: str
+
+
 # SegFormer SAR Flood Inference Models
 class FloodPreprocessingMetadata(BaseModel):
     vv_clip_min: float = -35.0
@@ -323,14 +380,48 @@ class AllDistrictsEvidenceResponse(BaseModel):
     districts: List[DistrictEvidence]
 
 class RiskEvaluationRequest(BaseModel):
-    districtId: str = Field(..., description="Target district ID, e.g. 'od_balasore'")
-    stepId: Optional[str] = Field("NOW", description="Timeline step identifier")
-    customRainMm24h: Optional[float] = Field(None, description="Optional override for 24h rainfall (mm)")
-    customSurgeMeters: Optional[float] = Field(None, description="Optional override for storm surge (m)")
-    customWindKmh: Optional[int] = Field(None, description="Optional override for sustained wind (km/h)")
-    customFloodPct: Optional[float] = Field(None, description="Optional override for flood extent %")
-    sarVvValues: Optional[List[List[float]]] = Field(None, description="Optional custom VV backscatter grid (224x224)")
-    sarVhValues: Optional[List[List[float]]] = Field(None, description="Optional custom VH backscatter grid (224x224)")
+    model_config = ConfigDict(populate_by_name=True)
+
+    district_id: str = Field(..., validation_alias=AliasChoices("district_id", "districtId"), description="Target district ID, e.g. 'od_balasore'")
+    step_id: Optional[str] = Field("NOW", validation_alias=AliasChoices("step_id", "stepId"), description="Timeline step identifier")
+    custom_rain_mm_24h: Optional[float] = Field(None, validation_alias=AliasChoices("custom_rain_mm_24h", "customRainMm24h"), description="Optional override for 24h rainfall (mm)")
+    custom_surge_meters: Optional[float] = Field(None, validation_alias=AliasChoices("custom_surge_meters", "customSurgeMeters"), description="Optional override for storm surge (m)")
+    custom_wind_kmh: Optional[int] = Field(None, validation_alias=AliasChoices("custom_wind_kmh", "customWindKmh"), description="Optional override for sustained wind (km/h)")
+    custom_flood_pct: Optional[float] = Field(None, validation_alias=AliasChoices("custom_flood_pct", "customFloodPct"), description="Optional override for flood extent %")
+    sar_vv_values: Optional[List[List[float]]] = Field(None, validation_alias=AliasChoices("sar_vv_values", "sarVvValues"), description="Optional custom VV backscatter grid (224x224)")
+    sar_vh_values: Optional[List[List[float]]] = Field(None, validation_alias=AliasChoices("sar_vh_values", "sarVhValues"), description="Optional custom VH backscatter grid (224x224)")
+
+    @property
+    def districtId(self) -> str:
+        return self.district_id
+
+    @property
+    def stepId(self) -> Optional[str]:
+        return self.step_id
+
+    @property
+    def customRainMm24h(self) -> Optional[float]:
+        return self.custom_rain_mm_24h
+
+    @property
+    def customSurgeMeters(self) -> Optional[float]:
+        return self.custom_surge_meters
+
+    @property
+    def customWindKmh(self) -> Optional[int]:
+        return self.custom_wind_kmh
+
+    @property
+    def customFloodPct(self) -> Optional[float]:
+        return self.custom_flood_pct
+
+    @property
+    def sarVvValues(self) -> Optional[List[List[float]]]:
+        return self.sar_vv_values
+
+    @property
+    def sarVhValues(self) -> Optional[List[List[float]]]:
+        return self.sar_vh_values
 
 # ========================================================
 # STAGE 5: DECISION INTELLIGENCE & GEMINI ADVISORY MODELS

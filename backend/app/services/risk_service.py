@@ -155,16 +155,16 @@ class RiskService:
         """
         Dynamically evaluates multi-hazard risk using custom or genuine SAR inputs.
         """
-        is_genuine = req.sarVvValues is not None and req.sarVhValues is not None
+        is_genuine = req.sar_vv_values is not None and req.sar_vh_values is not None
         evidence = evidence_service.compile_district_evidence(
-            district_id=req.districtId,
-            step_id=req.stepId or "NOW",
-            custom_rain_mm=req.customRainMm24h,
-            custom_surge_m=req.customSurgeMeters,
-            custom_wind_kmh=req.customWindKmh,
-            custom_flood_pct=req.customFloodPct,
-            sar_vv=req.sarVvValues,
-            sar_vh=req.sarVhValues,
+            district_id=req.district_id,
+            step_id=req.step_id or "NOW",
+            custom_rain_mm=req.custom_rain_mm_24h,
+            custom_surge_m=req.custom_surge_meters,
+            custom_wind_kmh=req.custom_wind_kmh,
+            custom_flood_pct=req.custom_flood_pct,
+            sar_vv=req.sar_vv_values,
+            sar_vh=req.sar_vh_values,
             is_genuine_sar=is_genuine
         )
         explanation = transparent_risk_engine.evaluate_risk(evidence)

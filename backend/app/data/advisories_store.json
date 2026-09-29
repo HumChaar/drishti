@@ -1,0 +1,2920 @@
+{
+  "adv-od_balasore-NOW-52a2f4": {
+    "advisory_id": "adv-od_balasore-NOW-52a2f4",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-52a2f4",
+      "status": "APPROVED",
+      "reviewer_name": "Major Sharma",
+      "reviewer_notes": "All actions approved for immediate broadcast.",
+      "reviewed_at": "2026-09-29T10:06:02.021287+00:00",
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-50dbffb6",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:01:26.284400+00:00"
+    },
+    "generated_at": "2026-09-29T10:01:26.284400+00:00"
+  },
+  "adv-od_balasore-NOW-f9b245": {
+    "advisory_id": "adv-od_balasore-NOW-f9b245",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-f9b245",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-2811622b",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:24.930290+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:24.930914+00:00"
+  },
+  "adv-od_kendrapara-NOW-4cdf44": {
+    "advisory_id": "adv-od_kendrapara-NOW-4cdf44",
+    "district_id": "od_kendrapara",
+    "district_name": "Kendrapara",
+    "language": "en",
+    "risk_score": 88,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Kendrapara. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 88/100 (EXTREME) driven by Storm Surge (2.8m) and Flood Inundation (78.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.8m and satellite flood inundation of 78.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 95 km/h (gusts 120 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 420,000 vulnerable individuals in coastal blocks, with active evacuation targeting 74,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 2 critical installations: Rajnagar Multipurpose Cyclone Shelter, Kendrapara District Headquarters Hospital"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.8m, Rain 210.0mm, Wind 95km/h",
+        "Demographics: Census 2011/SDMA (420,000 vulnerable in 5km buffer)",
+        "Infrastructure: 2 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_kendrapara-NOW-4cdf44",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_kendrapara-NOW-02278521",
+      "district_id": "od_kendrapara",
+      "district_name": "Kendrapara",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 88,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.8,
+      "rain_mm_24h": 210.0,
+      "wind_kmh": 95,
+      "gust_kmh": 120,
+      "eye_distance_km": 307.14,
+      "flood_extent_pct": 78.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 1440000,
+      "vulnerable_population": 420000,
+      "shelter_capacity": 74000,
+      "shelter_deficit": 346000,
+      "critical_assets_count": 2,
+      "critical_assets": [
+        "Rajnagar Multipurpose Cyclone Shelter",
+        "Kendrapara District Headquarters Hospital"
+      ],
+      "shelter_occupancy_pct": 82,
+      "evacuation_progress_pct": 82.2,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.82,
+        "storm_surge": 11.23,
+        "wind_hazard": 10.1,
+        "vulnerability": 15.34,
+        "infrastructure_exposure": 7.92
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.8m, Rain 210.0mm, Wind 95km/h",
+        "Demographics: Census 2011/SDMA (420,000 vulnerable in 5km buffer)",
+        "Infrastructure: 2 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:24.937936+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:24.937936+00:00"
+  },
+  "adv-od_balasore-NOW-36c540": {
+    "advisory_id": "adv-od_balasore-NOW-36c540",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "or",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "ଭୟଙ୍କର ବାତ୍ୟା ରେମାଲ୍ (REMAL) ର ଗତିପଥ ଯୋଗୁଁ Balasore ଉପକୂଳରେ ଭୀଷଣ ଜୁଆର ଏବଂ ଜଳପ୍ଲାବନ ଆଶଙ୍କା ରହିଛି। ତୁରନ୍ତ ୫ କିଲୋମିଟର ଉପକୂଳ ବଳୟରୁ ନିରାପଦ ସ୍ଥାନାନ୍ତର କାର୍ଯ୍ୟକ୍ରମକୁ ପ୍ରାଥମିକତା ଦିଅନ୍ତୁ।",
+      "risk_explanation": "ମିଳିତ ବିପଦ ସୂଚକାଙ୍କ 86/100 (EXTREME) ମୁଖ୍ୟତଃ Storm Surge (2.7m) and Flood Inundation (76.0%) ଦ୍ୱାରା ପ୍ରଭାବିତ। ବାତ୍ୟା ଆଶ୍ରୟସ୍ଥଳୀରେ ସୁରକ୍ଷିତ ଥଇଥାନ ଜରୁରୀ।",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "୫ କିଲୋମିଟର ଉପକୂଳବର୍ତ୍ତୀ ଅଞ୍ଚଳରୁ ବାଧ୍ୟତାମୂଳକ ସ୍ଥାନାନ୍ତର",
+          "description": "ନିମ୍ନାଞ୍ଚଳ ଏବଂ କଚ୍ଚା ଘରେ ରହୁଥିବା ଲୋକଙ୍କୁ ବହୁମୁଖୀ ବାତ୍ୟା ଆଶ୍ରୟସ୍ଥଳୀ (MPCS) କୁ ସ୍ଥାନାନ୍ତରିତ କରନ୍ତୁ। ବୃଦ୍ଧ, ଶିଶୁ ଏବଂ ମହିଳାମାନଙ୍କୁ ପ୍ରାଥମିକତା ଦିଅନ୍ତୁ।",
+          "target_agency": "ରାଜସ୍ୱ ଓ ବିପର୍ଯ୍ୟୟ ପରିଚାଳନା / ଜିଲ୍ଲା ପୋଲିସ",
+          "rationale": "2.7m ସମୁଦ୍ର ଜୁଆର ଏବଂ 76.0% ଉପଗ୍ରହ ଆକଳିତ ଜଳପ୍ଲାବନ ଯୋଗୁଁ ମାଟି ଘର ପ୍ରତି ବିପଦ।"
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "ବନ୍ଦର କାର୍ଯ୍ୟକଳାପ ବନ୍ଦ ଓ ଜାହାଜ ସୁରକ୍ଷା ନିର୍ଦ୍ଦେଶ",
+          "description": "ମତ୍ସ୍ୟଜୀବୀ ଓ ସମସ୍ତ ବୋଟ୍ ଚଳାଚଳ ତୁରନ୍ତ ବନ୍ଦ କରନ୍ତୁ। ବନ୍ଦର ଗୁଡିକରେ ବିପଦ ସଙ୍କେତ ଜାରି ରଖନ୍ତୁ।",
+          "target_agency": "ବନ୍ଦର କର୍ତ୍ତୃପକ୍ଷ / ରାଜ୍ୟ ସାମୁଦ୍ରିକ ବୋର୍ଡ",
+          "rationale": "ପବନର ବେଗ 90 km/h (ଝଟକା 115 km/h) ଏବଂ ସମୁଦ୍ରର ଅଶାନ୍ତ ଅବସ୍ଥା।"
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "୩୩ କେଭି ବିଦ୍ୟୁତ୍ ଫିଡର ନିୟନ୍ତ୍ରିତ ବିଚ୍ଛିନ୍ନତା",
+          "description": "ପବନର ବେଗ ୬୫ କିମି/ଘଣ୍ଟା ଅତିକ୍ରମ କଲେ ଦୁର୍ଘଟଣା ଏଡ଼ାଇବା ପାଇଁ ବିଦ୍ୟୁତ୍ ସରବରାହ ସତର୍କତାମୂଳକ ଭାବେ ବନ୍ଦ କରନ୍ତୁ।",
+          "target_agency": "ଓଡ଼ିଶା ପାୱାର ଟ୍ରାନ୍ସମିସନ କର୍ପୋରେସନ (OPTCL / TPNODL)",
+          "rationale": "ଗଛ ପଡି ତାର ଛିଣ୍ଡିବା ଏବଂ ବିଦ୍ୟୁତାଘାତ ଆଶଙ୍କା।"
+        }
+      ],
+      "affected_population": "ଉପକୂଳ ବ୍ଲକରେ ପ୍ରାୟ 510,000 ଜଣ ବିପଦସଙ୍କୁଳ ବ୍ୟକ୍ତି, ସ୍ଥାନାନ୍ତର ଲକ୍ଷ୍ୟ 92,000 ଆଶ୍ରୟସ୍ଥଳୀ କ୍ଷମତା।",
+      "infrastructure_concerns": [
+        "80km ଉପକୂଳବର୍ତ୍ତୀ ଲୁଣା ବନ୍ଧ ଓ ପୋଲ୍ଡର ପ୍ରତି ଜୁଆର ବିପଦ",
+        "ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ପ୍ରତିଷ୍ଠାନ ଗୁଡ଼ିକରେ ବିଦ୍ୟୁତ୍ ବ୍ୟାହତ ଆଶଙ୍କା: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (IMD ଟ୍ରାକିଂ ଏବଂ ସେଗଫର୍ମର SAR ତଥ୍ୟ ଉପରେ ଆଧାରିତ)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-36c540",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-56f32de7",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:24.953455+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:24.953455+00:00"
+  },
+  "adv-od_balasore-NOW-ddac71": {
+    "advisory_id": "adv-od_balasore-NOW-ddac71",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "bn",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "ঘূর্ণিঝড় রিমাল (REMAL) এর গতিপথের কারণে Balasore উপকূলে মারাত্মক জলোচ্ছ্বাস এবং বন্যার ঝুঁকি তৈরি হয়েছে। অবিলম্বে উপকূলীয় ৫ কিমি অঞ্চলের মানুষদের নিরাপদ স্থানে সরিয়ে নেওয়া প্রয়োজন।",
+      "risk_explanation": "সম্মিলিত ঝুঁকি স্কোর 86/100 (EXTREME) মূলত Storm Surge (2.7m) and Flood Inundation (76.0%) দ্বারা চালিত। সাইক্লোন শেল্টারে নিরাপদ স্থানান্তর অগ্রাধিকার দেওয়া উচিত।",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "উপকূলীয় ৫ কিমি ঝুঁকিপূর্ণ অঞ্চল থেকে বাধ্যতামূলক স্থানান্তর",
+          "description": "কাঁচা বাড়ি ও নদী তীরবর্তী বাসিন্দাদের বহুমুখী সাইক্লোন শেল্টারে (MPCS) স্থানান্তর করুন। শিশু, বৃদ্ধ ও নারীদের অগ্রাধিকার দিন।",
+          "target_agency": "দুর্যোগ ব্যবস্থাপনা দপ্তর / জেলা পুলিশ",
+          "rationale": "2.7m জলোচ্ছ্বাস এবং 76.0% স্যাটেলাইট প্লাবন অনুমানের কারণে মাটির বাঁধ ও বাড়ি ঝুঁকিতে।"
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "বন্দর কার্য স্থগিত ও সতর্কবার্তা জারি",
+          "description": "সব ধরণের নৌযান চলাচল বন্ধ রাখুন এবং বন্দরে মহাবিপদ সংকেত প্রদর্শন বহাল রাখুন।",
+          "target_agency": "বন্দর কর্তৃপক্ষ / মেরিন বোর্ড",
+          "rationale": "বাতাসের গতিবেগ 90 km/h (দমকা 115 km/h) এবং সমুদ্র উত্তাল।"
+        }
+      ],
+      "affected_population": "উপকূলীয় এলাকায় প্রায় 510,000 জন ঝুঁকিপূর্ণ মানুষ, স্থানান্তর লক্ষ্য 92,000 শেল্টার ক্ষমতা।",
+      "infrastructure_concerns": [
+        "80km উপকূলীয় বাঁধ ওভারটপিংয়ের আশঙ্কা",
+        "জরুরি বিদ্যুৎ ও বন্দর পরিকাঠামোতে বিঘ্ন: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (IMD ও SegFormer SAR উপগ্রহ তথ্যের ওপর প্রতিষ্ঠিত)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-ddac71",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-4bab4718",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:24.969014+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:24.969014+00:00"
+  },
+  "adv-od_balasore-NOW-80bf8e": {
+    "advisory_id": "adv-od_balasore-NOW-80bf8e",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "hi",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "भीषण चक्रवाती तूफान रेमल (REMAL) के प्रभाव से Balasore के तटीय क्षेत्रों में भारी तूफानी लहरों और जलभराव का अत्यधिक खतरा है। तटीय 5 किमी क्षेत्र से सुरक्षित निकासी को सर्वोच्च प्राथमिकता दें।",
+      "risk_explanation": "समग्र जोखिम स्कोर 86/100 (EXTREME) मुख्य रूप से Storm Surge (2.7m) and Flood Inundation (76.0%) के कारण है। बहुउद्देशीय चक्रवात आश्रयों (MPCS) में त्वरित राहत सुनिश्चित करें।",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "तटीय 5 किमी संवेदनशील क्षेत्र से अनिवार्य निकासी",
+          "description": "कच्चे मकानों और निचले इलाकों में रह रहे नागरिकों को तुरंत सुरक्षित चक्रवात आश्रय स्थलों में स्थानांतरित करें।",
+          "target_agency": "राजस्व एवं आपदा प्रबंधन / पुलिस",
+          "rationale": "2.7m समुद्री लहरें और 76.0% उपग्रह-आधारित बाढ़ फैलाव।"
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "बंदरगाह संचालन निलंबन और चेतावनी संकेत",
+          "description": "मछुआरों को समुद्र में जाने से रोकें तथा सभी जलपोतों को सुरक्षित लंगरगाह में बांधें।",
+          "target_agency": "बंदरगाह प्राधिकरण / समुद्री बोर्ड",
+          "rationale": "90 km/h हवा की गति (झोंके 115 km/h) और खतरनाक समुद्री स्थिति।"
+        }
+      ],
+      "affected_population": "तटीय प्रखंडों में लगभग 510,000 संवेदनशील नागरिक, कुल आश्रय क्षमता 92,000।",
+      "infrastructure_concerns": [
+        "80km तटीय तटबंधों पर लहरों के ऊपर से बहने का खतरा",
+        "महत्वपूर्ण बुनियादी ढांचे पर प्रभाव: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (IMD मौसम विज्ञान और SegFormer SAR उपग्रह डेटा पर आधारित)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-80bf8e",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-ec9c6964",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:24.975541+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:24.975541+00:00"
+  },
+  "adv-od_balasore-NOW-00a58d": {
+    "advisory_id": "adv-od_balasore-NOW-00a58d",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-00a58d",
+      "status": "APPROVED",
+      "reviewer_name": "Special Relief Commissioner, Odisha",
+      "reviewer_notes": "Advisory verified against ground telemetry. Mandatory evacuation authorized.",
+      "reviewed_at": "2026-09-29T10:06:25.022734+00:00",
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-d67f4211",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:24.997720+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:24.997720+00:00"
+  },
+  "adv-od_puri-NOW-0bea4e": {
+    "advisory_id": "adv-od_puri-NOW-0bea4e",
+    "district_id": "od_puri",
+    "district_name": "Puri",
+    "language": "en",
+    "risk_score": 56,
+    "risk_band": "MODERATE",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Puri. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 56/100 (MODERATE) driven by High Gale Winds (60 km/h) and Coastal Exposure. Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 1.1m and satellite flood inundation of 30.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 60 km/h (gusts 75 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 290,000 vulnerable individuals in coastal blocks, with active evacuation targeting 82,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chilika Lagoon Mouth, Astaranga Fishing Harbor, Konark Heritage Buffer"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 1.1m, Rain 90.0mm, Wind 60km/h",
+        "Demographics: Census 2011/SDMA (290,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_puri-NOW-0bea4e",
+      "status": "REJECTED",
+      "reviewer_name": "Duty Officer Puri",
+      "reviewer_notes": "Local eye observations report wind gusts below threshold; holding action.",
+      "reviewed_at": "2026-09-29T10:06:25.053135+00:00",
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_puri-NOW-4dc36fcc",
+      "district_id": "od_puri",
+      "district_name": "Puri",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 56,
+      "risk_band": "MODERATE",
+      "color": "#ca8a04",
+      "surge_meters": 1.1,
+      "rain_mm_24h": 90.0,
+      "wind_kmh": 60,
+      "gust_kmh": 75,
+      "eye_distance_km": 353.55,
+      "flood_extent_pct": 30.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 1698000,
+      "vulnerable_population": 290000,
+      "shelter_capacity": 82000,
+      "shelter_deficit": 208000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chilika Lagoon Mouth",
+        "Astaranga Fishing Harbor",
+        "Konark Heritage Buffer"
+      ],
+      "shelter_occupancy_pct": 32,
+      "evacuation_progress_pct": 36.7,
+      "contributing_factors_summary": {
+        "flood_hazard": 7.16,
+        "storm_surge": 8.3,
+        "wind_hazard": 6.21,
+        "vulnerability": 10.86,
+        "infrastructure_exposure": 6.42
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 1.1m, Rain 90.0mm, Wind 60km/h",
+        "Demographics: Census 2011/SDMA (290,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:25.030044+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:25.030044+00:00"
+  },
+  "adv-od_jagatsinghpur-NOW-d1f193": {
+    "advisory_id": "adv-od_jagatsinghpur-NOW-d1f193",
+    "district_id": "od_jagatsinghpur",
+    "district_name": "Jagatsinghpur",
+    "language": "en",
+    "risk_score": 84,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Jagatsinghpur. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 84/100 (EXTREME) driven by Storm Surge (2.6m) and Flood Inundation (74.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "MOD-ACT-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Expanded Evacuation to Erasama Block Polders",
+          "description": "Officer command: Prioritize 12 additional polder gram panchayats.",
+          "target_agency": "ODRAF Team 4",
+          "rationale": "Field survey reports mud embankment micro-fissures."
+        }
+      ],
+      "affected_population": "Approximately 385,000 vulnerable individuals in coastal blocks, with active evacuation targeting 68,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Paradip Major Deepwater Port, Erasama Coastal Relief Center, OPTCL Paradip 220/132/33kV Grid Substation"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.6m, Rain 195.0mm, Wind 92km/h",
+        "Demographics: Census 2011/SDMA (385,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_jagatsinghpur-NOW-d1f193",
+      "status": "MODIFIED",
+      "reviewer_name": "Collector Jagatsinghpur",
+      "reviewer_notes": "Elevated Erasama block priority due to local embankment weakness.",
+      "reviewed_at": "2026-09-29T10:06:25.086168+00:00",
+      "modified_actions": [
+        {
+          "action_id": "MOD-ACT-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Expanded Evacuation to Erasama Block Polders",
+          "description": "Officer command: Prioritize 12 additional polder gram panchayats.",
+          "target_agency": "ODRAF Team 4",
+          "rationale": "Field survey reports mud embankment micro-fissures."
+        }
+      ]
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_jagatsinghpur-NOW-56b5315f",
+      "district_id": "od_jagatsinghpur",
+      "district_name": "Jagatsinghpur",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 84,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.6,
+      "rain_mm_24h": 195.0,
+      "wind_kmh": 92,
+      "gust_kmh": 115,
+      "eye_distance_km": 325.13,
+      "flood_extent_pct": 74.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 1136000,
+      "vulnerable_population": 385000,
+      "shelter_capacity": 68000,
+      "shelter_deficit": 317000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Paradip Major Deepwater Port",
+        "Erasama Coastal Relief Center",
+        "OPTCL Paradip 220/132/33kV Grid Substation"
+      ],
+      "shelter_occupancy_pct": 84,
+      "evacuation_progress_pct": 81.7,
+      "contributing_factors_summary": {
+        "flood_hazard": 16.77,
+        "storm_surge": 9.8,
+        "wind_hazard": 9.56,
+        "vulnerability": 16.75,
+        "infrastructure_exposure": 9.54
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.6m, Rain 195.0mm, Wind 92km/h",
+        "Demographics: Census 2011/SDMA (385,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:25.060838+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:25.060838+00:00"
+  },
+  "adv-od_bhadrak-NOW-f04878": {
+    "advisory_id": "adv-od_bhadrak-NOW-f04878",
+    "district_id": "od_bhadrak",
+    "district_name": "Bhadrak",
+    "language": "en",
+    "risk_score": 85,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Bhadrak. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 85/100 (EXTREME) driven by Storm Surge (2.5m) and Flood Inundation (72.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.5m and satellite flood inundation of 72.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 88 km/h (gusts 110 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 360,000 vulnerable individuals in coastal blocks, with active evacuation targeting 65,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 1 critical installations: Dhamra Port LNG & Bulk Terminal"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.5m, Rain 200.0mm, Wind 88km/h",
+        "Demographics: Census 2011/SDMA (360,000 vulnerable in 5km buffer)",
+        "Infrastructure: 1 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_bhadrak-NOW-f04878",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_bhadrak-NOW-0a20441e",
+      "district_id": "od_bhadrak",
+      "district_name": "Bhadrak",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 85,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.5,
+      "rain_mm_24h": 200.0,
+      "wind_kmh": 88,
+      "gust_kmh": 110,
+      "eye_distance_km": 316.59,
+      "flood_extent_pct": 72.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 1506000,
+      "vulnerable_population": 360000,
+      "shelter_capacity": 65000,
+      "shelter_deficit": 295000,
+      "critical_assets_count": 1,
+      "critical_assets": [
+        "Dhamra Port LNG & Bulk Terminal"
+      ],
+      "shelter_occupancy_pct": 80,
+      "evacuation_progress_pct": 81.8,
+      "contributing_factors_summary": {
+        "flood_hazard": 16.66,
+        "storm_surge": 9.83,
+        "wind_hazard": 9.29,
+        "vulnerability": 13.73,
+        "infrastructure_exposure": 6.3
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.5m, Rain 200.0mm, Wind 88km/h",
+        "Demographics: Census 2011/SDMA (360,000 vulnerable in 5km buffer)",
+        "Infrastructure: 1 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:25.095794+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:25.096339+00:00"
+  },
+  "adv-od_balasore-NOW-d07250": {
+    "advisory_id": "adv-od_balasore-NOW-d07250",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-d07250",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-b13b2602",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:25.136693+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:25.136693+00:00"
+  },
+  "adv-od_balasore-NOW-8cbc27": {
+    "advisory_id": "adv-od_balasore-NOW-8cbc27",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-8cbc27",
+      "status": "APPROVED",
+      "reviewer_name": "Special Relief Commissioner, Odisha",
+      "reviewer_notes": "All JEV recommendations and SegFormer evidence dossiers audited and verified. Mandatory evacuation authorized.",
+      "reviewed_at": "2026-09-29T10:06:31.153296+00:00",
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-265a5d2b",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:06:31.135185+00:00"
+    },
+    "generated_at": "2026-09-29T10:06:31.135185+00:00"
+  },
+  "adv-od_balasore-NOW-124415": {
+    "advisory_id": "adv-od_balasore-NOW-124415",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-124415",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-bc6461f3",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.651067+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.651067+00:00"
+  },
+  "adv-od_kendrapara-NOW-dfb5b3": {
+    "advisory_id": "adv-od_kendrapara-NOW-dfb5b3",
+    "district_id": "od_kendrapara",
+    "district_name": "Kendrapara",
+    "language": "en",
+    "risk_score": 88,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Kendrapara. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 88/100 (EXTREME) driven by Storm Surge (2.8m) and Flood Inundation (78.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.8m and satellite flood inundation of 78.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 95 km/h (gusts 120 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 420,000 vulnerable individuals in coastal blocks, with active evacuation targeting 74,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 2 critical installations: Rajnagar Multipurpose Cyclone Shelter, Kendrapara District Headquarters Hospital"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.8m, Rain 210.0mm, Wind 95km/h",
+        "Demographics: Census 2011/SDMA (420,000 vulnerable in 5km buffer)",
+        "Infrastructure: 2 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_kendrapara-NOW-dfb5b3",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_kendrapara-NOW-e339f510",
+      "district_id": "od_kendrapara",
+      "district_name": "Kendrapara",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 88,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.8,
+      "rain_mm_24h": 210.0,
+      "wind_kmh": 95,
+      "gust_kmh": 120,
+      "eye_distance_km": 307.14,
+      "flood_extent_pct": 78.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 1440000,
+      "vulnerable_population": 420000,
+      "shelter_capacity": 74000,
+      "shelter_deficit": 346000,
+      "critical_assets_count": 2,
+      "critical_assets": [
+        "Rajnagar Multipurpose Cyclone Shelter",
+        "Kendrapara District Headquarters Hospital"
+      ],
+      "shelter_occupancy_pct": 82,
+      "evacuation_progress_pct": 82.2,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.82,
+        "storm_surge": 11.23,
+        "wind_hazard": 10.1,
+        "vulnerability": 15.34,
+        "infrastructure_exposure": 7.92
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.8m, Rain 210.0mm, Wind 95km/h",
+        "Demographics: Census 2011/SDMA (420,000 vulnerable in 5km buffer)",
+        "Infrastructure: 2 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.660270+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.660270+00:00"
+  },
+  "adv-od_balasore-NOW-4254af": {
+    "advisory_id": "adv-od_balasore-NOW-4254af",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "or",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "ଭୟଙ୍କର ବାତ୍ୟା ରେମାଲ୍ (REMAL) ର ଗତିପଥ ଯୋଗୁଁ Balasore ଉପକୂଳରେ ଭୀଷଣ ଜୁଆର ଏବଂ ଜଳପ୍ଲାବନ ଆଶଙ୍କା ରହିଛି। ତୁରନ୍ତ ୫ କିଲୋମିଟର ଉପକୂଳ ବଳୟରୁ ନିରାପଦ ସ୍ଥାନାନ୍ତର କାର୍ଯ୍ୟକ୍ରମକୁ ପ୍ରାଥମିକତା ଦିଅନ୍ତୁ।",
+      "risk_explanation": "ମିଳିତ ବିପଦ ସୂଚକାଙ୍କ 86/100 (EXTREME) ମୁଖ୍ୟତଃ Storm Surge (2.7m) and Flood Inundation (76.0%) ଦ୍ୱାରା ପ୍ରଭାବିତ। ବାତ୍ୟା ଆଶ୍ରୟସ୍ଥଳୀରେ ସୁରକ୍ଷିତ ଥଇଥାନ ଜରୁରୀ।",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "୫ କିଲୋମିଟର ଉପକୂଳବର୍ତ୍ତୀ ଅଞ୍ଚଳରୁ ବାଧ୍ୟତାମୂଳକ ସ୍ଥାନାନ୍ତର",
+          "description": "ନିମ୍ନାଞ୍ଚଳ ଏବଂ କଚ୍ଚା ଘରେ ରହୁଥିବା ଲୋକଙ୍କୁ ବହୁମୁଖୀ ବାତ୍ୟା ଆଶ୍ରୟସ୍ଥଳୀ (MPCS) କୁ ସ୍ଥାନାନ୍ତରିତ କରନ୍ତୁ। ବୃଦ୍ଧ, ଶିଶୁ ଏବଂ ମହିଳାମାନଙ୍କୁ ପ୍ରାଥମିକତା ଦିଅନ୍ତୁ।",
+          "target_agency": "ରାଜସ୍ୱ ଓ ବିପର୍ଯ୍ୟୟ ପରିଚାଳନା / ଜିଲ୍ଲା ପୋଲିସ",
+          "rationale": "2.7m ସମୁଦ୍ର ଜୁଆର ଏବଂ 76.0% ଉପଗ୍ରହ ଆକଳିତ ଜଳପ୍ଲାବନ ଯୋଗୁଁ ମାଟି ଘର ପ୍ରତି ବିପଦ।"
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "ବନ୍ଦର କାର୍ଯ୍ୟକଳାପ ବନ୍ଦ ଓ ଜାହାଜ ସୁରକ୍ଷା ନିର୍ଦ୍ଦେଶ",
+          "description": "ମତ୍ସ୍ୟଜୀବୀ ଓ ସମସ୍ତ ବୋଟ୍ ଚଳାଚଳ ତୁରନ୍ତ ବନ୍ଦ କରନ୍ତୁ। ବନ୍ଦର ଗୁଡିକରେ ବିପଦ ସଙ୍କେତ ଜାରି ରଖନ୍ତୁ।",
+          "target_agency": "ବନ୍ଦର କର୍ତ୍ତୃପକ୍ଷ / ରାଜ୍ୟ ସାମୁଦ୍ରିକ ବୋର୍ଡ",
+          "rationale": "ପବନର ବେଗ 90 km/h (ଝଟକା 115 km/h) ଏବଂ ସମୁଦ୍ରର ଅଶାନ୍ତ ଅବସ୍ଥା।"
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "୩୩ କେଭି ବିଦ୍ୟୁତ୍ ଫିଡର ନିୟନ୍ତ୍ରିତ ବିଚ୍ଛିନ୍ନତା",
+          "description": "ପବନର ବେଗ ୬୫ କିମି/ଘଣ୍ଟା ଅତିକ୍ରମ କଲେ ଦୁର୍ଘଟଣା ଏଡ଼ାଇବା ପାଇଁ ବିଦ୍ୟୁତ୍ ସରବରାହ ସତର୍କତାମୂଳକ ଭାବେ ବନ୍ଦ କରନ୍ତୁ।",
+          "target_agency": "ଓଡ଼ିଶା ପାୱାର ଟ୍ରାନ୍ସମିସନ କର୍ପୋରେସନ (OPTCL / TPNODL)",
+          "rationale": "ଗଛ ପଡି ତାର ଛିଣ୍ଡିବା ଏବଂ ବିଦ୍ୟୁତାଘାତ ଆଶଙ୍କା।"
+        }
+      ],
+      "affected_population": "ଉପକୂଳ ବ୍ଲକରେ ପ୍ରାୟ 510,000 ଜଣ ବିପଦସଙ୍କୁଳ ବ୍ୟକ୍ତି, ସ୍ଥାନାନ୍ତର ଲକ୍ଷ୍ୟ 92,000 ଆଶ୍ରୟସ୍ଥଳୀ କ୍ଷମତା।",
+      "infrastructure_concerns": [
+        "80km ଉପକୂଳବର୍ତ୍ତୀ ଲୁଣା ବନ୍ଧ ଓ ପୋଲ୍ଡର ପ୍ରତି ଜୁଆର ବିପଦ",
+        "ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ପ୍ରତିଷ୍ଠାନ ଗୁଡ଼ିକରେ ବିଦ୍ୟୁତ୍ ବ୍ୟାହତ ଆଶଙ୍କା: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (IMD ଟ୍ରାକିଂ ଏବଂ ସେଗଫର୍ମର SAR ତଥ୍ୟ ଉପରେ ଆଧାରିତ)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-4254af",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-db8fd970",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.680968+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.681526+00:00"
+  },
+  "adv-od_balasore-NOW-9afcd3": {
+    "advisory_id": "adv-od_balasore-NOW-9afcd3",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "bn",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "ঘূর্ণিঝড় রিমাল (REMAL) এর গতিপথের কারণে Balasore উপকূলে মারাত্মক জলোচ্ছ্বাস এবং বন্যার ঝুঁকি তৈরি হয়েছে। অবিলম্বে উপকূলীয় ৫ কিমি অঞ্চলের মানুষদের নিরাপদ স্থানে সরিয়ে নেওয়া প্রয়োজন।",
+      "risk_explanation": "সম্মিলিত ঝুঁকি স্কোর 86/100 (EXTREME) মূলত Storm Surge (2.7m) and Flood Inundation (76.0%) দ্বারা চালিত। সাইক্লোন শেল্টারে নিরাপদ স্থানান্তর অগ্রাধিকার দেওয়া উচিত।",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "উপকূলীয় ৫ কিমি ঝুঁকিপূর্ণ অঞ্চল থেকে বাধ্যতামূলক স্থানান্তর",
+          "description": "কাঁচা বাড়ি ও নদী তীরবর্তী বাসিন্দাদের বহুমুখী সাইক্লোন শেল্টারে (MPCS) স্থানান্তর করুন। শিশু, বৃদ্ধ ও নারীদের অগ্রাধিকার দিন।",
+          "target_agency": "দুর্যোগ ব্যবস্থাপনা দপ্তর / জেলা পুলিশ",
+          "rationale": "2.7m জলোচ্ছ্বাস এবং 76.0% স্যাটেলাইট প্লাবন অনুমানের কারণে মাটির বাঁধ ও বাড়ি ঝুঁকিতে।"
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "বন্দর কার্য স্থগিত ও সতর্কবার্তা জারি",
+          "description": "সব ধরণের নৌযান চলাচল বন্ধ রাখুন এবং বন্দরে মহাবিপদ সংকেত প্রদর্শন বহাল রাখুন।",
+          "target_agency": "বন্দর কর্তৃপক্ষ / মেরিন বোর্ড",
+          "rationale": "বাতাসের গতিবেগ 90 km/h (দমকা 115 km/h) এবং সমুদ্র উত্তাল।"
+        }
+      ],
+      "affected_population": "উপকূলীয় এলাকায় প্রায় 510,000 জন ঝুঁকিপূর্ণ মানুষ, স্থানান্তর লক্ষ্য 92,000 শেল্টার ক্ষমতা।",
+      "infrastructure_concerns": [
+        "80km উপকূলীয় বাঁধ ওভারটপিংয়ের আশঙ্কা",
+        "জরুরি বিদ্যুৎ ও বন্দর পরিকাঠামোতে বিঘ্ন: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (IMD ও SegFormer SAR উপগ্রহ তথ্যের ওপর প্রতিষ্ঠিত)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-9afcd3",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-24cb33a6",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.697076+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.697076+00:00"
+  },
+  "adv-od_balasore-NOW-5921e9": {
+    "advisory_id": "adv-od_balasore-NOW-5921e9",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "hi",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "भीषण चक्रवाती तूफान रेमल (REMAL) के प्रभाव से Balasore के तटीय क्षेत्रों में भारी तूफानी लहरों और जलभराव का अत्यधिक खतरा है। तटीय 5 किमी क्षेत्र से सुरक्षित निकासी को सर्वोच्च प्राथमिकता दें।",
+      "risk_explanation": "समग्र जोखिम स्कोर 86/100 (EXTREME) मुख्य रूप से Storm Surge (2.7m) and Flood Inundation (76.0%) के कारण है। बहुउद्देशीय चक्रवात आश्रयों (MPCS) में त्वरित राहत सुनिश्चित करें।",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "तटीय 5 किमी संवेदनशील क्षेत्र से अनिवार्य निकासी",
+          "description": "कच्चे मकानों और निचले इलाकों में रह रहे नागरिकों को तुरंत सुरक्षित चक्रवात आश्रय स्थलों में स्थानांतरित करें।",
+          "target_agency": "राजस्व एवं आपदा प्रबंधन / पुलिस",
+          "rationale": "2.7m समुद्री लहरें और 76.0% उपग्रह-आधारित बाढ़ फैलाव।"
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "बंदरगाह संचालन निलंबन और चेतावनी संकेत",
+          "description": "मछुआरों को समुद्र में जाने से रोकें तथा सभी जलपोतों को सुरक्षित लंगरगाह में बांधें।",
+          "target_agency": "बंदरगाह प्राधिकरण / समुद्री बोर्ड",
+          "rationale": "90 km/h हवा की गति (झोंके 115 km/h) और खतरनाक समुद्री स्थिति।"
+        }
+      ],
+      "affected_population": "तटीय प्रखंडों में लगभग 510,000 संवेदनशील नागरिक, कुल आश्रय क्षमता 92,000।",
+      "infrastructure_concerns": [
+        "80km तटीय तटबंधों पर लहरों के ऊपर से बहने का खतरा",
+        "महत्वपूर्ण बुनियादी ढांचे पर प्रभाव: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (IMD मौसम विज्ञान और SegFormer SAR उपग्रह डेटा पर आधारित)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-5921e9",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-27d01a76",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.715370+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.717378+00:00"
+  },
+  "adv-od_balasore-NOW-4caccd": {
+    "advisory_id": "adv-od_balasore-NOW-4caccd",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-4caccd",
+      "status": "APPROVED",
+      "reviewer_name": "Special Relief Commissioner, Odisha",
+      "reviewer_notes": "Advisory verified against ground telemetry. Mandatory evacuation authorized.",
+      "reviewed_at": "2026-09-29T10:12:37.765478+00:00",
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-fffe08ee",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.736146+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.736146+00:00"
+  },
+  "adv-od_puri-NOW-f8fd68": {
+    "advisory_id": "adv-od_puri-NOW-f8fd68",
+    "district_id": "od_puri",
+    "district_name": "Puri",
+    "language": "en",
+    "risk_score": 56,
+    "risk_band": "MODERATE",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Puri. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 56/100 (MODERATE) driven by High Gale Winds (60 km/h) and Coastal Exposure. Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 1.1m and satellite flood inundation of 30.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 60 km/h (gusts 75 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 290,000 vulnerable individuals in coastal blocks, with active evacuation targeting 82,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chilika Lagoon Mouth, Astaranga Fishing Harbor, Konark Heritage Buffer"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 1.1m, Rain 90.0mm, Wind 60km/h",
+        "Demographics: Census 2011/SDMA (290,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_puri-NOW-f8fd68",
+      "status": "REJECTED",
+      "reviewer_name": "Duty Officer Puri",
+      "reviewer_notes": "Local eye observations report wind gusts below threshold; holding action.",
+      "reviewed_at": "2026-09-29T10:12:37.799500+00:00",
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_puri-NOW-ec551bc1",
+      "district_id": "od_puri",
+      "district_name": "Puri",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 56,
+      "risk_band": "MODERATE",
+      "color": "#ca8a04",
+      "surge_meters": 1.1,
+      "rain_mm_24h": 90.0,
+      "wind_kmh": 60,
+      "gust_kmh": 75,
+      "eye_distance_km": 353.55,
+      "flood_extent_pct": 30.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 1698000,
+      "vulnerable_population": 290000,
+      "shelter_capacity": 82000,
+      "shelter_deficit": 208000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chilika Lagoon Mouth",
+        "Astaranga Fishing Harbor",
+        "Konark Heritage Buffer"
+      ],
+      "shelter_occupancy_pct": 32,
+      "evacuation_progress_pct": 36.7,
+      "contributing_factors_summary": {
+        "flood_hazard": 7.16,
+        "storm_surge": 8.3,
+        "wind_hazard": 6.21,
+        "vulnerability": 10.86,
+        "infrastructure_exposure": 6.42
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 1.1m, Rain 90.0mm, Wind 60km/h",
+        "Demographics: Census 2011/SDMA (290,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.777567+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.777567+00:00"
+  },
+  "adv-od_jagatsinghpur-NOW-974f09": {
+    "advisory_id": "adv-od_jagatsinghpur-NOW-974f09",
+    "district_id": "od_jagatsinghpur",
+    "district_name": "Jagatsinghpur",
+    "language": "en",
+    "risk_score": 84,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Jagatsinghpur. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 84/100 (EXTREME) driven by Storm Surge (2.6m) and Flood Inundation (74.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "MOD-ACT-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Expanded Evacuation to Erasama Block Polders",
+          "description": "Officer command: Prioritize 12 additional polder gram panchayats.",
+          "target_agency": "ODRAF Team 4",
+          "rationale": "Field survey reports mud embankment micro-fissures."
+        }
+      ],
+      "affected_population": "Approximately 385,000 vulnerable individuals in coastal blocks, with active evacuation targeting 68,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Paradip Major Deepwater Port, Erasama Coastal Relief Center, OPTCL Paradip 220/132/33kV Grid Substation"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.6m, Rain 195.0mm, Wind 92km/h",
+        "Demographics: Census 2011/SDMA (385,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_jagatsinghpur-NOW-974f09",
+      "status": "MODIFIED",
+      "reviewer_name": "Collector Jagatsinghpur",
+      "reviewer_notes": "Elevated Erasama block priority due to local embankment weakness.",
+      "reviewed_at": "2026-09-29T10:12:37.843089+00:00",
+      "modified_actions": [
+        {
+          "action_id": "MOD-ACT-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Expanded Evacuation to Erasama Block Polders",
+          "description": "Officer command: Prioritize 12 additional polder gram panchayats.",
+          "target_agency": "ODRAF Team 4",
+          "rationale": "Field survey reports mud embankment micro-fissures."
+        }
+      ]
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_jagatsinghpur-NOW-07526842",
+      "district_id": "od_jagatsinghpur",
+      "district_name": "Jagatsinghpur",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 84,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.6,
+      "rain_mm_24h": 195.0,
+      "wind_kmh": 92,
+      "gust_kmh": 115,
+      "eye_distance_km": 325.13,
+      "flood_extent_pct": 74.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 1136000,
+      "vulnerable_population": 385000,
+      "shelter_capacity": 68000,
+      "shelter_deficit": 317000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Paradip Major Deepwater Port",
+        "Erasama Coastal Relief Center",
+        "OPTCL Paradip 220/132/33kV Grid Substation"
+      ],
+      "shelter_occupancy_pct": 84,
+      "evacuation_progress_pct": 81.7,
+      "contributing_factors_summary": {
+        "flood_hazard": 16.77,
+        "storm_surge": 9.8,
+        "wind_hazard": 9.56,
+        "vulnerability": 16.75,
+        "infrastructure_exposure": 9.54
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.6m, Rain 195.0mm, Wind 92km/h",
+        "Demographics: Census 2011/SDMA (385,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.813918+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.813918+00:00"
+  },
+  "adv-od_bhadrak-NOW-ab12b7": {
+    "advisory_id": "adv-od_bhadrak-NOW-ab12b7",
+    "district_id": "od_bhadrak",
+    "district_name": "Bhadrak",
+    "language": "en",
+    "risk_score": 85,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Bhadrak. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 85/100 (EXTREME) driven by Storm Surge (2.5m) and Flood Inundation (72.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.5m and satellite flood inundation of 72.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 88 km/h (gusts 110 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 360,000 vulnerable individuals in coastal blocks, with active evacuation targeting 65,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 1 critical installations: Dhamra Port LNG & Bulk Terminal"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.5m, Rain 200.0mm, Wind 88km/h",
+        "Demographics: Census 2011/SDMA (360,000 vulnerable in 5km buffer)",
+        "Infrastructure: 1 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_bhadrak-NOW-ab12b7",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_bhadrak-NOW-f401cce7",
+      "district_id": "od_bhadrak",
+      "district_name": "Bhadrak",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 85,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.5,
+      "rain_mm_24h": 200.0,
+      "wind_kmh": 88,
+      "gust_kmh": 110,
+      "eye_distance_km": 316.59,
+      "flood_extent_pct": 72.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 1506000,
+      "vulnerable_population": 360000,
+      "shelter_capacity": 65000,
+      "shelter_deficit": 295000,
+      "critical_assets_count": 1,
+      "critical_assets": [
+        "Dhamra Port LNG & Bulk Terminal"
+      ],
+      "shelter_occupancy_pct": 80,
+      "evacuation_progress_pct": 81.8,
+      "contributing_factors_summary": {
+        "flood_hazard": 16.66,
+        "storm_surge": 9.83,
+        "wind_hazard": 9.29,
+        "vulnerability": 13.73,
+        "infrastructure_exposure": 6.3
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.5m, Rain 200.0mm, Wind 88km/h",
+        "Demographics: Census 2011/SDMA (360,000 vulnerable in 5km buffer)",
+        "Infrastructure: 1 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.853889+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.853889+00:00"
+  },
+  "adv-od_balasore-NOW-09edbf": {
+    "advisory_id": "adv-od_balasore-NOW-09edbf",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-09edbf",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-8110cc95",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:37.900851+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:37.901411+00:00"
+  },
+  "adv-od_balasore-NOW-053f85": {
+    "advisory_id": "adv-od_balasore-NOW-053f85",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-053f85",
+      "status": "APPROVED",
+      "reviewer_name": "Special Relief Commissioner, Odisha",
+      "reviewer_notes": "All JEV recommendations and SegFormer evidence dossiers audited and verified. Mandatory evacuation authorized.",
+      "reviewed_at": "2026-09-29T10:12:39.230823+00:00",
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-417bb2d6",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:12:39.211044+00:00"
+    },
+    "generated_at": "2026-09-29T10:12:39.211044+00:00"
+  },
+  "adv-od_balasore-NOW-c05dd6": {
+    "advisory_id": "adv-od_balasore-NOW-c05dd6",
+    "district_id": "od_balasore",
+    "district_name": "Balasore",
+    "language": "en",
+    "risk_score": 86,
+    "risk_band": "EXTREME",
+    "mode": "DEMO_FALLBACK",
+    "advisory": {
+      "summary": "Severe Cyclonic Storm REMAL trajectory poses severe coastal surge and inundation hazards to Balasore. Preparedness protocols must prioritize coastal buffer evacuation and port defense.",
+      "risk_explanation": "Composite Risk Score 86/100 (EXTREME) driven by Storm Surge (2.7m) and Flood Inundation (76.0%). Vulnerable populations along the 5km coastal belt require immediate shelter occupancy optimization.",
+      "priority_actions": [
+        {
+          "action_id": "ACT-EVAC-01",
+          "priority": "CRITICAL",
+          "action_type": "Evacuation",
+          "title": "Mandatory Coastal Evacuation within 5km Hazard Belt",
+          "description": "Mobilize local revenue teams and police to safely transfer high-risk populations to designated Multi-Purpose Cyclone Shelters (MPCS). Ensure elderly and children are prioritized.",
+          "target_agency": "Revenue & Disaster Management / District Police",
+          "rationale": "High storm surge of 2.7m and satellite flood inundation of 76.0% threaten coastal mud structures."
+        },
+        {
+          "action_id": "ACT-PORT-02",
+          "priority": "CRITICAL",
+          "action_type": "Maritime Safety",
+          "title": "Enforce Anchorage Clearance & Harbor Berth Evacuation",
+          "description": "Suspend all commercial shipping, small craft operations, and cargo handling. Verify all anchored vessels are double-moored or moved to deep sea safe zones.",
+          "target_agency": "Port Authorities / State Maritime Board",
+          "rationale": "Gale winds exceeding 90 km/h (gusts 115 km/h) and dangerous swells along open sea face."
+        },
+        {
+          "action_id": "ACT-PWR-03",
+          "priority": "HIGH",
+          "action_type": "Power Grid",
+          "title": "Controlled De-energization of Exposed 33kV Feeders",
+          "description": "Prepare pre-emptive de-energization for coastal sub-stations if sustained surface wind exceeds 65 km/h to prevent electrocution and transformer destruction.",
+          "target_agency": "State Power Transmission Corp (OPTCL/WBSEDCL) / SLDC",
+          "rationale": "High thatched tree fall probability along rural overhead power corridors."
+        },
+        {
+          "action_id": "ACT-MED-04",
+          "priority": "HIGH",
+          "action_type": "Medical Logistics",
+          "title": "Deploy Mobile Medical Units with Antivenom and ORS",
+          "description": "Stage emergency medical kits, water purification tablets, and trauma care consumables at community health centers and MPCS nodes.",
+          "target_agency": "Health & Family Welfare Department",
+          "rationale": "Post-inundation waterborne contamination and displacement of wildlife in polders."
+        }
+      ],
+      "affected_population": "Approximately 510,000 vulnerable individuals in coastal blocks, with active evacuation targeting 92,000 shelter capacity.",
+      "infrastructure_concerns": [
+        "Overwash hazard along 80km mud dykes and embankment sectors",
+        "Power supply interruption risks at 3 critical installations: Chandipur Sea-Face Cyclone Shelter, Fakir Mohan Medical College & Hospital, Balasore 132/33kV Grid Station"
+      ],
+      "confidence": "HIGH (Grounded in calibrated IMD meteorological track and SegFormer SAR perception)",
+      "evidence_used": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "provenance": "DEMO / FALLBACK — AI ADVISORY UNAVAILABLE",
+      "requires_human_approval": true
+    },
+    "review": {
+      "advisory_id": "adv-od_balasore-NOW-c05dd6",
+      "status": "PENDING",
+      "reviewer_name": "Command Center Incident Commander",
+      "reviewer_notes": null,
+      "reviewed_at": null,
+      "modified_actions": null
+    },
+    "decision_profile": {
+      "profile_id": "dip-od_balasore-NOW-3505b3f5",
+      "district_id": "od_balasore",
+      "district_name": "Balasore",
+      "state": "Odisha",
+      "step_id": "NOW",
+      "risk_score": 86,
+      "risk_band": "EXTREME",
+      "color": "#dc2626",
+      "surge_meters": 2.7,
+      "rain_mm_24h": 220.0,
+      "wind_kmh": 90,
+      "gust_kmh": 115,
+      "eye_distance_km": 316.27,
+      "flood_extent_pct": 76.0,
+      "flood_probability": 0.75,
+      "is_genuine_sar": false,
+      "total_population": 2320000,
+      "vulnerable_population": 510000,
+      "shelter_capacity": 92000,
+      "shelter_deficit": 418000,
+      "critical_assets_count": 3,
+      "critical_assets": [
+        "Chandipur Sea-Face Cyclone Shelter",
+        "Fakir Mohan Medical College & Hospital",
+        "Balasore 132/33kV Grid Station"
+      ],
+      "shelter_occupancy_pct": 81,
+      "evacuation_progress_pct": 82.1,
+      "contributing_factors_summary": {
+        "flood_hazard": 17.88,
+        "storm_surge": 11.48,
+        "wind_hazard": 9.55,
+        "vulnerability": 13.15,
+        "infrastructure_exposure": 9.36
+      },
+      "provenance_chain": {
+        "cyclone_hazard": "HISTORICAL_SIMULATION_REMAL_2024",
+        "flood_perception": "[AI INFERENCE] SegFormer-B0 SAR Fallback",
+        "meteorology": "HISTORICAL_SIMULATION_METEOROLOGY",
+        "vulnerability": "CENSUS_2011_PROJECTED_SDMA",
+        "infrastructure": "NDMA_SDMA_COASTAL_REGISTRY"
+      },
+      "evidence_references": [
+        "Cyclone Track: HISTORICAL_SIMULATION_REMAL_2024",
+        "Perception: [AI INFERENCE] SegFormer-B0 SAR Fallback (Model: SegFormer-B0 (best_clean - fallback))",
+        "Meteorology: Surge 2.7m, Rain 220.0mm, Wind 90km/h",
+        "Demographics: Census 2011/SDMA (510,000 vulnerable in 5km buffer)",
+        "Infrastructure: 3 coastal assets registry"
+      ],
+      "timestamp": "2026-09-29T10:23:13.967321+00:00"
+    },
+    "generated_at": "2026-09-29T10:23:13.970018+00:00"
+  }
+}

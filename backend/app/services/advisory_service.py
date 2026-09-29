@@ -7,6 +7,8 @@ into auditable, multilingual disaster advisories with strict human-in-the-loop r
 import os
 import json
 import uuid
+import threading
+from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any
 import httpx
@@ -189,9 +191,71 @@ DEMO_ADVISORIES: Dict[str, Dict[str, Any]] = {
 
 
 class AdvisoryService:
+    # Path to the persistent JSON store — lives alongside the other data files
+    _STORE_PATH: Path = (
+        Path(__file__).parent.parent / "data" / "advisories_store.json"
+    )
+
     def __init__(self):
-        # In-memory store for tracking advisories and human review decisions
-        self._advisories_store: Dict[str, AdvisoryResponse] = {}
+        self._lock = threading.Lock()
+        # Ensure the data directory and store file exist
+        self._STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        if not self._STORE_PATH.exists():
+            self._STORE_PATH.write_text("{}", encoding="utf-8")
+
+    # ------------------------------------------------------------------
+    # Persistence helpers
+    # ------------------------------------------------------------------
+
+    def _load_store(self) -> Dict[str, dict]:
+        """Read the full store from disk. Returns empty dict on any parse error."""
+        try:
+            raw = self._STORE_PATH.read_text(encoding="utf-8")
+            return json.loads(raw) if raw.strip() else {}
+        except Exception:
+            return {}
+
+    def _save_store(self, store: Dict[str, dict]) -> None:
+        """Atomically write the store dict to disk as JSON."""
+        try:
+            self._STORE_PATH.write_text(
+                json.dumps(store, default=str, ensure_ascii=False, indent=2),
+                encoding="utf-8"
+            )
+        except Exception as exc:
+            # Log but never raise — a write failure must not crash the API
+            print(f"[AdvisoryService] WARNING: could not persist advisory store: {exc}")
+
+    def _store_advisory(self, advisory: AdvisoryResponse) -> None:
+        """Persist a single advisory to the JSON store (thread-safe)."""
+        with self._lock:
+            store = self._load_store()
+            store[advisory.advisory_id] = advisory.model_dump(mode="json")
+            self._save_store(store)
+
+    def _fetch_advisory(self, advisory_id: str) -> Optional[AdvisoryResponse]:
+        """Load a single advisory by ID from the JSON store."""
+        with self._lock:
+            store = self._load_store()
+            raw = store.get(advisory_id)
+        if raw is None:
+            return None
+        try:
+            return AdvisoryResponse(**raw)
+        except Exception:
+            return None
+
+    def _fetch_all_advisories(self) -> List[AdvisoryResponse]:
+        """Return all stored advisories, skipping any that fail to deserialize."""
+        with self._lock:
+            store = self._load_store()
+        results = []
+        for raw in store.values():
+            try:
+                results.append(AdvisoryResponse(**raw))
+            except Exception:
+                continue
+        return results
 
     def get_gemini_api_key(self) -> Optional[str]:
         """
@@ -496,8 +560,8 @@ Produce an operational advisory with priority emergency directives formatted as 
             generated_at=datetime.now(timezone.utc).isoformat()
         )
 
-        # Store in state
-        self._advisories_store[advisory_id] = response
+        # Persist to file store (survives restarts)
+        self._store_advisory(response)
         return response
 
     def review_advisory(
@@ -509,10 +573,10 @@ Produce an operational advisory with priority emergency directives formatted as 
         Applies Human-in-the-Loop review actions: APPROVE, REJECT, or MODIFY.
         Enforces that AI recommendations require human authorization before action.
         """
-        if advisory_id not in self._advisories_store:
+        advisory_resp = self._fetch_advisory(advisory_id)
+        if advisory_resp is None:
             return None
 
-        advisory_resp = self._advisories_store[advisory_id]
         action = review_request.action.upper()
 
         if action not in ["APPROVE", "REJECT", "MODIFY"]:
@@ -534,13 +598,15 @@ Produce an operational advisory with priority emergency directives formatted as 
             # Also update active priority actions with human officer edits
             advisory_resp.advisory.priority_actions = review_request.modified_actions
 
+        # Persist updated advisory back to disk
+        self._store_advisory(advisory_resp)
         return advisory_resp
 
     def get_advisory(self, advisory_id: str) -> Optional[AdvisoryResponse]:
-        return self._advisories_store.get(advisory_id)
+        return self._fetch_advisory(advisory_id)
 
     def list_advisories(self) -> List[AdvisoryResponse]:
-        return list(self._advisories_store.values())
+        return self._fetch_all_advisories()
 
 
 advisory_service = AdvisoryService()

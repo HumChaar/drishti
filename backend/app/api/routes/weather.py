@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from app.models.schemas import MarineBulletinResponse
+from app.models.schemas import MarineBulletinResponse, IndiaWeatherResponse
+from app.services.india_weather_service import fetch_india_weather
 
 router = APIRouter(prefix="/weather", tags=["Meteorological & Marine Weather"])
 
@@ -19,3 +20,14 @@ async def get_marine_bulletin():
         squallWarning="Squally wind speed reaching 90-100 kmph gusting to 115 kmph prevailing over North Bay of Bengal",
         fishermenAdvisory="Total suspension of fishing operations over North Bay of Bengal and along Odisha-West Bengal coasts."
     )
+
+
+@router.get("/india", response_model=IndiaWeatherResponse, summary="Get Live India Meteorology (Open-Meteo Proxy)")
+async def get_india_meteorology():
+    """
+    Server-side proxy for Open-Meteo live weather data across all 36 Indian states/UTs.
+    PROVENANCE: LIVE WEATHER — distinct from HISTORICAL SIMULATION (REMAL 2024).
+    10-minute cache applied to prevent rate limiting.
+    """
+    return await fetch_india_weather()
+

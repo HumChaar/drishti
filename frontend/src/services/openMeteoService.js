@@ -16,6 +16,7 @@
  */
 
 import { STATES_AND_UTS } from "../data/indiaGeography";
+import { API_BASE_URL } from "./cycloneApi.js";
 
 const todayIST = new Date().toLocaleDateString("en-GB", {
   day: "2-digit",
@@ -93,109 +94,19 @@ export async function fetchIndiaMeteorology() {
   }
 
   try {
-    const latitudes = STATES_AND_UTS.map((s) => s.center[0]).join(",");
-    const longitudes = STATES_AND_UTS.map((s) => s.center[1]).join(",");
-
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitudes}&longitude=${longitudes}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,wind_gusts_10m`;
-
-    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    const response = await fetch(`${API_BASE_URL}/api/weather/india`, {
+      signal: AbortSignal.timeout(10000)
+    });
     if (!response.ok) {
-      throw new Error(`Open-Meteo API returned status ${response.status}`);
+      throw new Error(`Backend weather API returned status ${response.status}`);
     }
 
-    const jsonList = await response.json();
-    const resultsArray = Array.isArray(jsonList) ? jsonList : [jsonList];
-
-    const stateMeteorologyMap = {};
-    const windGridPoints = [];
-
-    STATES_AND_UTS.forEach((state, index) => {
-      const dataPoint = resultsArray[index]?.current || {};
-      const windSpeed = dataPoint.wind_speed_10m != null ? Math.round(dataPoint.wind_speed_10m) : 15;
-      const windDirection = dataPoint.wind_direction_10m != null ? Math.round(dataPoint.wind_direction_10m) : 90;
-      const windGust = dataPoint.wind_gusts_10m != null ? Math.round(dataPoint.wind_gusts_10m) : Math.round(windSpeed * 1.3);
-      const temperature = dataPoint.temperature_2m != null ? Math.round(dataPoint.temperature_2m * 10) / 10 : 28.5;
-      const humidity = dataPoint.relative_humidity_2m != null ? Math.round(dataPoint.relative_humidity_2m) : 75;
-      const rain = dataPoint.precipitation != null ? Math.round(dataPoint.precipitation * 10) / 10 : 0.0;
-
-      const distanceKm = Math.round(
-        calculateDistanceKm(
-          state.center[0],
-          state.center[1],
-          ACTIVE_DEPRESSION_SYSTEM.centerLat,
-          ACTIVE_DEPRESSION_SYSTEM.centerLon
-        )
-      );
-
-      const depressionInfluence = calculateDepressionInfluence(distanceKm, windSpeed, rain);
-
-      const stateRecord = {
-        id: state.id,
-        name: state.name,
-        region: state.region,
-        center: state.center,
-        capital: state.capital,
-        temperature,
-        humidity,
-        windSpeed,
-        windDirection,
-        windGust,
-        rain,
-        distanceToDepressionKm: distanceKm,
-        depressionInfluencePct: depressionInfluence,
-        source: "Open-Meteo",
-        provenance: "CURRENT MODEL DATA",
-        updatedAt: new Date().toLocaleTimeString("en-IN", {
-          timeZone: "Asia/Kolkata",
-          hour12: false,
-          hour: "2-digit",
-          minute: "2-digit"
-        }) + " IST"
-      };
-
-      stateMeteorologyMap[state.id] = stateRecord;
-
-      // Add to wind grid
-      windGridPoints.push({
-        lat: state.center[0],
-        lon: state.center[1],
-        name: state.name,
-        speed: windSpeed,
-        direction: windDirection,
-        gust: windGust
-      });
-    });
-
-    // Also add oceanic and coastal surrounding grid points for realistic wind flow over BoB and Arabian Sea
-    const oceanicPoints = [
-      { lat: 15.0, lon: 88.0, name: "Central Bay of Bengal", speed: 28, direction: 220, gust: 36 },
-      { lat: 18.5, lon: 86.5, name: "North Bay of Bengal", speed: 32, direction: 200, gust: 42 },
-      { lat: 12.0, lon: 84.0, name: "Southwest Bay of Bengal", speed: 24, direction: 240, gust: 30 },
-      { lat: 16.0, lon: 70.0, name: "Central Arabian Sea", speed: 22, direction: 290, gust: 28 },
-      { lat: 21.0, lon: 68.0, name: "Northeast Arabian Sea (Gujarat Coast)", speed: 26, direction: 270, gust: 34 },
-      { lat: 10.0, lon: 74.0, name: "Southeast Arabian Sea (Lakshadweep Sea)", speed: 18, direction: 310, gust: 24 }
-    ];
-    windGridPoints.push(...oceanicPoints);
-
-    cachedWeatherData = {
-      states: stateMeteorologyMap,
-      windPoints: windGridPoints,
-      activeSystem: ACTIVE_DEPRESSION_SYSTEM,
-      fetchedAt: new Date(),
-      lastUpdatedFormatted: new Date().toLocaleTimeString("en-IN", {
-        timeZone: "Asia/Kolkata",
-        hour12: false,
-        hour: "2-digit",
-        minute: "2-digit"
-      }) + " IST",
-      nextRefreshMinutes: 10
-    };
-
+    const data = await response.json();
+    cachedWeatherData = data;
     lastFetchTime = now;
     return cachedWeatherData;
   } catch (err) {
-    console.warn("Live Open-Meteo fetch failed or offline, using fallback state observations:", err);
-    // Graceful fallback without crashing
+    console.warn("Live weather proxy fetch failed, falling back to local dataset:", err);
     return getFallbackMeteorology();
   }
 }
@@ -218,10 +129,10 @@ function getFallbackMeteorology() {
     let windSpeed = 16;
     let rain = 0.0;
     if (state.id === "IN-MP") { windSpeed = 38; rain = 48.5; }
-    else if (state.id === "IN-CT") { windSpeed = 32; rain = 32.0; }
+    else if (state.id === "IN-CT" || state.id === "IN-CG") { windSpeed = 32; rain = 32.0; }
     else if (state.id === "IN-UP") { windSpeed = 26; rain = 14.5; }
     else if (state.id === "IN-JH") { windSpeed = 22; rain = 8.0; }
-    else if (state.id === "IN-OD") { windSpeed = 28; rain = 12.0; }
+    else if (state.id === "IN-OD" || state.id === "IN-OR") { windSpeed = 28; rain = 12.0; }
 
     const depressionInfluence = calculateDepressionInfluence(distanceKm, windSpeed, rain);
 
@@ -240,7 +151,7 @@ function getFallbackMeteorology() {
       distanceToDepressionKm: distanceKm,
       depressionInfluencePct: depressionInfluence,
       source: "Open-Meteo (Cached Model)",
-      provenance: "CURRENT MODEL DATA",
+      provenance: "LIVE WEATHER — CURRENT MODEL DATA (Fallback)",
       updatedAt: "23:00 IST"
     };
 
@@ -255,10 +166,12 @@ function getFallbackMeteorology() {
   });
 
   return {
+    provenance: "LIVE WEATHER — CURRENT MODEL DATA (Fallback)",
+    sourcing_note: "Live meteorological model data fallback. NOT the REMAL historical cyclone simulation.",
     states: stateMeteorologyMap,
     windPoints: windGridPoints,
     activeSystem: ACTIVE_DEPRESSION_SYSTEM,
-    fetchedAt: new Date(),
+    fetchedAt: new Date().toISOString(),
     lastUpdatedFormatted: "23:00 IST",
     nextRefreshMinutes: 10
   };
