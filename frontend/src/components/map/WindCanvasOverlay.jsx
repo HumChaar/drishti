@@ -124,10 +124,10 @@ export default function WindCanvasOverlay({
     // Helper to find nearest wind grid point in screen space
     const getWindAtScreenPos = (sx, sy) => {
       try {
-        if (!canvas || !map) return { speed: 15, dirRad: Math.PI / 4, color: "#0284c7" };
+        if (!canvas || !map || !windPoints || windPoints.length === 0) return null;
 
         const bounds = map.getBounds();
-        if (!bounds || !bounds.isValid()) return { speed: 15, dirRad: Math.PI / 4, color: "#0284c7" };
+        if (!bounds || !bounds.isValid()) return null;
         const topLeft = map.latLngToLayerPoint(bounds.getNorthWest());
         const layerX = topLeft.x + sx;
         const layerY = topLeft.y + sy;
@@ -135,10 +135,11 @@ export default function WindCanvasOverlay({
 
         // Find closest station
         let minDistSq = Infinity;
-        let closest = windPoints[0] || { speed: 15, direction: 90 };
+        let closest = null;
 
         for (let i = 0; i < windPoints.length; i++) {
           const pt = windPoints[i];
+          if (!pt || pt.lat == null || pt.lon == null) continue;
           const dLat = pt.lat - latlng.lat;
           const dLon = pt.lon - latlng.lng;
           const distSq = dLat * dLat + dLon * dLon;
@@ -148,16 +149,18 @@ export default function WindCanvasOverlay({
           }
         }
 
-        const flowDeg = ((closest?.direction ?? 90) + 180) % 360;
+        if (!closest) return null;
+
+        const flowDeg = ((closest.direction ?? 90) + 180) % 360;
         const dirRad = ((90 - flowDeg) * Math.PI) / 180;
 
         return {
-          speed: closest?.speed ?? 15,
+          speed: closest.speed ?? 15,
           dirRad,
-          color: getWindColor(closest?.speed ?? 15)
+          color: getWindColor(closest.speed ?? 15)
         };
       } catch {
-        return { speed: 15, dirRad: Math.PI / 4, color: "#0284c7" };
+        return null;
       }
     };
 
@@ -185,13 +188,15 @@ export default function WindCanvasOverlay({
         }
 
         const wind = getWindAtScreenPos(p.x, p.y);
-        const velocity = Math.max(1.5, Math.min(7.0, (wind?.speed ?? 15) * 0.16));
+        if (!wind || wind.speed == null || wind.dirRad == null) continue;
+
+        const velocity = Math.max(1.5, Math.min(7.0, wind.speed * 0.16));
 
         const nextX = p.x + Math.cos(wind.dirRad) * velocity;
         const nextY = p.y - Math.sin(wind.dirRad) * velocity;
 
         // Draw streamline streak
-        ctx.strokeStyle = wind.color;
+        ctx.strokeStyle = wind.color || "#0284c7";
         ctx.beginPath();
         ctx.moveTo(p.x - Math.cos(wind.dirRad) * velocity * 2.2, p.y + Math.sin(wind.dirRad) * velocity * 2.2);
         ctx.lineTo(nextX, nextY);

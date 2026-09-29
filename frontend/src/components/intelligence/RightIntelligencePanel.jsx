@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { 
   Sparkles, 
   MapPin, 
-  Info, 
-  HelpCircle,
   ArrowUpRight,
-  ExternalLink
+  ExternalLink,
+  Wind,
+  CloudRain,
+  Gauge,
+  Thermometer,
+  Compass,
+  Radio
 } from "lucide-react";
-import { ACTIVE_DEPRESSION_SYSTEM } from "../../services/openMeteoService";
+import ProvenanceBadge from "../common/ProvenanceBadge";
 
 export default function RightIntelligencePanel({
   operatingMode = "NORMAL",
@@ -28,11 +32,13 @@ export default function RightIntelligencePanel({
   const isNormal = operatingMode === "NORMAL";
 
   // Active state weather record (only if selected, otherwise national overview)
-  const stateRecord = (selectedState && weatherData?.states)
-    ? weatherData.states[selectedState.id]
+  const stateRecord = selectedState && weatherData?.states
+    ? (Array.isArray(weatherData.states)
+        ? weatherData.states.find(s => s.stateId === selectedState.id || s.id === selectedState.id)
+        : weatherData.states[selectedState.id])
     : null;
 
-  const activeSystem = weatherData?.activeSystem || ACTIVE_DEPRESSION_SYSTEM;
+  const activeSystem = weatherData?.activeSystem || null;
 
   const activeDist = selectedDistrict || districtsData[0] || null;
   const activeRisk = activeDist?.risk || {};
@@ -45,9 +51,10 @@ export default function RightIntelligencePanel({
           <span className="dossier-category font-mono">
             {isNormal ? "NATIONAL SYNOPTIC DOSSIER" : "TACTICAL RESPONSE DOSSIER"}
           </span>
-          <span className={`badge-provenance text-[9px] ${isNormal ? "badge-normal" : "badge-disaster"}`}>
-            {isNormal ? "LIVE MODEL + IMD BULLETINS" : "HISTORICAL SIMULATION"}
-          </span>
+          <ProvenanceBadge
+            provenance={isNormal ? "MODEL" : "SIMULATED"}
+            size="xs"
+          />
         </div>
 
         {/* Tab Strip */}
@@ -73,7 +80,7 @@ export default function RightIntelligencePanel({
             /* NORMAL MODE: Current Active Synoptic System & Selected Sector */
             <div className="flex flex-col gap-3">
               {/* Dynamic Active Synoptic System Card */}
-              {activeSystem?.hasActiveSystem ? (
+              {activeSystem?.hasActiveSystem && activeSystem.liveStatus === "LIVE" && activeSystem.latitude != null ? (
                 <div className="synoptic-system-card bg-amber-50/70 border border-amber-300 rounded p-3 text-slate-800">
                   <div className="flex items-center justify-between pb-1.5 border-b border-amber-200">
                     <div className="flex items-center gap-1.5">
@@ -82,9 +89,12 @@ export default function RightIntelligencePanel({
                         ACTIVE SYNOPTIC SYSTEM
                       </span>
                     </div>
-                    <span className="badge-provenance text-[9px] bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.5 rounded font-mono">
-                      OBSERVED BULLETIN
-                    </span>
+                    <div className="flex items-center gap-1">
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 text-[9px] font-bold font-mono">
+                        LIVE / IMD
+                      </span>
+                      <ProvenanceBadge provenance="OBSERVED" size="tiny" />
+                    </div>
                   </div>
 
                   <div className="mt-2">
@@ -92,40 +102,46 @@ export default function RightIntelligencePanel({
                       {activeSystem.name}
                     </h4>
                     <div className="text-[11px] text-slate-600 font-medium mt-0.5">
-                      Classification: <strong className="text-amber-800">{activeSystem.status}</strong> • Reported: {activeSystem.observedDate}
+                      Classification: <strong className="text-amber-800">[{activeSystem.classification}]</strong> • Observation: {activeSystem.observationTime}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 mt-3 font-mono text-[11px]">
                     <div className="p-2 bg-white/90 rounded border border-amber-200">
-                      <span className="text-[9.5px] text-slate-500 block">ESTIMATED CENTRE</span>
+                      <span className="text-[9.5px] text-slate-500 block">COORDINATES</span>
                       <strong className="text-slate-900">
-                        {activeSystem.centerLat}°N, {activeSystem.centerLon}°E
+                        {activeSystem.coordinatesFormatted || `${activeSystem.latitude}°N, ${activeSystem.longitude}°E`}
                       </strong>
                     </div>
                     <div className="p-2 bg-white/90 rounded border border-amber-200">
                       <span className="text-[9.5px] text-slate-500 block">CENTRAL PRESSURE</span>
-                      <strong className="text-slate-900">{activeSystem.centralPressureMb} hPa</strong>
+                      <strong className="text-slate-900">
+                        {activeSystem.centralPressureHpa ? `${activeSystem.centralPressureHpa} hPa` : "Not reported"}
+                      </strong>
                     </div>
                     <div className="p-2 bg-white/90 rounded border border-amber-200">
                       <span className="text-[9.5px] text-slate-500 block">MAX SUSTAINED WIND</span>
-                      <strong className="text-amber-700">{activeSystem.maxWindKmh} km/h (Gusts {activeSystem.gustKmh})</strong>
+                      <strong className="text-amber-700">
+                        {activeSystem.maxWindKmph ? `${activeSystem.maxWindKmph} km/h` : "N/A"}{activeSystem.gustKmph ? ` (Gusts ${activeSystem.gustKmph})` : ""}
+                      </strong>
                     </div>
                     <div className="p-2 bg-white/90 rounded border border-amber-200">
-                      <span className="text-[9.5px] text-slate-500 block">SYSTEM MOVEMENT</span>
-                      <strong className="text-slate-900">{activeSystem.movement}</strong>
+                      <span className="text-[9.5px] text-slate-500 block">MOVEMENT</span>
+                      <strong className="text-slate-900 truncate block" title={activeSystem.movementDescription}>
+                        {activeSystem.movementDescription || "Monitoring"}
+                      </strong>
                     </div>
                   </div>
 
                   <div className="mt-2.5 pt-2 border-t border-amber-200/60 flex items-center justify-between text-[10px] font-mono text-slate-500">
                     <span>SOURCE: {activeSystem.source}</span>
                     <a
-                      href="https://mausam.imd.gov.in/"
+                      href="https://mausam.imd.gov.in/responsive/cycloneinformation.php"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-amber-800 font-bold hover:underline flex items-center gap-0.5"
                     >
-                      <span>IMD BULLETIN</span>
+                      <span>IMD PORTAL</span>
                       <ExternalLink size={9} />
                     </a>
                   </div>
@@ -134,80 +150,121 @@ export default function RightIntelligencePanel({
                 <div className="synoptic-system-card bg-slate-50 border border-slate-300 rounded p-3 text-slate-800">
                   <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <Radio size={12} className="text-slate-600" />
                       <span className="font-mono text-xs font-bold text-slate-900 uppercase">
-                        {activeSystem?.statusText || "NO ACTIVE SYNOPTIC SYSTEM"}
+                        IMD SYSTEM FEED: SOURCE UNAVAILABLE
                       </span>
                     </div>
-                    <span className="badge-provenance text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded font-mono">
-                      OBSERVED
-                    </span>
+                    <ProvenanceBadge provenance="UNAVAILABLE" size="tiny" />
                   </div>
-                  <div className="mt-2 text-xs font-mono text-slate-600">
-                    {activeSystem?.details || "No cyclonic disturbance or depression currently active across Indian maritime or terrestrial sectors. Routine baseline surveillance."}
+
+                  <div className="grid grid-cols-2 gap-2 mt-2 font-mono text-[10.5px]">
+                    <div className="p-2 bg-white rounded border border-slate-200">
+                      <span className="text-[9px] text-slate-500 block font-bold">COORDINATES</span>
+                      <strong className="text-slate-700">NOT VERIFIED</strong>
+                    </div>
+                    <div className="p-2 bg-white rounded border border-slate-200">
+                      <span className="text-[9px] text-slate-500 block font-bold">OBSERVATION</span>
+                      <strong className="text-slate-700">NOT VERIFIED</strong>
+                    </div>
                   </div>
+
+                  <div className="mt-2 text-[10.5px] font-mono text-slate-600">
+                    Direct browser connection to IMD National Synoptic Bulletin is restricted by CORS. Live system observation and coordinates cannot be verified client-side without an authoritative proxy.
+                  </div>
+
                   <div className="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] font-mono text-slate-500">
-                    <span>SOURCE: IMD SYNOPTIC SURVEILLANCE</span>
-                    <span>STATUS: ROUTINE SURVEILLANCE</span>
+                    <span>DRISHTI CHECKED: <strong className="text-slate-700">{activeSystem?.checkedAt || weatherData?.checkedAt || "IST"}</strong></span>
+                    <a
+                      href="https://mausam.imd.gov.in/responsive/cycloneinformation.php"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-700 font-bold hover:underline flex items-center gap-0.5"
+                    >
+                      <span>OPEN IMD BULLETIN</span>
+                      <ExternalLink size={9} />
+                    </a>
                   </div>
                 </div>
               )}
 
-              {/* State Synoptic Snapshot & Depression Influence % */}
+              {/* State Territorial Sector Meteorological Card (Section 8 & 9) */}
               <div className="state-influence-card bg-white border border-slate-200 rounded p-3 shadow-sm">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between pb-2 border-b border-slate-100">
                   <div>
-                    <span className="text-[9.5px] font-mono text-slate-500 font-bold uppercase tracking-wider">
+                    <span className="text-[9.5px] font-mono text-slate-500 font-bold uppercase tracking-wider block">
                       TERRITORIAL SECTOR
                     </span>
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1">
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1 mt-0.5">
                       <MapPin size={14} className="text-blue-700" />
-                      {stateRecord ? stateRecord.name : (selectedState ? selectedState.name : "NATIONAL SECTOR (PAN-INDIA)")}
+                      {stateRecord ? stateRecord.location : (selectedState ? selectedState.name : "PAN-INDIA OVERVIEW (36 STATES & UTs)")}
                     </h3>
-                    {!stateRecord && (
-                      <span className="text-[10px] font-mono text-slate-500 block mt-0.5">
-                        Click any state/UT on the map to inspect regional influence
-                      </span>
-                    )}
+                    <span className="text-[10px] font-mono text-slate-500 block mt-0.5">
+                      {stateRecord ? `Capital: ${stateRecord.capital} • Region: ${stateRecord.region}` : "Click any state or UT on the map to inspect regional meteorology"}
+                    </span>
                   </div>
 
-                  {/* DRISHTI DERIVED DEPRESSION INFLUENCE % */}
-                  <div className="text-right">
-                    <div className="flex items-center justify-end gap-1" title="Derived spatial influence indicator based on available system position, distance, model wind/rainfall and warning context. Not an official IMD probability.">
-                      <span className="text-[9px] font-mono font-bold text-slate-500">
-                        DEPRESSION INFLUENCE
-                      </span>
-                      <HelpCircle size={10} className="text-slate-400" />
-                    </div>
-                    <div className="text-base font-bold font-mono text-orange-600">
-                      {stateRecord?.depressionInfluencePct != null
-                        ? `${stateRecord.depressionInfluencePct}%`
-                        : (activeSystem?.hasActiveSystem ? (selectedState ? "INFLUENCE NOT COMPUTABLE" : "SELECT STATE") : "0% (QUIET)")}
-                    </div>
-                    <span className="badge-provenance text-[8.5px] bg-slate-100 text-slate-600 border border-slate-200 px-1 py-0.2 rounded font-mono">
-                      DRISHTI DERIVED
+                  <ProvenanceBadge provenance="MODEL" size="xs" />
+                </div>
+
+                {/* State Meteorological Telemetry Grid */}
+                <div className="mt-2.5 grid grid-cols-2 gap-2 font-mono text-[10.5px]">
+                  <div className="p-2 bg-slate-50 rounded border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-bold">SURFACE WIND</span>
+                    <strong className="text-slate-900 text-xs">
+                      {stateRecord?.windSpeedKmph != null ? `${stateRecord.windSpeedKmph} km/h ${stateRecord.windDirectionLabel || ""}` : (stateRecord?.windSpeed != null ? `${stateRecord.windSpeed} km/h` : "18 km/h (Nat. Mean)")}
+                    </strong>
+                    <span className="text-[8.5px] text-slate-400 block mt-0.5">10m Model Vectors</span>
+                  </div>
+
+                  <div className="p-2 bg-slate-50 rounded border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-bold">PRECIPITATION</span>
+                    <strong className="text-slate-900 text-xs">
+                      {stateRecord?.rainfallMm != null ? `${stateRecord.rainfallMm} mm` : (stateRecord?.rain != null ? `${stateRecord.rain} mm` : "0.0 mm")}
+                    </strong>
+                    <span className="text-[8.5px] text-slate-400 block mt-0.5">24h Accumulated NWP</span>
+                  </div>
+
+                  <div className="p-2 bg-slate-50 rounded border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-bold">SURFACE PRESSURE</span>
+                    <strong className="text-slate-900 text-xs">
+                      {stateRecord?.pressureHpa != null ? `${stateRecord.pressureHpa} hPa` : "DATA UNAVAILABLE"}
+                    </strong>
+                    <span className="text-[8.5px] text-slate-400 block mt-0.5">Surface Barometric</span>
+                  </div>
+
+                  <div className="p-2 bg-slate-50 rounded border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-bold">AIR TEMPERATURE</span>
+                    <strong className="text-slate-900 text-xs">
+                      {stateRecord?.temperatureC != null ? `${stateRecord.temperatureC} °C` : (stateRecord?.temperature != null ? `${stateRecord.temperature} °C` : "DATA UNAVAILABLE")}
+                    </strong>
+                    <span className="text-[8.5px] text-slate-400 block mt-0.5">
+                      {stateRecord?.humidityPct != null ? `${stateRecord.humidityPct}% RH` : "RH: N/A"}
                     </span>
                   </div>
                 </div>
 
-                {/* Formula Breakdown Tooltip Box */}
-                <div className="mt-2.5 p-2 bg-slate-50 rounded border border-slate-200 text-[10.5px] font-mono text-slate-600">
-                  <div className="font-bold text-slate-800 mb-1 flex items-center gap-1">
-                    <Info size={11} className="text-blue-600" />
-                    <span>Influence Factors (Transparent Formula):</span>
+                {/* Distance to System (DERIVED - Section 11) */}
+                {stateRecord?.distanceToSystemKm != null && (
+                  <div className="mt-2 p-2 bg-amber-50/80 rounded border border-amber-200 flex items-center justify-between font-mono text-[10px]">
+                    <div className="flex items-center gap-1.5 text-amber-900">
+                      <Compass size={12} className="text-amber-700" />
+                      <span>Distance to System Center: <strong>{stateRecord.distanceToSystemKm} km</strong></span>
+                    </div>
+                    <ProvenanceBadge provenance="DERIVED" size="tiny" />
                   </div>
-                  <div className="grid grid-cols-2 gap-1 text-[10px]">
-                    <div>• Distance: <strong>{stateRecord?.distanceToDepressionKm != null ? `${stateRecord.distanceToDepressionKm} km` : (selectedState ? "N/A" : "Select State")}</strong></div>
-                    <div>• Wind: <strong>{stateRecord?.windSpeed != null ? `${stateRecord.windSpeed} km/h` : (selectedState ? "N/A" : "Nat. Mean 18 km/h")}</strong></div>
-                    <div>• Rainfall: <strong>{stateRecord?.rain != null ? `${stateRecord.rain} mm` : (selectedState ? "N/A" : "Baseline Watch")}</strong></div>
-                    <div>• Center: <strong>{activeSystem?.hasActiveSystem ? (activeSystem.shortName || "Centroid") : "None Active"}</strong></div>
-                  </div>
+                )}
+
+                {/* Sourcing and Timestamps */}
+                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[9.5px] font-mono text-slate-500">
+                  <span>SOURCE: OPEN-METEO (MODEL)</span>
+                  <span>CHECKED: {stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
                 </div>
 
-                {/* Quick Switch to Disaster Mode Button */}
+                {/* Switch to Disaster Mode Button */}
                 <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
                   <span className="text-[10px] text-slate-500 font-mono">
-                    HISTORICAL BENCHMARK AVAILABLE
+                    CALIBRATED BENCHMARK
                   </span>
                   {onLaunchDisasterMode && (
                     <button
@@ -231,9 +288,7 @@ export default function RightIntelligencePanel({
                     <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
                     CYCLONE REMAL (BOB/01/2024)
                   </span>
-                  <span className="badge-provenance text-[9px] bg-red-100 text-red-900 border border-red-300 px-1.5 py-0.5 rounded font-mono">
-                    HISTORICAL SIMULATION
-                  </span>
+                  <ProvenanceBadge provenance="SIMULATED" size="tiny" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 mt-3 font-mono text-[11px]">
@@ -271,114 +326,117 @@ export default function RightIntelligencePanel({
         </div>
       )}
 
-      {/* Tab 2: WEATHER (Strict Dossier Format: SECTION HEADER / VALUE / UNIT / SOURCE / TIMESTAMP) */}
+      {/* Tab 2: WEATHER (Strict Dossier Format: SECTION HEADER / VALUE / UNIT / SOURCE / PROVENANCE / TIMESTAMP) */}
       {activeTab === "WEATHER" && (
         <div className="dossier-content-scroll">
           <div className="weather-telemetry-dossier flex flex-col gap-2.5">
             <div className="p-2.5 bg-blue-50/70 border border-blue-200 rounded flex items-center justify-between">
               <div>
                 <span className="text-[9.5px] font-mono font-bold text-blue-900 uppercase block">
-                  TELEMETRY DOSSIER • {stateRecord ? stateRecord.name : "PAN-INDIA (36 NODES)"}
+                  TELEMETRY DOSSIER • {stateRecord ? stateRecord.location : "PAN-INDIA (36 NODES)"}
                 </span>
                 <span className="text-[10px] text-slate-500 font-mono">
                   SOURCE: OPEN-METEO CURRENT WEATHER NWP
                 </span>
               </div>
-              <span className="badge-provenance text-[9px] bg-blue-100 text-blue-900 border border-blue-300 px-1.5 py-0.5 rounded font-mono">
-                CURRENT MODEL DATA
-              </span>
+              <ProvenanceBadge provenance="MODEL" size="xs" />
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-xs font-mono">
               {/* 1. SURFACE WIND */}
               <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
-                <div className="text-[9.5px] text-slate-500 font-bold uppercase">
-                  SURFACE WIND
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>SURFACE WIND</span>
+                  <Wind size={12} className="text-blue-600" />
                 </div>
                 <div className="text-base font-bold text-slate-900 my-1">
-                  {stateRecord?.windSpeed != null ? `${stateRecord.windSpeed} km/h` : (selectedState ? "NO DATA" : "18 km/h")}
+                  {stateRecord?.windSpeedKmph != null ? `${stateRecord.windSpeedKmph} km/h` : (stateRecord?.windSpeed != null ? `${stateRecord.windSpeed} km/h` : (selectedState ? "DATA UNAVAILABLE" : "18 km/h"))}
                 </div>
                 <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
-                  <span>MODEL • OPEN-METEO</span>
-                  <span>UPDATED {stateRecord?.updatedAt || weatherData?.lastUpdatedFormatted || "IST"}</span>
+                  <span>{stateRecord?.windDirectionLabel ? `${stateRecord.windDirectionLabel} ${stateRecord.windDirectionDeg || ""}°` : "MODEL"}</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
                 </div>
               </div>
 
               {/* 2. PRECIPITATION */}
               <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
-                <div className="text-[9.5px] text-slate-500 font-bold uppercase">
-                  PRECIPITATION
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>PRECIPITATION</span>
+                  <CloudRain size={12} className="text-blue-600" />
                 </div>
                 <div className="text-base font-bold text-slate-900 my-1">
-                  {stateRecord?.rain != null ? `${stateRecord.rain} mm` : (selectedState ? "NO DATA" : "0.0 mm")}
+                  {stateRecord?.rainfallMm != null ? `${stateRecord.rainfallMm} mm` : (stateRecord?.rain != null ? `${stateRecord.rain} mm` : (selectedState ? "DATA UNAVAILABLE" : "0.0 mm"))}
                 </div>
                 <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
-                  <span>MODEL • OPEN-METEO</span>
-                  <span>UPDATED {stateRecord?.updatedAt || weatherData?.lastUpdatedFormatted || "IST"}</span>
+                  <span>MODEL • 24h NWP</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
                 </div>
               </div>
 
-              {/* 3. TEMPERATURE */}
+              {/* 3. SURFACE PRESSURE */}
               <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
-                <div className="text-[9.5px] text-slate-500 font-bold uppercase">
-                  2M TEMPERATURE
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>SURFACE PRESSURE</span>
+                  <Gauge size={12} className="text-blue-600" />
                 </div>
                 <div className="text-base font-bold text-slate-900 my-1">
-                  {stateRecord?.temperature != null ? `${stateRecord.temperature} °C` : (selectedState ? "NO DATA" : "28.2 °C")}
+                  {stateRecord?.pressureHpa != null ? `${stateRecord.pressureHpa} hPa` : "DATA UNAVAILABLE"}
                 </div>
                 <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
-                  <span>MODEL • OPEN-METEO</span>
-                  <span>UPDATED {stateRecord?.updatedAt || weatherData?.lastUpdatedFormatted || "IST"}</span>
+                  <span>BAROMETRIC NWP</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
                 </div>
               </div>
 
-              {/* 4. RELATIVE HUMIDITY */}
+              {/* 4. 2M TEMPERATURE */}
+              <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>2M TEMPERATURE</span>
+                  <Thermometer size={12} className="text-blue-600" />
+                </div>
+                <div className="text-base font-bold text-slate-900 my-1">
+                  {stateRecord?.temperatureC != null ? `${stateRecord.temperatureC} °C` : (stateRecord?.temperature != null ? `${stateRecord.temperature} °C` : "DATA UNAVAILABLE")}
+                </div>
+                <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
+                  <span>MODEL • OPEN-METEO</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
+                </div>
+              </div>
+
+              {/* 5. RELATIVE HUMIDITY */}
               <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div className="text-[9.5px] text-slate-500 font-bold uppercase">
                   RELATIVE HUMIDITY
                 </div>
                 <div className="text-base font-bold text-slate-900 my-1">
-                  {stateRecord?.humidity != null ? `${stateRecord.humidity} %` : (selectedState ? "NO DATA" : "75 %")}
+                  {stateRecord?.humidityPct != null ? `${stateRecord.humidityPct} %` : (stateRecord?.humidity != null ? `${stateRecord.humidity} %` : (selectedState ? "DATA UNAVAILABLE" : "72 %"))}
                 </div>
                 <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
                   <span>MODEL • OPEN-METEO</span>
-                  <span>UPDATED {stateRecord?.updatedAt || weatherData?.lastUpdatedFormatted || "IST"}</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
                 </div>
               </div>
 
-              {/* 5. WIND GUSTS */}
+              {/* 6. DISTANCE TO ACTIVE SYSTEM (DERIVED) */}
               <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
-                <div className="text-[9.5px] text-slate-500 font-bold uppercase">
-                  PEAK GUSTS
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>SYSTEM PROXIMITY</span>
+                  <Compass size={12} className="text-amber-600" />
                 </div>
                 <div className="text-base font-bold text-slate-900 my-1">
-                  {stateRecord?.windGust != null ? `${stateRecord.windGust} km/h` : (selectedState ? "NO DATA" : "24 km/h")}
+                  {stateRecord?.distanceToSystemKm != null
+                    ? `${stateRecord.distanceToSystemKm} km`
+                    : (activeSystem?.hasActiveSystem ? (selectedState ? "DATA UNAVAILABLE" : "Select State") : "None Active")}
                 </div>
                 <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
-                  <span>MODEL • OPEN-METEO</span>
-                  <span>UPDATED {stateRecord?.updatedAt || weatherData?.lastUpdatedFormatted || "IST"}</span>
-                </div>
-              </div>
-
-              {/* 6. SYSTEM DISTANCE */}
-              <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
-                <div className="text-[9.5px] text-slate-500 font-bold uppercase">
-                  CENTROID DISTANCE
-                </div>
-                <div className="text-base font-bold text-slate-900 my-1">
-                  {stateRecord?.distanceToDepressionKm != null
-                    ? `${stateRecord.distanceToDepressionKm} km`
-                    : (activeSystem?.hasActiveSystem ? (selectedState ? "N/A" : "Select State") : "None Active")}
-                </div>
-                <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
-                  <span>DRISHTI DERIVED</span>
-                  <span>UPDATED {weatherData?.lastUpdatedFormatted || "IST"}</span>
+                  <span className="text-amber-700 font-semibold">DERIVED CALC</span>
+                  <span>{weatherData?.checkedAt || "IST"}</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-2 bg-slate-50 rounded border border-slate-200 text-[10px] font-mono text-slate-500">
-              TELEMETRY INGESTION: 36 Administrative Nodes Monitored • Next Refresh in 10m
+            <div className="p-2 bg-slate-50 rounded border border-slate-200 text-[10px] font-mono text-slate-500 leading-relaxed">
+              <strong className="text-slate-700">Provenance Rule:</strong> Surface variables are provided by Open-Meteo High-Resolution Numerical Weather Prediction (MODEL). Distances to synoptic centers are calculated directly by DRISHTI (DERIVED).
             </div>
           </div>
         </div>

@@ -1,352 +1,681 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Satellite,
-  Layers,
   ExternalLink,
-  ShieldCheck,
+  AlertTriangle,
+  RefreshCw,
+  Info,
+  Clock,
+  Compass,
   X,
-  Zap
+  FileText,
+  Activity,
+  Wind,
+  Gauge,
+  Navigation
 } from "lucide-react";
+import {
+  SATELLITE_PRODUCTS,
+  OFFICIAL_SATELLITE_PORTALS,
+  getCachedProductMeta,
+  setCachedProductMeta,
+  getCurrentISTTime
+} from "../../services/satelliteService";
+import {
+  fetchActiveSynopticSystems,
+  OFFICIAL_CYCLONE_PORTALS
+} from "../../services/synopticSystemService";
+
+// Re-export for any modules importing from SatellitePanel
+export { SATELLITE_PRODUCTS };
 
 /**
- * INSAT-3DS Satellite Product Viewer & Map Overlay Control
- * Premium dark-themed panel — consistent with DRISHTI overlay design language.
- * Sourcing Classification: OBSERVED / SATELLITE PRODUCT (MOSDAC / ISRO)
+ * DRISHTI Official Satellite Intelligence Panel (Stage 2A)
+ *
+ * SOURCING CLASSIFICATION:
+ * - SOURCE: IMD / INSAT-3DS (with MOSDAC / ISRO references)
+ * - STATUS: OBSERVED
+ * - PROVENANCE: OBSERVED
+ *
+ * Strict Architecture Compliance:
+ * - 100% remote official imagery; zero bundled rasters or archives.
+ * - Viewport responsive containment with object-fit: contain; zero distortion, zero cropping.
+ * - Authoritative IMD active depression detection & dual-view map integration.
+ * - Transparent status tagging: LIVE only when retrieved; LAST_VERIFIED when CORS blocks client fetch.
+ * - Never guesses uncalibrated raster bounds.
  */
-export const SATELLITE_PRODUCTS = [
-  {
-    id: "IR1",
-    name: "Thermal Infrared (IR1 - 10.8 µm)",
-    shortName: "IR1",
-    description: "Deep convection, cloud height, and nocturnal storm monitoring.",
-    sensor: "INSAT-3DS Imager",
-    resolution: "4 km",
-    imageUrl: "https://mausam.imd.gov.in/satellite/archive/3D_IR1.jpg",
-    color: "#818cf8"
-  },
-  {
-    id: "VIS",
-    name: "Visible Channel (VIS - 0.65 µm)",
-    shortName: "VIS",
-    description: "Daytime high-resolution cloud cover, cyclone eye definition, and fog.",
-    sensor: "INSAT-3DS Imager",
-    resolution: "1 km",
-    imageUrl: "https://mausam.imd.gov.in/satellite/archive/3D_VIS.jpg",
-    color: "#34d399"
-  },
-  {
-    id: "WV",
-    name: "Water Vapour Channel (WV - 6.8 µm)",
-    shortName: "WV",
-    description: "Mid-to-upper tropospheric moisture, jet streams, and dry air intrusion.",
-    sensor: "INSAT-3DS Imager",
-    resolution: "8 km",
-    imageUrl: "https://mausam.imd.gov.in/satellite/archive/3D_WV.jpg",
-    color: "#38bdf8"
-  },
-  {
-    id: "CTT",
-    name: "Cloud Top Temperature (CTT - RGB)",
-    shortName: "CTT",
-    description: "Convective storm intensity and cloud-top cooling trends.",
-    sensor: "INSAT-3DS Imager / Sounder",
-    resolution: "4 km",
-    imageUrl: "https://mausam.imd.gov.in/satellite/archive/3D_CTT.jpg",
-    color: "#fb923c"
-  }
-];
-
 export default function SatellitePanel({
   onClose,
-  overlayOpacity = 0.6,
-  onOpacityChange,
-  isOverlayActive = false,
-  onToggleOverlay
+  onLocateOnMap,
+  _overlayOpacity = 0.6,
+  _onOpacityChange,
+  _isOverlayActive = false,
+  _onToggleOverlay
 }) {
   const [selectedProduct, setSelectedProduct] = useState(SATELLITE_PRODUCTS[0]);
+  const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+  const [lastCheckedTime, setLastCheckedTime] = useState(() => getCurrentISTTime());
+  const [cacheBuster, setCacheBuster] = useState(() => Date.now());
+  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(false);
 
-  const handleProductChange = (prod) => {
-    setSelectedProduct(prod);
+  // Active synoptic system detection state
+  const [synopticData, setSynopticData] = useState(null);
+  const [synopticLoading, setSynopticLoading] = useState(false);
+
+  // Fetch active system intelligence from official IMD sources
+  const loadSynopticSystems = useCallback(async () => {
+    setSynopticLoading(true);
+    try {
+      const data = await fetchActiveSynopticSystems();
+      setSynopticData(data);
+    } catch (err) {
+      console.warn("Synoptic system fetch error:", err);
+    } finally {
+      setSynopticLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadSynopticSystems();
+  }, [loadSynopticSystems]);
+
+  // Switch products and check in-memory cache
+  const handleSelectProduct = useCallback((product) => {
+    if (product.id === selectedProduct.id) return;
+    setSelectedProduct(product);
+    setImageLoading(true);
     setImageError(false);
+
+    const cached = getCachedProductMeta(product.id);
+    if (cached) {
+      if (cached.status === "ERROR") {
+        setImageError(true);
+        setImageLoading(false);
+      }
+    }
+  }, [selectedProduct.id]);
+
+  // Manual image refresh handler
+  const handleManualImageRefresh = useCallback(() => {
+    setImageLoading(true);
+    setImageError(false);
+    const now = Date.now();
+    setCacheBuster(now);
+    const newChecked = getCurrentISTTime();
+    setLastCheckedTime(newChecked);
+
+    setCachedProductMeta(selectedProduct.id, {
+      status: "CHECKING",
+      lastChecked: newChecked
+    });
+  }, [selectedProduct.id]);
+
+  // Image load callbacks
+  const handleImageLoad = () => {
+    setImageLoading(false);
+    setImageError(false);
+    setCachedProductMeta(selectedProduct.id, {
+      status: "OBSERVED",
+      lastChecked: lastCheckedTime
+    });
   };
 
-  const istTime = new Date().toLocaleTimeString("en-IN", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit"
-  }) + " IST";
+  const handleImageError = () => {
+    setImageLoading(false);
+    setImageError(true);
+    setCachedProductMeta(selectedProduct.id, {
+      status: "ERROR",
+      lastChecked: lastCheckedTime
+    });
+  };
+
+  // Conservative 15-minute auto-refresh interval for satellite image
+  useEffect(() => {
+    if (!autoRefreshEnabled) return;
+    const interval = setInterval(() => {
+      handleManualImageRefresh();
+    }, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [autoRefreshEnabled, handleManualImageRefresh]);
+
+  const currentImageUrl = `${selectedProduct.imageUrl}?t=${cacheBuster}`;
+  const primarySystem = synopticData?.primarySystem || null;
+  const isSystemLive = synopticData?.liveStatus === "LIVE" && synopticData?.hasActiveSystem && primarySystem != null && primarySystem.latitude != null;
 
   return (
-    <div style={{
-      background: "#0f172a",
-      borderRadius: "0",        /* shell in OverlayManager provides border-radius */
-      display: "flex",
-      flexDirection: "column",
-      overflow: "hidden",
-      fontFamily: "var(--font-mono, monospace)",
-      maxHeight: "85vh"
-    }}>
-      {/* ── Header ── */}
-      <div style={{
-        background: "linear-gradient(135deg, #0f172a 0%, #0e2040 50%, #0a1628 100%)",
-        borderBottom: "1px solid rgba(6,182,212,0.2)",
-        padding: "16px 20px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        flexShrink: 0
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={{
-            width: "36px", height: "36px", borderRadius: "8px",
-            background: "rgba(6,182,212,0.15)", border: "1px solid rgba(6,182,212,0.3)",
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
-            <Satellite size={18} style={{ color: "#22d3ee" }} />
+    <div
+      className="satellite-operational-panel bg-slate-900 text-slate-100 rounded-lg border border-slate-700 shadow-2xl overflow-hidden"
+      role="region"
+      aria-label="Satellite Intelligence Command Center"
+    >
+      {/* 1. Header Bar: Title, Sourcing Provenance & Window Controls */}
+      <div className="satellite-header flex items-center justify-between px-4 py-2.5 bg-slate-950 border-b border-slate-800">
+        <div className="flex items-center gap-2.5">
+          <div className="p-1.5 rounded bg-cyan-950/80 border border-cyan-800/60 text-cyan-400">
+            <Satellite size={16} />
           </div>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }}>
-              <h3 style={{ color: "#f1f5f9", fontSize: "13px", fontWeight: 800, letterSpacing: "0.06em", margin: 0 }}>
-                INSAT-3DS METEOROLOGICAL SATELLITE
+            <div className="flex items-center gap-2">
+              <h3 className="text-xs font-bold font-mono tracking-wider text-slate-100">
+                SATELLITE INTELLIGENCE
               </h3>
-              <span style={{
-                fontSize: "9px", fontWeight: 700, padding: "1px 7px", borderRadius: "3px",
-                background: "rgba(34,197,94,0.15)", color: "#4ade80",
-                border: "1px solid rgba(34,197,94,0.3)",
-                display: "flex", alignItems: "center", gap: "4px"
-              }}>
-                <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#4ade80", display: "inline-block", animation: "pulse 2s infinite" }} />
-                LIVE
+              <span className="text-[10px] font-mono text-cyan-400 font-semibold">
+                • INSAT-3DS
               </span>
             </div>
-            <div style={{ fontSize: "10px", color: "#64748b", letterSpacing: "0.04em" }}>
-              SPACE APPLICATIONS CENTRE • ISRO / MOSDAC
+            <div className="text-[10px] text-slate-400 font-mono">
+              SOURCE: IMD / INSAT-3DS • SPACE APPLICATIONS CENTRE (ISRO)
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <span style={{
-            fontSize: "9px", fontWeight: 700, padding: "2px 8px", borderRadius: "3px",
-            background: "rgba(6,182,212,0.1)", color: "#22d3ee",
-            border: "1px solid rgba(6,182,212,0.25)", letterSpacing: "0.05em"
-          }}>
-            OBSERVED / SATELLITE PRODUCT
+
+        <div className="flex items-center gap-2">
+          <span className="badge-provenance text-[9px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded font-mono font-bold tracking-wide">
+            STATUS: OBSERVED
           </span>
           {onClose && (
             <button
               type="button"
               onClick={onClose}
-              style={{
-                background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "6px", color: "#94a3b8", cursor: "pointer",
-                width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center"
-              }}
-              title="Close Satellite Panel"
+              className="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800 transition-colors"
+              title="Close Satellite Intelligence Panel"
+              aria-label="Close"
             >
-              <X size={14} />
+              <X size={16} />
             </button>
           )}
         </div>
       </div>
 
-      {/* ── Product Tab Strip ── */}
-      <div style={{
-        display: "flex", alignItems: "center", gap: "6px",
-        padding: "10px 16px",
-        background: "rgba(6,182,212,0.04)",
-        borderBottom: "1px solid rgba(6,182,212,0.1)",
-        overflowX: "auto", flexShrink: 0
-      }}>
-        {SATELLITE_PRODUCTS.map((prod) => (
-          <button
-            key={prod.id}
-            type="button"
-            onClick={() => handleProductChange(prod)}
-            style={{
-              padding: "6px 14px", borderRadius: "6px", fontSize: "11px", fontWeight: 700,
-              cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap",
-              background: selectedProduct.id === prod.id
-                ? "rgba(6,182,212,0.2)" : "rgba(255,255,255,0.04)",
-              border: selectedProduct.id === prod.id
-                ? "1px solid rgba(6,182,212,0.5)" : "1px solid rgba(255,255,255,0.08)",
-              color: selectedProduct.id === prod.id ? "#22d3ee" : "#94a3b8"
-            }}
-          >
-            {prod.shortName}
-          </button>
-        ))}
-
-        {/* selected product name */}
-        <span style={{ marginLeft: "auto", fontSize: "10px", color: "#475569", whiteSpace: "nowrap" }}>
-          {selectedProduct.name}
-        </span>
-      </div>
-
-      {/* ── Main Satellite Viewport ── */}
-      <div style={{
-        position: "relative", background: "#020617",
-        aspectRatio: "16/9", overflow: "hidden",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        flexShrink: 0
-      }}>
-        {!imageError ? (
-          <img
-            src={selectedProduct.imageUrl}
-            alt={`INSAT-3DS ${selectedProduct.name}`}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            onError={() => setImageError(true)}
-            crossOrigin="anonymous"
-          />
-        ) : (
-          /* Fallback: offline / CORS blocked */
-          <div style={{
-            width: "100%", height: "100%",
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center",
-            padding: "24px", textAlign: "center",
-            background: "radial-gradient(ellipse at center, #0a1628 0%, #020617 100%)"
-          }}>
-            <div style={{
-              width: "56px", height: "56px", borderRadius: "50%",
-              background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.3)",
-              display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "12px"
-            }}>
-              <Satellite size={28} style={{ color: "#22d3ee" }} />
-            </div>
-            <div style={{ fontSize: "14px", fontWeight: 800, color: "#e2e8f0", letterSpacing: "0.04em", marginBottom: "4px" }}>
-              INSAT-3DS
-            </div>
-            <div style={{ fontSize: "12px", fontWeight: 700, color: "#22d3ee", marginBottom: "4px" }}>
-              {selectedProduct.shortName} — {selectedProduct.name.split("(")[0].trim()}
-            </div>
-            <div style={{ fontSize: "10px", color: "#475569", marginBottom: "6px" }}>
-              {selectedProduct.description}
-            </div>
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: "5px",
-              padding: "4px 10px", borderRadius: "4px",
-              background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)",
-              fontSize: "10px", fontWeight: 700, color: "#4ade80", marginBottom: "14px"
-            }}>
-              <ShieldCheck size={11} />LIVE SOURCE AVAILABLE — CORS RESTRICTED
-            </div>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
-              <a
-                href={selectedProduct.imageUrl} target="_blank" rel="noopener noreferrer"
-                style={{
-                  padding: "8px 16px", borderRadius: "6px",
-                  background: "rgba(6,182,212,0.2)", border: "1px solid rgba(6,182,212,0.4)",
-                  color: "#22d3ee", fontWeight: 700, fontSize: "11px",
-                  display: "flex", alignItems: "center", gap: "5px", textDecoration: "none"
-                }}
-              >
-                OPEN LIVE PRODUCT <ExternalLink size={11} />
-              </a>
-              <a
-                href="https://www.mosdac.gov.in/" target="_blank" rel="noopener noreferrer"
-                style={{
-                  padding: "8px 16px", borderRadius: "6px",
-                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                  color: "#94a3b8", fontWeight: 700, fontSize: "11px",
-                  display: "flex", alignItems: "center", gap: "5px", textDecoration: "none"
-                }}
-              >
-                MOSDAC / ISRO PORTAL <ExternalLink size={11} />
-              </a>
-            </div>
-          </div>
-        )}
-
-        {/* Live capture tag — top left */}
-        <div style={{
-          position: "absolute", top: "8px", left: "8px",
-          padding: "4px 10px", borderRadius: "4px",
-          background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)",
-          border: "1px solid rgba(6,182,212,0.3)",
-          fontSize: "10px", fontWeight: 700, color: "#22d3ee",
-          display: "flex", alignItems: "center", gap: "5px"
-        }}>
-          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4ade80", animation: "ping 1s infinite" }} />
-          LATEST CAPTURE: {istTime}
-        </div>
-
-        {/* Portal links — bottom right */}
-        {!imageError && (
-          <div style={{ position: "absolute", bottom: "8px", right: "8px", display: "flex", gap: "6px" }}>
-            {[
-              { href: "https://www.mosdac.gov.in/", label: "MOSDAC" },
-              { href: "https://mausam.imd.gov.in/responsive/satellite.php", label: "IMD MAUSAM" }
-            ].map((l) => (
-              <a
-                key={l.href} href={l.href} target="_blank" rel="noopener noreferrer"
-                style={{
-                  padding: "4px 8px", borderRadius: "4px",
-                  background: "rgba(0,0,0,0.65)", border: "1px solid rgba(255,255,255,0.15)",
-                  color: "#94a3b8", fontSize: "10px", fontWeight: 600,
-                  display: "flex", alignItems: "center", gap: "4px", textDecoration: "none"
-                }}
-              >
-                {l.label} <ExternalLink size={9} />
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ── Product Info + Controls ── */}
-      <div style={{ padding: "14px 16px", background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
-        <p style={{ fontSize: "11px", color: "#94a3b8", margin: "0 0 10px 0", lineHeight: 1.5, fontFamily: "sans-serif" }}>
-          {selectedProduct.description}
-        </p>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <span style={{ fontSize: "10px", color: "#475569" }}>SENSOR: <span style={{ color: "#94a3b8", fontWeight: 700 }}>{selectedProduct.sensor}</span></span>
-            <span style={{ fontSize: "10px", color: "#475569" }}>RESOLUTION: <span style={{ color: "#94a3b8", fontWeight: 700 }}>{selectedProduct.resolution}</span></span>
-          </div>
-
-          {onToggleOverlay && (
+      {/* 2. Product Selector Tabs */}
+      <div className="satellite-tabs px-3 py-2 bg-slate-950/80 border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto scrollbar-thin">
+        {SATELLITE_PRODUCTS.map((prod) => {
+          const isActive = selectedProduct.id === prod.id;
+          return (
             <button
+              key={prod.id}
               type="button"
-              onClick={() => onToggleOverlay("satellite")}
-              style={{
-                padding: "6px 14px", borderRadius: "6px", fontSize: "10px", fontWeight: 700,
-                cursor: "pointer", transition: "all 0.15s",
-                background: isOverlayActive ? "rgba(6,182,212,0.2)" : "rgba(255,255,255,0.04)",
-                border: isOverlayActive ? "1px solid rgba(6,182,212,0.5)" : "1px solid rgba(255,255,255,0.1)",
-                color: isOverlayActive ? "#22d3ee" : "#64748b",
-                display: "flex", alignItems: "center", gap: "5px"
-              }}
+              onClick={() => handleSelectProduct(prod)}
+              className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold tracking-wider whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                isActive
+                  ? "bg-cyan-600 text-white shadow-sm ring-1 ring-cyan-400"
+                  : "bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60"
+              }`}
             >
-              <Layers size={11} />
-              {isOverlayActive ? "MAP OVERLAY ACTIVE" : "MAP OVERLAY OFF"}
+              <span>{prod.shortName}</span>
+              {prod.category === "Rapid Scan" && (
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" title="Rapid Scan Mode" />
+              )}
             </button>
-          )}
-        </div>
+          );
+        })}
+      </div>
 
-        {isOverlayActive && onOpacityChange && (
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px" }}>
-            <span style={{ fontSize: "10px", color: "#64748b", whiteSpace: "nowrap" }}>OPACITY:</span>
-            <input
-              type="range" min="0" max="1" step="0.05"
-              value={overlayOpacity}
-              onChange={(e) => onOpacityChange(parseFloat(e.target.value))}
-              style={{ flex: 1, accentColor: "#22d3ee", cursor: "pointer" }}
-            />
-            <span style={{ fontSize: "10px", fontWeight: 700, color: "#22d3ee", width: "36px", textAlign: "right" }}>
-              {Math.round(overlayOpacity * 100)}%
+      {/* 3. Main Satellite Viewport Box (Responsive Fit, object-fit: contain, zero distortion) */}
+      <div className="satellite-viewport-box">
+        {/* Loading Spinner / Skeleton */}
+        {imageLoading && !imageError && (
+          <div className="absolute inset-0 z-10 bg-slate-950 flex flex-col items-center justify-center gap-2.5">
+            <RefreshCw size={24} className="text-cyan-400 animate-spin" />
+            <span className="text-xs font-mono text-slate-300">
+              CONNECTING TO OFFICIAL IMD SATELLITE STREAM...
+            </span>
+            <span className="text-[10px] font-mono text-slate-500">
+              {selectedProduct.name}
             </span>
           </div>
         )}
+
+        {/* Live Satellite Raster Display */}
+        {!imageError ? (
+          <div className="satellite-image-viewport">
+            <img
+              key={currentImageUrl}
+              src={currentImageUrl}
+              alt={`INSAT-3DS ${selectedProduct.name}`}
+              loading="lazy"
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              className={`satellite-image transition-opacity duration-300 ${
+                imageLoading ? "opacity-0" : "opacity-100"
+              }`}
+            />
+          </div>
+        ) : (
+          /* High-Integrity Error State when direct stream is blocked or unavailable */
+          <div className="w-full h-full bg-slate-950 flex flex-col items-center justify-center p-6 text-center border border-slate-800">
+            <div className="p-3 bg-red-950/60 rounded-full border border-red-800/80 mb-2.5 text-red-400">
+              <AlertTriangle size={28} />
+            </div>
+            <div className="text-xs font-bold font-mono text-red-300 tracking-wider mb-1">
+              SATELLITE DATA UNAVAILABLE
+            </div>
+            <p className="text-[11px] font-mono text-slate-400 max-w-md mb-3 leading-relaxed">
+              Official satellite imagery could not be retrieved directly from the remote IMD endpoint.
+              Direct browser access may be constrained by network connectivity or server maintenance.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <a
+                href={OFFICIAL_SATELLITE_PORTALS.IMD_SATELLITE.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white rounded text-xs font-mono font-bold flex items-center gap-1.5 transition-colors"
+              >
+                <span>OPEN IMD SATELLITE</span>
+                <ExternalLink size={12} />
+              </a>
+              <a
+                href={OFFICIAL_SATELLITE_PORTALS.IMD_RAPID_SCAN.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-mono font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors"
+              >
+                <span>OPEN IMD RAPID SCAN</span>
+                <ExternalLink size={12} />
+              </a>
+              <a
+                href={OFFICIAL_SATELLITE_PORTALS.MOSDAC_INSAT3DS.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-mono font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors"
+              >
+                <span>OPEN MOSDAC</span>
+                <ExternalLink size={12} />
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* Viewport Floating HUD Overlays */}
+        {!imageError && !imageLoading && (
+          <>
+            {/* Top-Left: Active System HUD Annotation Marker (Only when officially LIVE and verified) */}
+            {isSystemLive && (
+              <div className="absolute top-2.5 left-2.5 z-20 flex flex-wrap items-center gap-2 max-w-[85%]">
+                <div className="px-2.5 py-1.5 rounded bg-black/85 backdrop-blur-md border border-amber-500/80 text-[11px] font-mono text-amber-300 shadow-xl flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5 shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                  </span>
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-amber-200 tracking-wider">
+                        ACTIVE SYSTEM: {primarySystem.classification}
+                      </span>
+                      <span className="px-1 py-0.2 bg-amber-950/80 border border-amber-700/60 rounded text-[9px] text-amber-400 font-bold">
+                        {primarySystem.coordinatesFormatted}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {onLocateOnMap && (
+                  <button
+                    type="button"
+                    onClick={() => onLocateOnMap(primarySystem)}
+                    className="px-2.5 py-1.5 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold font-mono text-[10.5px] flex items-center gap-1.5 shadow-lg transition-transform active:scale-95"
+                    title="Center and view exact coordinates on Leaflet Operational Map"
+                  >
+                    <Compass size={13} className="text-slate-950" />
+                    <span>LOCATE ON MAP</span>
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Top-Right: Product Sector & Check Timestamp */}
+            <div className="absolute top-2.5 right-2.5 z-20 flex items-center gap-1.5">
+              <div className="px-2 py-1 rounded bg-black/80 backdrop-blur-sm border border-slate-700 text-[10px] font-mono text-cyan-300 flex items-center gap-1.5 shadow">
+                <span>{selectedProduct.shortName} • {selectedProduct.sector}</span>
+              </div>
+              <div className="px-2 py-1 rounded bg-black/80 backdrop-blur-sm border border-slate-700 text-[10px] font-mono text-slate-300 flex items-center gap-1 shadow">
+                <Clock size={10} className="text-cyan-400" />
+                <span>CHECKED: {lastCheckedTime}</span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* ── Footer ── */}
-      <div style={{
-        padding: "10px 20px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        background: "rgba(15,23,42,0.8)", flexShrink: 0
-      }}>
-        <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: MOSDAC / ISRO SAC GEOSTATIONARY PRODUCTS</span>
-        <span style={{ fontSize: "10px", color: "#22d3ee", fontWeight: 700 }}>ISRO • MOSDAC • IMD</span>
+      {/* 4. Intelligence Dossier: Active Meteorological System Card & Product Specs */}
+      <div className="p-3 bg-slate-950 flex flex-col gap-2.5 overflow-y-auto max-h-[38vh]">
+        {/* Dual Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2.5">
+          {/* Column A: Authoritative Active Meteorological System Card (Sections 2, 4, 5, 9, 10, 14) */}
+          <div className="md:col-span-7 p-3 bg-slate-900/90 rounded border border-amber-900/50 flex flex-col gap-2 font-mono text-xs">
+            <div className="flex items-center justify-between border-b border-amber-900/40 pb-1.5">
+              <div className="flex items-center gap-2">
+                <Activity size={14} className="text-amber-400 shrink-0" />
+                <span className="font-bold text-slate-100 text-[11.5px] tracking-wide">
+                  ACTIVE METEOROLOGICAL SYSTEM
+                </span>
+              </div>
+
+              {/* Live Status Badge */}
+              {synopticData?.liveStatus === "LIVE" ? (
+                <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 text-[9.5px] font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>LIVE / IMD OBSERVED</span>
+                </span>
+              ) : (
+                <span className="px-2 py-0.5 rounded bg-slate-900 text-amber-300 border border-amber-800/60 text-[9.5px] font-bold flex items-center gap-1">
+                  <AlertTriangle size={10} className="text-amber-400" />
+                  <span>IMD SYSTEM FEED: SOURCE UNAVAILABLE</span>
+                </span>
+              )}
+            </div>
+
+            {isSystemLive && primarySystem ? (
+              <>
+                {/* System Name & Classification */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded bg-amber-600 text-slate-950 font-bold text-[11px] tracking-wider">
+                      [{primarySystem.classification}]
+                    </span>
+                    <span className="font-bold text-slate-200 text-xs">
+                      {primarySystem.name}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Location & Precise Coordinates */}
+                <div className="p-2 rounded bg-slate-950/80 border border-slate-800 text-[11px] grid grid-cols-2 gap-2">
+                  <div className="col-span-2">
+                    <span className="text-slate-400 block text-[9.5px]">LOCATION / SECTOR:</span>
+                    <span className="text-slate-200 font-semibold">
+                      {primarySystem.locationDescription || "Indian Subcontinent & Oceanic Basins"}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-400 block text-[9.5px]">SYSTEM COORDINATES:</span>
+                    <span className="text-amber-300 font-bold text-xs">
+                      {primarySystem.coordinatesFormatted}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-400 block text-[9.5px]">LATITUDE / LONGITUDE:</span>
+                    <span className="text-slate-300 font-bold">
+                      {primarySystem.latitudeFormatted} • {primarySystem.longitudeFormatted}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Intensity, Pressure, Movement & Observation */}
+                <div className="grid grid-cols-3 gap-2 text-[10.5px]">
+                  <div className="p-1.5 rounded bg-slate-950/60 border border-slate-800/80">
+                    <div className="flex items-center gap-1 text-slate-400 text-[9px] mb-0.5">
+                      <Wind size={10} className="text-teal-400" />
+                      <span>MAX WIND</span>
+                    </div>
+                    <div className="font-bold text-teal-300">
+                      {primarySystem.maxWindKmph ? `${primarySystem.maxWindKmph} km/h` : "Not reported"}
+                    </div>
+                    {primarySystem.gustKmph && (
+                      <div className="text-[9px] text-slate-400">Gusts: {primarySystem.gustKmph} km/h</div>
+                    )}
+                  </div>
+
+                  <div className="p-1.5 rounded bg-slate-950/60 border border-slate-800/80">
+                    <div className="flex items-center gap-1 text-slate-400 text-[9px] mb-0.5">
+                      <Gauge size={10} className="text-blue-400" />
+                      <span>PRESSURE</span>
+                    </div>
+                    <div className="font-bold text-blue-300">
+                      {primarySystem.pressureHpa ? `${primarySystem.pressureHpa} hPa` : "Not reported"}
+                    </div>
+                    <div className="text-[9px] text-slate-400">Central core</div>
+                  </div>
+
+                  <div className="p-1.5 rounded bg-slate-950/60 border border-slate-800/80">
+                    <div className="flex items-center gap-1 text-slate-400 text-[9px] mb-0.5">
+                      <Navigation size={10} className="text-amber-400" />
+                      <span>MOVEMENT</span>
+                    </div>
+                    <div className="font-bold text-amber-300 truncate">
+                      {primarySystem.movementDescription || "Monitoring"}
+                    </div>
+                    <div className="text-[9px] text-slate-400">Synoptic vector</div>
+                  </div>
+                </div>
+
+                {/* Sourcing & Action Controls */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
+                  <div className="text-[10px] text-slate-400">
+                    <span>Observation: <strong className="text-slate-200">{primarySystem.observationTime}</strong></span>
+                    <span className="mx-1.5">•</span>
+                    <span>Source: <strong className="text-slate-300">{primarySystem.source}</strong></span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {onLocateOnMap && (
+                      <button
+                        type="button"
+                        onClick={() => onLocateOnMap(primarySystem)}
+                        className="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-slate-950 rounded font-bold text-[10.5px] flex items-center gap-1 shadow transition-colors"
+                        title="Center Leaflet operational map on active system coordinates"
+                      >
+                        <Compass size={12} />
+                        <span>LOCATE ON MAP</span>
+                      </button>
+                    )}
+
+                    <a
+                      href={primarySystem.sourceUrl || OFFICIAL_CYCLONE_PORTALS.PRIMARY_CYCLONE_INFO.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[10.5px] flex items-center gap-1 transition-colors"
+                      title="Open official IMD Cyclone Information portal"
+                    >
+                      <span>OPEN IMD SOURCE</span>
+                      <ExternalLink size={10} />
+                    </a>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="px-2 py-0.5 rounded bg-slate-800 text-amber-400 border border-amber-900/60 font-bold text-[11px] tracking-wider">
+                    [IMD SYSTEM FEED]
+                  </span>
+                  <span className="font-bold text-slate-300 text-xs">
+                    SOURCE UNAVAILABLE
+                  </span>
+                </div>
+
+                {/* Coordinates & Observation NOT VERIFIED */}
+                <div className="p-2.5 rounded bg-slate-950/80 border border-slate-800 text-[11px] grid grid-cols-2 gap-2">
+                  <div>
+                    <span className="text-slate-400 block text-[9.5px]">SYSTEM COORDINATES:</span>
+                    <span className="text-slate-400 font-bold text-xs">
+                      NOT VERIFIED
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-400 block text-[9.5px]">OBSERVATION:</span>
+                    <span className="text-slate-400 font-bold text-xs">
+                      NOT VERIFIED
+                    </span>
+                  </div>
+
+                  <div className="col-span-2 pt-1 border-t border-slate-800/80 flex items-center justify-between text-[10px]">
+                    <span className="text-slate-400">
+                      DRISHTI CHECKED: <strong className="text-cyan-300">{synopticData?.checkedAt || lastCheckedTime}</strong>
+                    </span>
+                    <span className="text-slate-500">PROVENANCE: UNAVAILABLE</span>
+                  </div>
+                </div>
+
+                {/* Sourcing Transparency Notice & Direct Link */}
+                <div className="p-2 bg-slate-950/60 rounded border border-slate-800/80 text-[10px] text-slate-400 flex flex-col gap-2">
+                  <span>Direct IMD bulletin web access is blocked by browser CORS. Official live system observation and coordinates cannot be verified client-side without an official proxy.</span>
+                  <div className="flex items-center justify-between pt-1 border-t border-slate-800">
+                    <a
+                      href={OFFICIAL_CYCLONE_PORTALS.PRIMARY_CYCLONE_INFO.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-slate-950 rounded font-bold text-[10.5px] flex items-center gap-1 transition-colors"
+                      title="Open official IMD Cyclone Information portal"
+                    >
+                      <span>OPEN OFFICIAL IMD BULLETIN</span>
+                      <ExternalLink size={10} />
+                    </a>
+                    <button
+                      type="button"
+                      onClick={loadSynopticSystems}
+                      disabled={synopticLoading}
+                      className="text-amber-400 hover:underline flex items-center gap-1 text-[10px] font-bold"
+                    >
+                      <RefreshCw size={9} className={synopticLoading ? "animate-spin" : ""} />
+                      <span>Re-check Feed</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Column B: Selected Satellite Product Specifications & Controls */}
+          <div className="md:col-span-5 p-3 bg-slate-900/90 rounded border border-slate-800 flex flex-col justify-between gap-2 font-mono text-xs">
+            <div>
+              <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2">
+                <span className="font-bold text-slate-200 text-[11.5px]">
+                  SATELLITE PRODUCT SPECS
+                </span>
+                <span className="text-[10px] text-cyan-400 font-bold">
+                  {selectedProduct.shortName}
+                </span>
+              </div>
+
+              <div className="space-y-1.5 text-[10.5px]">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">PRODUCT:</span>
+                  <span className="font-bold text-slate-200">{selectedProduct.name}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">SENSOR:</span>
+                  <span className="text-slate-300">{selectedProduct.sensor} ({selectedProduct.resolution})</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">WAVELENGTH:</span>
+                  <span className="text-slate-300">{selectedProduct.wavelength}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">ACQUISITION:</span>
+                  <span className="text-cyan-300 font-semibold">{selectedProduct.acquisitionNote}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">DRISHTI CHECKED:</span>
+                  <span className="text-slate-300">{lastCheckedTime}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Spatial Bounds Adherence Note (Section 7) */}
+            <div className="p-2 bg-slate-950/80 rounded border border-slate-800/80 text-[9.5px] text-slate-400 leading-relaxed flex items-start gap-1.5">
+              <Info size={11} className="text-cyan-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-slate-300">Geographic Spatial Bounds:</strong> IMD composite rasters lack published georeferencing matrices. In strict compliance with DRISHTI rules (NEVER GUESS IMAGE BOUNDS), exact coordinates are plotted on the Leaflet operational map.
+              </div>
+            </div>
+
+            {/* Satellite Actions */}
+            <div className="flex flex-wrap items-center justify-between gap-1.5 pt-1 border-t border-slate-800">
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={handleManualImageRefresh}
+                  className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 flex items-center gap-1 text-[10.5px] transition-colors"
+                  title="Re-check current satellite stream"
+                >
+                  <RefreshCw size={10} className="text-cyan-400" />
+                  <span>Refresh Image</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setAutoRefreshEnabled((prev) => !prev)}
+                  className={`px-1.5 py-1 rounded text-[9.5px] font-bold border transition-colors ${
+                    autoRefreshEnabled
+                      ? "bg-cyan-950 text-cyan-300 border-cyan-800"
+                      : "bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200"
+                  }`}
+                  title="Toggle conservative 15-minute background refresh"
+                >
+                  {autoRefreshEnabled ? "Auto (15m): ON" : "Auto: OFF"}
+                </button>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <a
+                  href={selectedProduct.imageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2 py-1 bg-cyan-700 hover:bg-cyan-600 text-white rounded text-[10.5px] font-bold flex items-center gap-1 transition-colors shadow-sm"
+                  title="Open full-resolution image in new tab"
+                >
+                  <span>FULL IMAGE</span>
+                  <ExternalLink size={10} />
+                </a>
+
+                <a
+                  href={selectedProduct.officialSourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10.5px] font-semibold border border-slate-700 flex items-center gap-1 transition-colors"
+                  title="Open official IMD portal page"
+                >
+                  <span>IMD PORTAL</span>
+                  <ExternalLink size={10} />
+                </a>
+
+                {selectedProduct.officialPdfUrl && (
+                  <a
+                    href={selectedProduct.officialPdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded text-[10.5px] font-semibold border border-slate-700 flex items-center gap-1 transition-colors"
+                    title="Download Official IMD Bulletin PDF"
+                  >
+                    <FileText size={10} />
+                    <span>PDF</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Provenance Footer */}
+        <div className="flex items-center justify-between pt-1 border-t border-slate-800 text-[10px] font-mono text-slate-500">
+          <span>Satellite observation • IMD / INSAT-3DS</span>
+          <div className="flex items-center gap-3">
+            <a
+              href={OFFICIAL_SATELLITE_PORTALS.MOSDAC_INSAT3DS.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cyan-400/80 hover:text-cyan-300 hover:underline flex items-center gap-1"
+            >
+              <span>MOSDAC / ISRO</span>
+              <ExternalLink size={9} />
+            </a>
+            <span className="text-slate-600">•</span>
+            <a
+              href={OFFICIAL_SATELLITE_PORTALS.IMD_SATELLITE.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cyan-400/80 hover:text-cyan-300 hover:underline flex items-center gap-1"
+            >
+              <span>IMD MAUSAM</span>
+              <ExternalLink size={9} />
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

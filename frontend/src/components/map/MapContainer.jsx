@@ -15,7 +15,6 @@ import L from "leaflet";
 import { Layers, Wind } from "lucide-react";
 import { STATES_AND_UTS } from "../../data/indiaGeography";
 import WindCanvasOverlay from "./WindCanvasOverlay";
-import { ACTIVE_DEPRESSION_SYSTEM } from "../../services/openMeteoService";
 
 // Subcomponent to smoothly animate map viewport to target coordinates and ensure full dimensions
 function MapViewController({ center, zoom }) {
@@ -121,7 +120,9 @@ export default function MapContainer({
   operatingMode = "NORMAL",
   selectedState,
   onSelectState,
-  weatherData = null
+  weatherData = null,
+  focusedSystem = null,
+  onResetFocus = null
 }) {
   const isNormal = operatingMode === "NORMAL";
 
@@ -158,11 +159,14 @@ export default function MapContainer({
     setLayers((prev) => ({ ...prev, [layerKey]: !prev[layerKey] }));
   };
 
-  // Determine dynamic map center & zoom based on operating mode & selected state
+  // Determine dynamic map center & zoom based on operating mode, selected state, or focused synoptic system
   // Prompt requirement: Initial screen must show India, Arabian Sea, Bay of Bengal, Sri Lanka
   let mapCenter = [20.5937, 78.9629];
   let mapZoom = 5;
-  if (isNormal) {
+  if (focusedSystem && focusedSystem.latitude && focusedSystem.longitude) {
+    mapCenter = [focusedSystem.latitude, focusedSystem.longitude];
+    mapZoom = 7;
+  } else if (isNormal) {
     if (selectedState) {
       mapCenter = selectedState.center || [20.5937, 78.9629];
       mapZoom = selectedState.zoom || 6;
@@ -190,7 +194,7 @@ export default function MapContainer({
   // Convert forecast track to LatLng array starting from current
   const forecastPathCoords = [[current.latitude, current.longitude], ...forecastTrack.map((p) => [p.lat, p.lon])];
 
-  // Lookup state match by name
+  // Lookup state match by name across 36 Indian States & UTs
   const getStateRecord = (geoName) => {
     if (!weatherData?.states) return null;
     const norm = normalizeStateName(geoName);
@@ -198,56 +202,30 @@ export default function MapContainer({
       const sNorm = normalizeStateName(st.name);
       return sNorm === norm || sNorm.includes(norm) || norm.includes(sNorm);
     });
-    if (matchedState && weatherData.states[matchedState.id]) {
-      return { meta: matchedState, weather: weatherData.states[matchedState.id] };
+    if (matchedState) {
+      let stateWeather = null;
+      if (Array.isArray(weatherData.states)) {
+        stateWeather = weatherData.states.find((s) => (s.stateId === matchedState.id || s.id === matchedState.id));
+      } else if (weatherData.states[matchedState.id]) {
+        stateWeather = weatherData.states[matchedState.id];
+      }
+      return { meta: matchedState, weather: stateWeather };
     }
     return null;
   };
 
-  // Choropleth style function for 36 Indian States & UTs
+  // Choropleth style function for 36 Indian States & UTs (Clean, unobtrusive baseline)
   const stateStyle = (feature) => {
     const stateName = feature.properties?.ST_NM || feature.properties?.NAME_1 || "";
-    const record = getStateRecord(stateName);
     const isSelected = selectedState && normalizeStateName(selectedState.name) === normalizeStateName(stateName);
 
-    // If no weather data, render neutral boundary without covering basemap
-    if (!record?.weather) {
-      return {
-        fillColor: isSelected ? "#3b82f6" : "transparent",
-        weight: isSelected ? 2.5 : 1,
-        opacity: 0.8,
-        color: isSelected ? "#1d4ed8" : "#94a3b8",
-        dashArray: isSelected ? undefined : "2 2",
-        fillOpacity: isSelected ? 0.25 : 0
-      };
-    }
-
-    const influence = record.weather.depressionInfluencePct || 0;
-
-    // Neutral baseline - transparent fill so OpenStreetMap basemap is 100% visible
-    let fillColor = isSelected ? "#3b82f6" : "transparent";
-    let fillOpacity = isSelected ? 0.25 : 0;
-    let strokeColor = isSelected ? "#1d4ed8" : "#64748b";
-    let strokeWeight = isSelected ? 2.5 : 1;
-
-    // Only tint states that have meaningful verified influence (>= 35%)
-    if (influence >= 60) {
-      fillColor = "#ea580c"; // Elevated influence (e.g., MP synoptic zone)
-      fillOpacity = isSelected ? 0.45 : 0.25;
-      strokeColor = isSelected ? "#1d4ed8" : "#c2410c";
-    } else if (influence >= 35) {
-      fillColor = "#f59e0b"; // Moderate influence
-      fillOpacity = isSelected ? 0.35 : 0.18;
-      strokeColor = isSelected ? "#1d4ed8" : "#b45309";
-    }
-
     return {
-      fillColor,
-      weight: strokeWeight,
+      fillColor: isSelected ? "#0284c7" : "transparent",
+      weight: isSelected ? 2.5 : 1,
       opacity: 0.85,
-      color: strokeColor,
+      color: isSelected ? "#0369a1" : "#64748b",
       dashArray: isSelected ? undefined : "2 2",
-      fillOpacity
+      fillOpacity: isSelected ? 0.22 : 0
     };
   };
 
@@ -263,8 +241,8 @@ export default function MapContainer({
             const target = e.target;
             target.setStyle({
               weight: 2.5,
-              color: "#2563eb",
-              fillOpacity: 0.55
+              color: "#0284c7",
+              fillOpacity: 0.35
             });
           } catch {}
         },
@@ -275,8 +253,8 @@ export default function MapContainer({
               const isSelected = selectedState && normalizeStateName(selectedState.name) === normalizeStateName(stateName);
               target.setStyle({
                 weight: isSelected ? 2.5 : 1,
-                color: isSelected ? "#1d4ed8" : "#94a3b8",
-                fillOpacity: stateStyle(feature).fillOpacity
+                color: isSelected ? "#0369a1" : "#64748b",
+                fillOpacity: isSelected ? 0.22 : 0
               });
             }
           } catch {}
@@ -290,38 +268,44 @@ export default function MapContainer({
         }
       });
 
-      // State hover: State, Wind, Rain, Temperature, Warning status, Data timestamp. If no data: NO CURRENT DATA
-      if (!record?.weather) {
+      // State hover: State Meteorology (Wind, Rainfall, Pressure, Temperature, Source, Provenance, Checked time)
+      if (!record?.weather || !record.weather.hasData) {
         layer.bindTooltip(
-          `<div class="font-mono text-xs leading-tight p-1.5">
-            <strong class="text-slate-900">${stateName}</strong>
-            <div class="text-[10.5px] text-slate-500 font-bold mt-1">NO CURRENT DATA</div>
-            <div class="text-[9px] text-slate-400 mt-0.5">OPEN-METEO / IMD TELEMETRY PENDING</div>
+          `<div class="font-mono text-xs leading-tight p-2" style="background:#0f172a;color:#f8fafc;border-radius:4px;border:1px solid #334155;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:4px;border-bottom:1px solid #334155;margin-bottom:4px;">
+              <strong style="color:#ffffff;font-size:11px;">${stateName}</strong>
+              <span style="font-size:9px;padding:1px 4px;border-radius:2px;background:#334155;color:#94a3b8;font-weight:bold;">DATA UNAVAILABLE</span>
+            </div>
+            <div style="font-size:10px;color:#94a3b8;">TELEMETRY OFFLINE</div>
           </div>`,
           { sticky: true, opacity: 0.95 }
         );
       } else {
-        const influence = record.weather.depressionInfluencePct != null ? `${record.weather.depressionInfluencePct}%` : "N/A";
-        const windSpeed = record.weather.windSpeed != null ? `${record.weather.windSpeed} km/h` : "N/A";
-        const rain = record.weather.rain != null ? `${record.weather.rain} mm` : "N/A";
-        const temp = record.weather.temperature != null ? `${record.weather.temperature}°C` : "N/A";
-        const warningStatus = record.weather.depressionInfluencePct >= 50 ? "WARNING" : record.weather.depressionInfluencePct >= 25 ? "ALERT" : "ROUTINE";
-        const timestamp = record.weather.updatedAt || "IST";
+        const w = record.weather;
+        const windSpeed = w.windSpeedKmph != null ? `${w.windSpeedKmph} km/h` : (w.windSpeed != null ? `${w.windSpeed} km/h` : "N/A");
+        const dirLabel = w.windDirectionLabel || "";
+        const rain = w.rainfallMm != null ? `${w.rainfallMm} mm` : (w.rain != null ? `${w.rain} mm` : "0.0 mm");
+        const pressure = w.pressureHpa != null ? `${w.pressureHpa} hPa` : "N/A";
+        const temp = w.temperatureC != null ? `${w.temperatureC} °C` : (w.temperature != null ? `${w.temperature} °C` : "N/A");
+        const distanceToSys = w.distanceToSystemKm;
+        const checkedTime = w.checkedAt || "IST";
 
         layer.bindTooltip(
-          `<div class="font-mono text-xs leading-tight p-1.5">
-            <div class="flex items-center justify-between pb-1 border-b border-slate-200 mb-1">
-              <strong class="text-slate-900">${stateName}</strong>
-              <span class="text-[9px] px-1 py-0.2 rounded font-bold ${
-                warningStatus === "WARNING" ? "bg-red-100 text-red-800" :
-                warningStatus === "ALERT" ? "bg-orange-100 text-orange-800" :
-                "bg-emerald-100 text-emerald-800"
-              }">${warningStatus}</span>
+          `<div class="font-mono text-xs leading-tight p-2" style="background:#0f172a;color:#f8fafc;border-radius:4px;border:1px solid #334155;min-width:180px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:4px;border-bottom:1px solid #334155;margin-bottom:6px;">
+              <strong style="color:#38bdf8;font-size:11.5px;">${stateName}</strong>
+              <span style="font-size:9px;padding:1px 4px;border-radius:2px;background:#1e3a8a;color:#93c5fd;border:1px solid #3b82f6;font-weight:bold;">MODEL</span>
             </div>
-            <div class="text-[10px] text-slate-600">Wind: <strong>${windSpeed}</strong> | Rain: <strong>${rain}</strong> | Temp: <strong>${temp}</strong></div>
-            <div class="mt-1 pt-1 border-t border-slate-200 flex items-center justify-between text-[9.5px]">
-              <span class="text-orange-700 font-bold">DEPRESSION INFLUENCE: ${influence}</span>
-              <span class="text-slate-400 font-mono">${timestamp}</span>
+            <div style="display:flex;flex-direction:column;gap:3px;font-size:10.5px;color:#e2e8f0;">
+              <div>Wind: <strong style="color:#ffffff;">${windSpeed} ${dirLabel}</strong></div>
+              <div>Rainfall: <strong style="color:#ffffff;">${rain}</strong></div>
+              <div>Pressure: <strong style="color:#ffffff;">${pressure}</strong></div>
+              <div>Temperature: <strong style="color:#ffffff;">${temp}</strong></div>
+              ${distanceToSys != null ? `<div style="color:#f59e0b;font-weight:bold;border-top:1px solid #334155;padding-top:3px;margin-top:2px;">Distance to System: ${distanceToSys} km <span style="font-size:8.5px;color:#fbbf24;font-weight:normal;">(DERIVED)</span></div>` : ''}
+            </div>
+            <div style="margin-top:6px;padding-top:4px;border-top:1px solid #334155;display:flex;align-items:center;justify-content:space-between;font-size:9px;color:#94a3b8;">
+              <span>OPEN-METEO</span>
+              <span>${checkedTime}</span>
             </div>
           </div>`,
           { sticky: true, opacity: 0.95 }
@@ -455,35 +439,50 @@ export default function MapContainer({
             />
           )}
 
-          {/* Active Synoptic System Marker (Normal Mode) */}
-          {isNormal && ACTIVE_DEPRESSION_SYSTEM && ACTIVE_DEPRESSION_SYSTEM.centerLat && (
-            <Marker
-              position={[ACTIVE_DEPRESSION_SYSTEM.centerLat, ACTIVE_DEPRESSION_SYSTEM.centerLon]}
-              icon={createDepressionIcon()}
-            >
-              <Popup>
-                <div className="map-popup-card">
-                  <div className="popup-title">
-                    <span className="text-amber-800 font-bold">ACTIVE SYNOPTIC SYSTEM</span>
-                    <span className="badge-provenance ml-2 text-xs">OBSERVED BULLETIN</span>
-                  </div>
-                  <div className="popup-stage font-semibold text-amber-700">
-                    {ACTIVE_DEPRESSION_SYSTEM.name}
-                  </div>
-                  <div className="popup-details font-mono text-xs mt-1">
-                    <div>Classification: <strong>{ACTIVE_DEPRESSION_SYSTEM.classification}</strong></div>
-                    <div>Position: {ACTIVE_DEPRESSION_SYSTEM.centerLat}°N, {ACTIVE_DEPRESSION_SYSTEM.centerLon}°E</div>
-                    <div>Max Sustained Wind: {ACTIVE_DEPRESSION_SYSTEM.maxWindKmh} km/h (Gusts {ACTIVE_DEPRESSION_SYSTEM.gustKmh} km/h)</div>
-                    <div>Central Pressure: {ACTIVE_DEPRESSION_SYSTEM.centralPressureMb} hPa</div>
-                    <div>Movement: {ACTIVE_DEPRESSION_SYSTEM.movement}</div>
-                    <div className="mt-1 text-slate-500 text-[10px] border-t border-slate-200 pt-1">
-                      {ACTIVE_DEPRESSION_SYSTEM.source}
+          {(focusedSystem || (isNormal && weatherData?.activeSystem?.hasActiveSystem && weatherData.activeSystem.liveStatus === "LIVE" && weatherData.activeSystem.latitude != null)) && (() => {
+            const sys = focusedSystem || weatherData?.activeSystem;
+            if (!sys || sys.latitude == null || sys.longitude == null || sys.coordinatesFormatted === "NOT VERIFIED" || sys.liveStatus === "SOURCE_UNAVAILABLE") return null;
+            return (
+              <Marker
+                key={`system-marker-${sys.latitude}-${sys.longitude}`}
+                position={[sys.latitude, sys.longitude]}
+                icon={createDepressionIcon()}
+              >
+                <Popup autoPan={false}>
+                  <div className="map-popup-card" style={{ minWidth: "220px", fontFamily: "monospace" }}>
+                    <div className="popup-title" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <span style={{ color: "#d97706", fontWeight: "bold", fontSize: "11px" }}>
+                        [{sys.classification || "DEPRESSION"}]
+                      </span>
+                      <span className="badge-provenance text-[9px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.5 rounded">
+                        {sys.provenance || "OBSERVED"}
+                      </span>
+                    </div>
+                    <div style={{ fontWeight: "bold", color: "#0f172a", fontSize: "12px", marginTop: "4px" }}>
+                      {sys.name}
+                    </div>
+                    <div style={{ marginTop: "6px", fontSize: "11px", color: "#334155", display: "flex", flexDirection: "column", gap: "2px" }}>
+                      <div><strong>Coordinates:</strong> {sys.coordinatesFormatted || `${sys.latitude}°N, ${sys.longitude}°E`}</div>
+                      <div><strong>Latitude:</strong> {sys.latitudeFormatted || `${sys.latitude}° N`}</div>
+                      <div><strong>Longitude:</strong> {sys.longitudeFormatted || `${sys.longitude}° E`}</div>
+                      {sys.maxWindKmph && (
+                        <div><strong>Max Sustained Wind:</strong> {sys.maxWindKmph} km/h</div>
+                      )}
+                      {sys.centralPressureHpa && (
+                        <div><strong>Central Pressure:</strong> {sys.centralPressureHpa} hPa</div>
+                      )}
+                      {sys.movementDescription && (
+                        <div><strong>Movement:</strong> {sys.movementDescription}</div>
+                      )}
+                      <div style={{ fontSize: "10px", color: "#64748b", marginTop: "4px", borderTop: "1px solid #e2e8f0", paddingTop: "4px" }}>
+                        {sys.source}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Popup>
-            </Marker>
-          )}
+                </Popup>
+              </Marker>
+            );
+          })()}
 
           {/* Animated Meteorological Wind Vectors Canvas Layer */}
           {layers.windField && (
@@ -692,6 +691,56 @@ export default function MapContainer({
           })}
         </LeafletMap>
 
+        {/* Focused Synoptic System Floating Indicator & Reset Control */}
+        {focusedSystem && (
+          <div
+            style={{
+              position: "absolute",
+              top: "12px",
+              left: "60px",
+              zIndex: 400,
+              background: "rgba(15, 23, 42, 0.95)",
+              border: "1px solid #f59e0b",
+              borderRadius: "6px",
+              padding: "6px 12px",
+              color: "#f8fafc",
+              fontFamily: "monospace",
+              fontSize: "11px",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.4)"
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#f59e0b", display: "inline-block", boxShadow: "0 0 6px #f59e0b" }} />
+              <span>
+                FOCUSED: <strong>{focusedSystem.classification}</strong> ({focusedSystem.coordinatesFormatted || `${focusedSystem.latitude}°N, ${focusedSystem.longitude}°E`})
+              </span>
+            </div>
+            {onResetFocus && (
+              <button
+                type="button"
+                onClick={onResetFocus}
+                style={{
+                  background: "#d97706",
+                  border: "none",
+                  borderRadius: "3px",
+                  color: "#0f172a",
+                  fontWeight: "bold",
+                  padding: "3px 8px",
+                  cursor: "pointer",
+                  fontSize: "10px",
+                  fontFamily: "monospace"
+                }}
+                title="Return to full India synoptic overview"
+              >
+                RETURN TO NATIONAL VIEW
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Meteorological Wind Speed Legend Overlay */}
         {layers.windField && (
           <div
@@ -701,45 +750,51 @@ export default function MapContainer({
               top: "12px",
               right: "12px",
               zIndex: 400,
-              backgroundColor: "rgba(255, 255, 255, 0.95)",
-              border: "1px solid #cbd5e1",
+              backgroundColor: "rgba(15, 23, 42, 0.95)",
+              border: "1px solid #334155",
               borderRadius: "4px",
               padding: "6px 10px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
               fontFamily: "monospace",
-              fontSize: "10px"
+              fontSize: "10px",
+              color: "#f8fafc"
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", fontWeight: "bold", color: "#1e293b", marginBottom: "4px", borderBottom: "1px solid #e2e8f0", paddingBottom: "4px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", fontWeight: "bold", marginBottom: "4px", borderBottom: "1px solid #334155", paddingBottom: "4px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                <Wind size={12} color="#0d9488" />
-                <span>MODEL WIND</span>
+                <Wind size={12} color="#06b6d4" />
+                <span style={{ color: "#f8fafc" }}>WIND SPEED (km/h)</span>
               </div>
-              <span style={{ fontSize: "9px", padding: "1px 4px", background: "#f0fdfa", color: "#115e59", border: "1px solid #ccfbf1", borderRadius: "2px", fontWeight: 600 }}>
-                OPEN-METEO
+              <span style={{ fontSize: "9px", padding: "1px 4px", background: "#1e3a8a", color: "#93c5fd", border: "1px solid #3b82f6", borderRadius: "2px", fontWeight: 600 }}>
+                MODEL • OPEN-METEO
               </span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#334155", padding: "2px 0" }}>
-              <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#0284c7" }} /> &lt;15
-              </span>
-              <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981" }} /> 15–30
-              </span>
-              <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#f59e0b" }} /> 30–50
-              </span>
-              <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#ea580c" }} /> 50–70
-              </span>
-              <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#dc2626" }} /> &gt;70
-              </span>
-            </div>
-            <div style={{ fontSize: "9px", color: "#64748b", marginTop: "4px", borderTop: "1px solid #e2e8f0", paddingTop: "2px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span>WIND SPEED (km/h)</span>
-              <span>UPDATED {weatherData?.national?.updatedAt || "00:20 IST"}</span>
-            </div>
+            {weatherData?.windPoints && weatherData.windPoints.length > 0 ? (
+              <>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#cbd5e1", padding: "2px 0" }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+                    <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#0284c7" }} /> 0–20
+                  </span>
+                  <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+                    <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981" }} /> 20–40
+                  </span>
+                  <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+                    <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#f59e0b" }} /> 40–60
+                  </span>
+                  <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+                    <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#dc2626" }} /> 60+
+                  </span>
+                </div>
+                <div style={{ fontSize: "9px", color: "#94a3b8", marginTop: "4px", borderTop: "1px solid #334155", paddingTop: "2px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span>NWP 10m VECTORS</span>
+                  <span>{weatherData?.nationalSummary?.maxWindState ? `PEAK: ${weatherData.nationalSummary.maxWindState.windSpeedKmph} km/h ${weatherData.nationalSummary.maxWindState.windDirectionLabel || ""}` : "MODEL ACTIVE"}</span>
+                </div>
+              </>
+            ) : (
+              <div style={{ color: "#f87171", fontWeight: "bold", padding: "3px 0" }}>
+                WIND DATA UNAVAILABLE
+              </div>
+            )}
           </div>
         )}
 
@@ -750,7 +805,7 @@ export default function MapContainer({
           </span>
           <span className="watermark-text font-mono">
             {isNormal
-              ? "ALL 36 STATES & UTs MONITORED • DEPRESSION INFLUENCE IS DRISHTI DERIVED • MODEL: OPEN-METEO"
+              ? "ALL 36 STATES & UTs MONITORED • METEOROLOGY: OPEN-METEO (MODEL) • BULLETINS: IMD (OBSERVED)"
               : "REMAL 2024 • INUNDATION & SURGE METRICS ARE DERIVED SIMULATIONS — NOT LIVE FLOOD POLYGONS"}
           </span>
         </div>
