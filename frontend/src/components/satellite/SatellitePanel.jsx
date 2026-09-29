@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { 
-  Satellite, 
-  Layers, 
-  ExternalLink, 
+import {
+  Satellite,
+  Layers,
+  ExternalLink,
   ShieldCheck,
-  X
+  X,
+  Zap
 } from "lucide-react";
 
 /**
  * INSAT-3DS Satellite Product Viewer & Map Overlay Control
+ * Premium dark-themed panel — consistent with DRISHTI overlay design language.
  * Sourcing Classification: OBSERVED / SATELLITE PRODUCT (MOSDAC / ISRO)
  */
 export const SATELLITE_PRODUCTS = [
@@ -19,9 +21,8 @@ export const SATELLITE_PRODUCTS = [
     description: "Deep convection, cloud height, and nocturnal storm monitoring.",
     sensor: "INSAT-3DS Imager",
     resolution: "4 km",
-    // Official IMD/MOSDAC public composite image or fallback visualizer
     imageUrl: "https://mausam.imd.gov.in/satellite/archive/3D_IR1.jpg",
-    fallbackColor: "from-slate-900 via-indigo-950 to-slate-900"
+    color: "#818cf8"
   },
   {
     id: "VIS",
@@ -31,7 +32,7 @@ export const SATELLITE_PRODUCTS = [
     sensor: "INSAT-3DS Imager",
     resolution: "1 km",
     imageUrl: "https://mausam.imd.gov.in/satellite/archive/3D_VIS.jpg",
-    fallbackColor: "from-slate-800 via-sky-950 to-slate-800"
+    color: "#34d399"
   },
   {
     id: "WV",
@@ -41,7 +42,7 @@ export const SATELLITE_PRODUCTS = [
     sensor: "INSAT-3DS Imager",
     resolution: "8 km",
     imageUrl: "https://mausam.imd.gov.in/satellite/archive/3D_WV.jpg",
-    fallbackColor: "from-blue-950 via-teal-950 to-slate-900"
+    color: "#38bdf8"
   },
   {
     id: "CTT",
@@ -51,7 +52,7 @@ export const SATELLITE_PRODUCTS = [
     sensor: "INSAT-3DS Imager / Sounder",
     resolution: "4 km",
     imageUrl: "https://mausam.imd.gov.in/satellite/archive/3D_CTT.jpg",
-    fallbackColor: "from-indigo-950 via-purple-950 to-slate-900"
+    color: "#fb923c"
   }
 ];
 
@@ -78,183 +79,274 @@ export default function SatellitePanel({
   }) + " IST";
 
   return (
-    <div className="satellite-operational-panel bg-slate-900 text-slate-100 rounded-lg border border-slate-700 shadow-xl overflow-hidden flex flex-col max-w-xl w-full">
-      {/* Panel Header */}
-      <div className="satellite-header flex items-center justify-between px-4 py-2.5 bg-slate-950 border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <Satellite size={16} className="text-cyan-400" />
+    <div style={{
+      background: "#0f172a",
+      borderRadius: "0",        /* shell in OverlayManager provides border-radius */
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+      fontFamily: "var(--font-mono, monospace)",
+      maxHeight: "85vh"
+    }}>
+      {/* ── Header ── */}
+      <div style={{
+        background: "linear-gradient(135deg, #0f172a 0%, #0e2040 50%, #0a1628 100%)",
+        borderBottom: "1px solid rgba(6,182,212,0.2)",
+        padding: "16px 20px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        flexShrink: 0
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{
+            width: "36px", height: "36px", borderRadius: "8px",
+            background: "rgba(6,182,212,0.15)", border: "1px solid rgba(6,182,212,0.3)",
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }}>
+            <Satellite size={18} style={{ color: "#22d3ee" }} />
+          </div>
           <div>
-            <h3 className="text-xs font-bold font-mono tracking-wider text-slate-200">
-              INSAT-3DS METEOROLOGICAL SATELLITE
-            </h3>
-            <span className="text-[10px] text-slate-400 font-mono">
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }}>
+              <h3 style={{ color: "#f1f5f9", fontSize: "13px", fontWeight: 800, letterSpacing: "0.06em", margin: 0 }}>
+                INSAT-3DS METEOROLOGICAL SATELLITE
+              </h3>
+              <span style={{
+                fontSize: "9px", fontWeight: 700, padding: "1px 7px", borderRadius: "3px",
+                background: "rgba(34,197,94,0.15)", color: "#4ade80",
+                border: "1px solid rgba(34,197,94,0.3)",
+                display: "flex", alignItems: "center", gap: "4px"
+              }}>
+                <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#4ade80", display: "inline-block", animation: "pulse 2s infinite" }} />
+                LIVE
+              </span>
+            </div>
+            <div style={{ fontSize: "10px", color: "#64748b", letterSpacing: "0.04em" }}>
               SPACE APPLICATIONS CENTRE • ISRO / MOSDAC
-            </span>
+            </div>
           </div>
         </div>
-
-        <div className="flex items-center gap-2">
-          <span className="badge-provenance text-[9.5px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded font-mono">
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{
+            fontSize: "9px", fontWeight: 700, padding: "2px 8px", borderRadius: "3px",
+            background: "rgba(6,182,212,0.1)", color: "#22d3ee",
+            border: "1px solid rgba(6,182,212,0.25)", letterSpacing: "0.05em"
+          }}>
             OBSERVED / SATELLITE PRODUCT
           </span>
           {onClose && (
             <button
               type="button"
               onClick={onClose}
-              className="text-slate-400 hover:text-white p-1 rounded"
+              style={{
+                background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: "6px", color: "#94a3b8", cursor: "pointer",
+                width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center"
+              }}
               title="Close Satellite Panel"
             >
-              <X size={15} />
+              <X size={14} />
             </button>
           )}
         </div>
       </div>
 
-      {/* Product Selection Tabs */}
-      <div className="satellite-tabs flex items-center gap-1 px-3 py-2 bg-slate-900 border-b border-slate-800 overflow-x-auto">
+      {/* ── Product Tab Strip ── */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: "6px",
+        padding: "10px 16px",
+        background: "rgba(6,182,212,0.04)",
+        borderBottom: "1px solid rgba(6,182,212,0.1)",
+        overflowX: "auto", flexShrink: 0
+      }}>
         {SATELLITE_PRODUCTS.map((prod) => (
           <button
             key={prod.id}
             type="button"
-            className={`px-3 py-1 rounded text-xs font-mono font-bold transition-all ${
-              selectedProduct.id === prod.id
-                ? "bg-cyan-600 text-white shadow-sm"
-                : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-            }`}
             onClick={() => handleProductChange(prod)}
+            style={{
+              padding: "6px 14px", borderRadius: "6px", fontSize: "11px", fontWeight: 700,
+              cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap",
+              background: selectedProduct.id === prod.id
+                ? "rgba(6,182,212,0.2)" : "rgba(255,255,255,0.04)",
+              border: selectedProduct.id === prod.id
+                ? "1px solid rgba(6,182,212,0.5)" : "1px solid rgba(255,255,255,0.08)",
+              color: selectedProduct.id === prod.id ? "#22d3ee" : "#94a3b8"
+            }}
           >
             {prod.shortName}
           </button>
         ))}
+
+        {/* selected product name */}
+        <span style={{ marginLeft: "auto", fontSize: "10px", color: "#475569", whiteSpace: "nowrap" }}>
+          {selectedProduct.name}
+        </span>
       </div>
 
-      {/* Main Satellite Display Area */}
-      <div className="satellite-viewport relative bg-black aspect-video flex items-center justify-center overflow-hidden border-b border-slate-800 group">
+      {/* ── Main Satellite Viewport ── */}
+      <div style={{
+        position: "relative", background: "#020617",
+        aspectRatio: "16/9", overflow: "hidden",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        flexShrink: 0
+      }}>
         {!imageError ? (
           <img
             src={selectedProduct.imageUrl}
             alt={`INSAT-3DS ${selectedProduct.name}`}
-            className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
             onError={() => setImageError(true)}
             crossOrigin="anonymous"
           />
         ) : (
-          /* Official Source Card when direct raster stream cannot be embedded (CORS / Auth) */
-          <div className="w-full h-full bg-slate-950 flex flex-col items-center justify-center p-6 text-center border border-slate-800">
-            <div className="p-3 bg-slate-900 rounded-full border border-cyan-800/50 mb-2.5">
-              <Satellite size={32} className="text-cyan-400" />
+          /* Fallback: offline / CORS blocked */
+          <div style={{
+            width: "100%", height: "100%",
+            display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center",
+            padding: "24px", textAlign: "center",
+            background: "radial-gradient(ellipse at center, #0a1628 0%, #020617 100%)"
+          }}>
+            <div style={{
+              width: "56px", height: "56px", borderRadius: "50%",
+              background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.3)",
+              display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "12px"
+            }}>
+              <Satellite size={28} style={{ color: "#22d3ee" }} />
             </div>
-            <div className="text-sm font-bold font-mono text-slate-100 tracking-wider mb-0.5">
+            <div style={{ fontSize: "14px", fontWeight: 800, color: "#e2e8f0", letterSpacing: "0.04em", marginBottom: "4px" }}>
               INSAT-3DS
             </div>
-            <div className="text-xs font-mono font-semibold text-cyan-300 mb-1.5">
-              IR1 / VIS / WV / CTT
+            <div style={{ fontSize: "12px", fontWeight: 700, color: "#22d3ee", marginBottom: "4px" }}>
+              {selectedProduct.shortName} — {selectedProduct.name.split("(")[0].trim()}
             </div>
-            <div className="text-[11px] font-mono text-slate-400 mb-2">
-              SOURCE: MOSDAC / ISRO
+            <div style={{ fontSize: "10px", color: "#475569", marginBottom: "6px" }}>
+              {selectedProduct.description}
             </div>
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800 text-[10px] font-mono text-emerald-300 font-bold mb-3">
-              <ShieldCheck size={12} className="text-emerald-400" />
-              <span>LIVE SOURCE AVAILABLE</span>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: "5px",
+              padding: "4px 10px", borderRadius: "4px",
+              background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)",
+              fontSize: "10px", fontWeight: 700, color: "#4ade80", marginBottom: "14px"
+            }}>
+              <ShieldCheck size={11} />LIVE SOURCE AVAILABLE — CORS RESTRICTED
             </div>
-            <div className="flex items-center gap-2">
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
               <a
-                href={selectedProduct.imageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-mono font-bold flex items-center gap-1.5 transition-colors shadow-sm"
+                href={selectedProduct.imageUrl} target="_blank" rel="noopener noreferrer"
+                style={{
+                  padding: "8px 16px", borderRadius: "6px",
+                  background: "rgba(6,182,212,0.2)", border: "1px solid rgba(6,182,212,0.4)",
+                  color: "#22d3ee", fontWeight: 700, fontSize: "11px",
+                  display: "flex", alignItems: "center", gap: "5px", textDecoration: "none"
+                }}
               >
-                <span>OPEN LIVE PRODUCT</span>
-                <ExternalLink size={12} />
+                OPEN LIVE PRODUCT <ExternalLink size={11} />
               </a>
               <a
-                href="https://www.mosdac.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-mono font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors"
+                href="https://www.mosdac.gov.in/" target="_blank" rel="noopener noreferrer"
+                style={{
+                  padding: "8px 16px", borderRadius: "6px",
+                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#94a3b8", fontWeight: 700, fontSize: "11px",
+                  display: "flex", alignItems: "center", gap: "5px", textDecoration: "none"
+                }}
               >
-                <span>MOSDAC / ISRO PORTAL</span>
-                <ExternalLink size={12} />
+                MOSDAC / ISRO PORTAL <ExternalLink size={11} />
               </a>
             </div>
           </div>
         )}
 
-        {/* Viewport Floating Meta Tag */}
-        <div className="absolute top-2 left-2 px-2 py-1 rounded bg-black/70 backdrop-blur-sm border border-slate-700 text-[10.5px] font-mono text-cyan-300 flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span>LATEST CAPTURE: {istTime}</span>
+        {/* Live capture tag — top left */}
+        <div style={{
+          position: "absolute", top: "8px", left: "8px",
+          padding: "4px 10px", borderRadius: "4px",
+          background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)",
+          border: "1px solid rgba(6,182,212,0.3)",
+          fontSize: "10px", fontWeight: 700, color: "#22d3ee",
+          display: "flex", alignItems: "center", gap: "5px"
+        }}>
+          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4ade80", animation: "ping 1s infinite" }} />
+          LATEST CAPTURE: {istTime}
         </div>
 
-        <div className="absolute bottom-2 right-2 flex items-center gap-1">
-          <a
-            href="https://www.mosdac.gov.in/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-2 py-1 bg-slate-950/80 hover:bg-cyan-900 border border-slate-700 rounded text-[10px] font-mono text-slate-200 flex items-center gap-1"
-            title="Open official MOSDAC ISRO portal"
-          >
-            <span>MOSDAC PORTAL</span>
-            <ExternalLink size={10} />
-          </a>
-          <a
-            href="https://mausam.imd.gov.in/responsive/satellite.php"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-2 py-1 bg-slate-950/80 hover:bg-cyan-900 border border-slate-700 rounded text-[10px] font-mono text-slate-200 flex items-center gap-1"
-            title="Open IMD Satellite portal"
-          >
-            <span>IMD MAUSAM</span>
-            <ExternalLink size={10} />
-          </a>
-        </div>
+        {/* Portal links — bottom right */}
+        {!imageError && (
+          <div style={{ position: "absolute", bottom: "8px", right: "8px", display: "flex", gap: "6px" }}>
+            {[
+              { href: "https://www.mosdac.gov.in/", label: "MOSDAC" },
+              { href: "https://mausam.imd.gov.in/responsive/satellite.php", label: "IMD MAUSAM" }
+            ].map((l) => (
+              <a
+                key={l.href} href={l.href} target="_blank" rel="noopener noreferrer"
+                style={{
+                  padding: "4px 8px", borderRadius: "4px",
+                  background: "rgba(0,0,0,0.65)", border: "1px solid rgba(255,255,255,0.15)",
+                  color: "#94a3b8", fontSize: "10px", fontWeight: 600,
+                  display: "flex", alignItems: "center", gap: "4px", textDecoration: "none"
+                }}
+              >
+                {l.label} <ExternalLink size={9} />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Map Overlay Controls & Opacity Slider */}
-      <div className="satellite-controls p-3 bg-slate-950 flex flex-col gap-2">
-        <div className="flex items-center justify-between text-xs font-mono">
-          <div className="flex items-center gap-2">
-            <Layers size={13} className="text-cyan-400" />
-            <span className="text-slate-300 font-bold">SYNOPTIC MAP OVERLAY:</span>
+      {/* ── Product Info + Controls ── */}
+      <div style={{ padding: "14px 16px", background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
+        <p style={{ fontSize: "11px", color: "#94a3b8", margin: "0 0 10px 0", lineHeight: 1.5, fontFamily: "sans-serif" }}>
+          {selectedProduct.description}
+        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <span style={{ fontSize: "10px", color: "#475569" }}>SENSOR: <span style={{ color: "#94a3b8", fontWeight: 700 }}>{selectedProduct.sensor}</span></span>
+            <span style={{ fontSize: "10px", color: "#475569" }}>RESOLUTION: <span style={{ color: "#94a3b8", fontWeight: 700 }}>{selectedProduct.resolution}</span></span>
           </div>
 
           {onToggleOverlay && (
             <button
               type="button"
               onClick={() => onToggleOverlay("satellite")}
-              className={`px-2.5 py-0.5 rounded text-[11px] font-bold border transition-colors ${
-                isOverlayActive
-                  ? "bg-cyan-600 border-cyan-500 text-white"
-                  : "bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200"
-              }`}
+              style={{
+                padding: "6px 14px", borderRadius: "6px", fontSize: "10px", fontWeight: 700,
+                cursor: "pointer", transition: "all 0.15s",
+                background: isOverlayActive ? "rgba(6,182,212,0.2)" : "rgba(255,255,255,0.04)",
+                border: isOverlayActive ? "1px solid rgba(6,182,212,0.5)" : "1px solid rgba(255,255,255,0.1)",
+                color: isOverlayActive ? "#22d3ee" : "#64748b",
+                display: "flex", alignItems: "center", gap: "5px"
+              }}
             >
-              {isOverlayActive ? "OVERLAY ACTIVE" : "OVERLAY OFF"}
+              <Layers size={11} />
+              {isOverlayActive ? "MAP OVERLAY ACTIVE" : "MAP OVERLAY OFF"}
             </button>
           )}
         </div>
 
         {isOverlayActive && onOpacityChange && (
-          <div className="flex items-center gap-3 pt-1">
-            <span className="text-[10px] font-mono text-slate-400">OPACITY:</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px" }}>
+            <span style={{ fontSize: "10px", color: "#64748b", whiteSpace: "nowrap" }}>OPACITY:</span>
             <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.05"
+              type="range" min="0" max="1" step="0.05"
               value={overlayOpacity}
               onChange={(e) => onOpacityChange(parseFloat(e.target.value))}
-              className="w-full accent-cyan-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+              style={{ flex: 1, accentColor: "#22d3ee", cursor: "pointer" }}
             />
-            <span className="text-[10.5px] font-mono text-cyan-300 w-10 text-right">
+            <span style={{ fontSize: "10px", fontWeight: 700, color: "#22d3ee", width: "36px", textAlign: "right" }}>
               {Math.round(overlayOpacity * 100)}%
             </span>
           </div>
         )}
+      </div>
 
-        <div className="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px] text-slate-400 font-mono">
-          <span>SENSOR: {selectedProduct.sensor}</span>
-          <span>RESOLUTION: {selectedProduct.resolution}</span>
-        </div>
+      {/* ── Footer ── */}
+      <div style={{
+        padding: "10px 20px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        background: "rgba(15,23,42,0.8)", flexShrink: 0
+      }}>
+        <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: MOSDAC / ISRO SAC GEOSTATIONARY PRODUCTS</span>
+        <span style={{ fontSize: "10px", color: "#22d3ee", fontWeight: 700 }}>ISRO • MOSDAC • IMD</span>
       </div>
     </div>
   );
