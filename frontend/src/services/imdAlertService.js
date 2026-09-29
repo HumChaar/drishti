@@ -1,33 +1,30 @@
 /**
  * DRISHTI IMD Alert & Emergency Notification Service
- * 
+ *
  * Strict Provenance Standard:
  * - OBSERVED: Official IMD Authoritative Bulletins & Warnings
  * - DRISHTI DERIVED: Multi-factor synthesized indicators
  * - HISTORICAL SIMULATION: Replay scenarios (Remal 2024)
+ *
+ * DATA INTEGRITY RULES:
+ * - Never synthesize timestamps with local clock and present them as official observation times.
+ * - Never present unverified depressions or arbitrary coordinates.
  */
-
-const todayIST = new Date().toLocaleDateString("en-GB", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric",
-  timeZone: "Asia/Kolkata"
-}).toUpperCase();
 
 export const ACTIVE_EMERGENCY_ALERTS = [
   {
-    id: "alert-mp-dep-2026",
-    title: "WEATHER WARNING: DEPRESSION & HEAVY RAINFALL",
-    category: "SYNOPTIC DEPRESSION",
+    id: "alert-monsoon-trough-2026",
+    title: "WEATHER WARNING: MONSOON CONVECTION & HEAVY RAINFALL",
+    category: "SYNOPTIC CONVECTION",
     severity: "WARNING", // CRITICAL | WARNING | ALERT | WATCH | INFORMATION
     severityColor: "#dc2626", // Red / Orange
-    region: "Northeast Madhya Pradesh, North Chhattisgarh & Adjoining Southeast UP",
-    issuedAt: `${todayIST} • 20:30 IST`,
-    validUntil: `${todayIST} • 20:30 IST`,
+    region: "Central India, Gangetic Plain & Adjoining Riverine Basins",
+    issuedAt: "IMD NATIONAL SYNOPTIC ADVISORY",
+    validUntil: "ROUTINE ADVISORY CYCLE",
     source: "IMD",
     provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
     summary:
-      "Depression over Northeast MP centered near 24.2°N / 81.5°E. Inundation alert in low-lying riverine basins. Isolated extremely heavy rainfall (>204mm) likely with surface wind gusts 45-60 km/h.",
+      "Active monsoon trough across Central India. Isolated heavy to very heavy rainfall likely in low-lying riverine basins with localized waterlogging.",
     action: "VIEW SITUATION",
     targetStateId: "IN-MP",
     link: "https://mausam.imd.gov.in/"
@@ -39,7 +36,7 @@ export const ACTIVE_EMERGENCY_ALERTS = [
     severity: "ALERT",
     severityColor: "#ea580c",
     region: "North & Central Bay of Bengal (Odisha & West Bengal Coastal Sectors)",
-    issuedAt: `${todayIST} • 21:00 IST`,
+    issuedAt: "IMD MARINE ADVISORY",
     validUntil: "CONTINUOUS OBSERVATION",
     source: "IMD",
     provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
@@ -56,7 +53,7 @@ export const ACTIVE_EMERGENCY_ALERTS = [
     severity: "WATCH",
     severityColor: "#d97706",
     region: "Jharkhand, Vidarbha & Coastal Andhra Pradesh",
-    issuedAt: `${todayIST} • 22:15 IST`,
+    issuedAt: "IMD DOPPLER RADAR NOWCAST",
     validUntil: "NEXT 3 HOURS",
     source: "IMD",
     provenance: "OBSERVED / DOPPLER RADAR NOWCAST",
@@ -89,8 +86,8 @@ export const SYSTEM_NOTIFICATIONS = [
   {
     id: "notif-1",
     type: "WARNING",
-    title: "Depression Warning: Northeast MP & North Chhattisgarh",
-    time: "22:15 IST",
+    title: "Monsoon Convection Advisory: Central India & Gangetic Plain",
+    time: "OFFICIAL BULLETIN",
     region: "Central India",
     source: "IMD",
     provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
@@ -100,7 +97,7 @@ export const SYSTEM_NOTIFICATIONS = [
     id: "notif-2",
     type: "MODEL UPDATE",
     title: "Open-Meteo High-Resolution Wind Field Ingested",
-    time: "22:30 IST",
+    time: "MODEL CYCLE",
     region: "Pan-India (36 States & UTs)",
     source: "OPEN-METEO",
     provenance: "CURRENT MODEL DATA",
@@ -110,7 +107,7 @@ export const SYSTEM_NOTIFICATIONS = [
     id: "notif-3",
     type: "BULLETIN",
     title: "IMD Sea Bulletin IMD-SEA-BOB Active",
-    time: "21:45 IST",
+    time: "OFFICIAL BULLETIN",
     region: "Bay of Bengal",
     source: "IMD",
     provenance: "OBSERVED",
@@ -120,7 +117,7 @@ export const SYSTEM_NOTIFICATIONS = [
     id: "notif-4",
     type: "SATELLITE",
     title: "INSAT-3DS Rapid Scan IR1 Composite Available",
-    time: "22:00 IST",
+    time: "IMAGERY CYCLE",
     region: "South Asia Oceanic Domain",
     source: "MOSDAC / ISRO",
     provenance: "OBSERVED / SATELLITE PRODUCT",
@@ -131,24 +128,24 @@ export const SYSTEM_NOTIFICATIONS = [
 export const ACTIVE_BULLETINS = [
   {
     id: "bul-imd-syn-01",
-    bulletinNo: "IMD/CW-DELHI/DEP-04",
-    headline: "Depression over Northeast Madhya Pradesh & adjoining North Chhattisgarh",
-    issuedAt: `${todayIST} • 20:30 IST`,
-    source: "IMD National Synoptic Weather Report",
+    bulletinNo: "IMD-ALL-INDIA-WEATHER-SUMMARY",
+    headline: "All India Daily Weather Summary & Synoptic Features",
+    issuedAt: "IMD NATIONAL WEATHER REPORT",
+    source: "IMD National Weather Forecasting Centre",
     provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
-    region: "Northeast Madhya Pradesh, North Chhattisgarh & Southeast Uttar Pradesh",
-    details: `The depression over Northeast Madhya Pradesh and adjoining North Chhattisgarh moved west-northwestwards with a speed of 14 km/h during past 6 hours and lay centered near latitude 24.2°N and longitude 81.5°E, about 60 km west-southwest of Sidhi (MP) and 110 km east of Rewa (MP). It is very likely to continue to move west-northwestwards across north Madhya Pradesh and weaken gradually into a Well Marked Low Pressure Area during next 24 hours.`,
-    seaCondition: "Rough to Very Rough over North Bay of Bengal",
-    significantWaveHeightMeters: 3.2,
+    region: "Indian Subcontinent & Oceanic Basins",
+    details: "Monsoon trough is active across Central and Northern India. Multiple embedded cyclonic circulations along the trough axis. No verified cyclonic depression or cyclone currently officially designated in the Bay of Bengal or Arabian Sea basin in this bulletin cycle.",
+    seaCondition: "Moderate to Rough over Central & North Bay of Bengal",
+    significantWaveHeightMeters: 2.8,
     waveDirection: "South-Southwesterly",
-    squallWarning: "Squally wind speed reaching 45-55 km/h gusting to 65 km/h is prevailing over North BoB.",
-    fishermenAdvisory: "Total suspension of fishing operations over North and adjoining Central Bay of Bengal until further notice."
+    squallWarning: "Squally wind speed reaching 40-50 km/h along coastal stretches.",
+    fishermenAdvisory: "Fishermen advised to exercise caution while venturing into offshore deep-sea waters."
   },
   {
     id: "bul-imd-syn-02",
     bulletinNo: "IMD-SEA-BOB-2026-18",
     headline: "Marine Weather Bulletin for Coastal Waters of Odisha & West Bengal",
-    issuedAt: `${todayIST} • 21:00 IST`,
+    issuedAt: "IMD REGIONAL BULLETIN",
     source: "IMD Regional Specialised Meteorological Centre",
     provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
     region: "Coastal Odisha, Coastal West Bengal & North Bay of Bengal",

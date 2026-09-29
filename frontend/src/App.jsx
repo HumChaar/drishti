@@ -51,6 +51,9 @@ export default function App() {
   // Single Overlay Manager System (Only ONE overlay open at any time)
   const [activeOverlay, setActiveOverlay] = useState(null);
 
+  // Focused synoptic system for dual-view map centering
+  const [focusedSystem, setFocusedSystem] = useState(null);
+
   // Rail & Layer states
   const [activeRailItem, setActiveRailItem] = useState("warnings");
   const [layerStates, setLayerStates] = useState({
@@ -210,6 +213,24 @@ export default function App() {
     setActiveOverlay(overlayKey);
   };
 
+  // Dual view handler: Locate active synoptic system on Leaflet operational map
+  const handleLocateSystemOnMap = useCallback((system) => {
+    setFocusedSystem(system);
+    setActiveTab("dashboard");
+    setActiveOverlay(null); // Closes satellite panel so operator immediately views operational map
+    logSessionActivity({
+      event: "MAP FOCUS: SYNOPTIC SYSTEM",
+      category: "SPATIAL",
+      region: system.locationDescription || system.name,
+      details: `Operational map centered on ${system.classification} at ${system.coordinatesFormatted || `${system.latitude}°N, ${system.longitude}°E`}`
+    });
+  }, [logSessionActivity]);
+
+  const handleResetNationalView = useCallback(() => {
+    setFocusedSystem(null);
+    setSelectedState(null);
+  }, []);
+
   const handleSelectRailItem = (itemId) => {
     setActiveRailItem(itemId);
     if (["warnings", "bulletins", "satellite", "radar", "observations"].includes(itemId)) {
@@ -334,6 +355,8 @@ export default function App() {
                 selectedState={selectedState}
                 onSelectState={setSelectedState}
                 weatherData={weatherData}
+                focusedSystem={focusedSystem}
+                onResetFocus={handleResetNationalView}
               />
 
               {/* Disaster Mode Timeline & Directives */}
@@ -375,18 +398,55 @@ export default function App() {
         {/* 2. WEATHER TAB */}
         {activeTab === "weather" && (
           <div className="p-4 bg-white rounded-lg border border-slate-200">
-            <h2 className="text-base font-bold font-mono text-slate-900 mb-2">
-              SURFACE WEATHER &amp; WIND TELEMETRY (36 STATES &amp; UTs)
-            </h2>
+            <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
+              <div>
+                <h2 className="text-base font-bold font-mono text-slate-900">
+                  PAN-INDIA NUMERICAL MODEL TELEMETRY (36 STATES &amp; UTs)
+                </h2>
+                <div className="text-[11px] font-mono text-slate-500 mt-0.5">
+                  SOURCE: OPEN-METEO HIGH-RESOLUTION NWP • PROVENANCE: MODEL
+                </div>
+              </div>
+              <span className="badge-provenance text-[9px] bg-blue-100 text-blue-900 border border-blue-300 px-2 py-0.5 rounded font-mono font-bold">
+                CURRENT MODEL DATA
+              </span>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {weatherData?.states ? (
-                Object.values(weatherData.states).map((st) => (
-                  <div key={st.id} className="p-3 bg-slate-50 border border-slate-200 rounded font-mono text-xs">
-                    <div className="font-bold text-slate-900 mb-1">{st.name}</div>
-                    <div className="text-teal-700">Wind: {st.windSpeed != null ? `${st.windSpeed} km/h` : "N/A"} (Gusts {st.windGust != null ? `${st.windGust}` : "N/A"})</div>
-                    <div className="text-blue-700">Rain: {st.rain != null ? `${st.rain} mm` : "N/A"}</div>
-                    <div className="text-amber-700">Temp: {st.temperature != null ? `${st.temperature}°C` : "N/A"} (Humidity {st.humidity != null ? `${st.humidity}%` : "N/A"})</div>
-                    <div className="text-orange-700 font-bold mt-1">Depression Influence: {st.depressionInfluencePct != null ? `${st.depressionInfluencePct}%` : "N/A"}</div>
+              {normalizedData?.states ? (
+                normalizedData.states.map((st) => (
+                  <div key={st.stateId || st.id} className="p-3 bg-slate-50 border border-slate-200 rounded font-mono text-xs flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between pb-1 border-b border-slate-200 mb-1.5">
+                        <strong className="text-slate-900 text-sm">{st.location || st.name}</strong>
+                        <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${st.hasData ? "bg-blue-100 text-blue-900" : "bg-slate-200 text-slate-600"}`}>
+                          {st.hasData ? "MODEL" : "OFFLINE"}
+                        </span>
+                      </div>
+                      <div className="space-y-1 text-[11px] text-slate-700">
+                        <div className="text-teal-800">
+                          <strong>Wind:</strong> {st.windSpeedKmph != null ? `${st.windSpeedKmph} km/h ${st.windDirectionLabel || ""}` : (st.windSpeed != null ? `${st.windSpeed} km/h` : "N/A")}{st.windGustKmph ? ` (Gusts ${st.windGustKmph})` : ""}
+                        </div>
+                        <div className="text-blue-800">
+                          <strong>Rainfall:</strong> {st.rainfallMm != null ? `${st.rainfallMm} mm` : (st.rain != null ? `${st.rain} mm` : "0.0 mm")}
+                        </div>
+                        <div className="text-slate-800">
+                          <strong>Surface Pressure:</strong> {st.pressureHpa != null ? `${st.pressureHpa} hPa` : "N/A"}
+                        </div>
+                        <div className="text-amber-900">
+                          <strong>Temperature:</strong> {st.temperatureC != null ? `${st.temperatureC}°C` : (st.temperature != null ? `${st.temperature}°C` : "N/A")}{st.humidityPct != null ? ` (${st.humidityPct}% RH)` : ""}
+                        </div>
+                        {st.distanceToSystemKm != null && (
+                          <div className="text-amber-800 font-bold border-t border-slate-200/80 pt-1 mt-1">
+                            Distance to System: {st.distanceToSystemKm} km <span className="text-[9px] font-normal text-amber-700">(DERIVED)</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-2 pt-1 border-t border-slate-200 flex items-center justify-between text-[9px] text-slate-400">
+                      <span>OPEN-METEO</span>
+                      <span>{st.checkedAt || "IST"}</span>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -522,6 +582,7 @@ export default function App() {
         data={normalizedData}
         onSelectState={setSelectedState}
         onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
+        onLocateOnMap={handleLocateSystemOnMap}
       />
 
       {/* 8. Government Institutional Footer */}

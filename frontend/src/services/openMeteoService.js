@@ -1,51 +1,106 @@
 /**
  * DRISHTI Open-Meteo Weather Integration Service
- * 
+ *
  * SOURCING CLASSIFICATION: CURRENT MODEL DATA (SOURCE: OPEN-METEO)
- * 
- * Fetches batch current meteorological observations for all 36 Indian States & UTs:
+ * PROVENANCE: MODEL
+ *
+ * Fetches batch current numerical model telemetry for all 36 Indian States & UTs:
+ * - temperature_2m (°C)
+ * - relative_humidity_2m (%)
+ * - surface_pressure (hPa)
+ * - precipitation (mm)
  * - wind_speed_10m (km/h)
  * - wind_direction_10m (degrees)
  * - wind_gusts_10m (km/h)
- * - temperature_2m (°C)
- * - relative_humidity_2m (%)
- * - precipitation (mm)
- * 
- * Transparently derives the "DRISHTI DERIVED DEPRESSION INFLUENCE %" without
- * mislabeling it as an authoritative IMD probability forecast.
+ *
+ * STRICT PROVENANCE RULES:
+ * 1. Open-Meteo values are ALWAYS labeled MODEL (Source: OPEN-METEO).
+ * 2. NEVER label Open-Meteo values as IMD OBSERVED.
+ * 3. Never invent or hard-code current weather numbers when API is offline.
+ * 4. Stamped with genuine Open-Meteo model run time and DRISHTI checked time.
  */
 
 import { STATES_AND_UTS } from "../data/indiaGeography";
-import { API_BASE_URL } from "./cycloneApi.js";
 
-const todayIST = new Date().toLocaleDateString("en-GB", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric",
-  timeZone: "Asia/Kolkata"
-}).toUpperCase();
+// In-memory cache to prevent excessive requests (10-minute TTL)
+let cachedWeatherData = null;
+let lastFetchTimestamp = 0;
+const CACHE_TTL_MS = 10 * 60 * 1000;
 
-// Active Synoptic Depression Centroid (Northeast Madhya Pradesh / North Chhattisgarh)
-export const ACTIVE_DEPRESSION_SYSTEM = {
-  hasActiveSystem: true,
-  isAvailable: true,
-  name: "Depression over Northeast Madhya Pradesh & adjoining North Chhattisgarh",
-  shortName: "Northeast MP Depression",
-  status: "DEPRESSION",
-  observedDate: todayIST,
-  centerLat: 24.2,
-  centerLon: 81.5,
-  centralPressureMb: 998,
-  maxWindKmh: 45,
-  gustKmh: 60,
-  movement: "West-Northwestwards @ 14 km/h",
-  source: "IMD NATIONAL SYNOPTIC WEATHER REPORT",
-  classification: "OBSERVED / AUTHORITATIVE BULLETIN"
-};
+/**
+ * Converts wind direction in degrees (0–360) to 16-point compass label.
+ */
+export function getWindCompassLabel(degrees) {
+  if (degrees == null || isNaN(degrees)) return null;
+  const val = Math.round(degrees / 22.5) % 16;
+  const compassDirections = [
+    "N", "NNE", "NE", "ENE",
+    "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW",
+    "W", "WNW", "NW", "NNW"
+  ];
+  return compassDirections[val] || null;
+}
 
-// Haversine distance formula between two lat/lon points in km
-function calculateDistanceKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Earth radius in km
+/**
+ * Converts an Open-Meteo ISO time string (e.g. "2026-09-29T08:45") to IST format.
+ */
+export function formatOpenMeteoTimeToIST(isoString) {
+  if (!isoString) return null;
+  try {
+    // Open-Meteo time is UTC
+    const date = new Date(isoString.endsWith("Z") ? isoString : `${isoString}Z`);
+    if (isNaN(date.getTime())) return null;
+
+    const dateFormatted = date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      timeZone: "Asia/Kolkata"
+    });
+
+    const timeFormatted = date.toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+    return `${dateFormatted} • ${timeFormatted} IST`;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Returns current IST time string for checked-at timestamp.
+ */
+export function getCurrentISTTimestamp() {
+  const now = new Date();
+  const dateFormatted = now.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Kolkata"
+  });
+
+  const timeFormatted = now.toLocaleTimeString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  return `${dateFormatted} • ${timeFormatted} IST`;
+}
+
+/**
+ * Calculates Haversine distance in km between two lat/lon coordinates.
+ * Marked explicitly as DERIVED (Source: DRISHTI calculation).
+ */
+export function calculateDistanceKm(lat1, lon1, lat2, lon2) {
+  if (lat1 == null || lon1 == null || lat2 == null || lon2 == null) return null;
+  const R = 6371; // Earth's mean radius in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
@@ -55,124 +110,210 @@ function calculateDistanceKm(lat1, lon1, lat2, lon2) {
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+  return Math.round(R * c);
 }
 
 /**
- * Transparent DRISHTI-derived depression influence calculation
- * Formula factors:
- * 1. Proximity to depression center (decay radius 750 km)
- * 2. Surface wind velocity (Open-Meteo model)
- * 3. Recent precipitation (Open-Meteo model)
- * If no active depression exists in Indian basins, influence is strictly 0.
+ * Primary function to fetch current Open-Meteo numerical model observations
+ * for all 36 Indian States & UTs.
+ *
+ * Never substitutes fake live numbers if API is unreachable.
  */
-function calculateDepressionInfluence(distanceKm, windSpeedKmh, rainMm, hasActiveSystem = true) {
-  if (!hasActiveSystem) return 0;
-  if (distanceKm > 950) return 0;
-
-  // Proximity factor (0 to 60 pts)
-  const proximityScore = Math.max(0, 60 * (1 - distanceKm / 850));
-
-  // Wind factor (0 to 25 pts)
-  const windScore = Math.min(25, (windSpeedKmh / 50) * 25);
-
-  // Rain factor (0 to 15 pts)
-  const rainScore = Math.min(15, (rainMm / 20) * 15);
-
-  const total = Math.round(proximityScore + windScore + rainScore);
-  return Math.min(100, Math.max(0, total));
-}
-
-let cachedWeatherData = null;
-let lastFetchTime = null;
-const CACHE_DURATION_MS = 10 * 60 * 1000; // 10 minutes cache to avoid rate limits
-
-export async function fetchIndiaMeteorology() {
+export async function fetchIndiaMeteorology(forceRefresh = false) {
   const now = Date.now();
-  if (cachedWeatherData && lastFetchTime && now - lastFetchTime < CACHE_DURATION_MS) {
+  if (!forceRefresh && cachedWeatherData && now - lastFetchTimestamp < CACHE_TTL_MS) {
     return cachedWeatherData;
   }
+
+  const checkedAtTime = getCurrentISTTimestamp();
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/weather/india`, {
-      signal: AbortSignal.timeout(10000)
-    });
+    const latitudes = STATES_AND_UTS.map((s) => s.center[0]).join(",");
+    const longitudes = STATES_AND_UTS.map((s) => s.center[1]).join(",");
+
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitudes}&longitude=${longitudes}&current=temperature_2m,relative_humidity_2m,surface_pressure,precipitation,wind_speed_10m,wind_direction_10m,wind_gusts_10m`;
+
+    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
     if (!response.ok) {
-      throw new Error(`Backend weather API returned status ${response.status}`);
+      throw new Error(`Open-Meteo API returned HTTP status ${response.status}`);
     }
 
-    const data = await response.json();
-    cachedWeatherData = data;
-    lastFetchTime = now;
-    return cachedWeatherData;
-  } catch (err) {
-    console.warn("Live weather proxy fetch failed, falling back to local dataset:", err);
-    return getFallbackMeteorology();
-  }
-}
+    const jsonList = await response.json();
+    const resultsArray = Array.isArray(jsonList) ? jsonList : [jsonList];
 
-// Fallback data if Open-Meteo is unreachable
-function getFallbackMeteorology() {
-  const stateMeteorologyMap = {};
-  const windGridPoints = [];
+    const stateMeteorologyMap = {};
+    const windGridPoints = [];
+    let validTempSum = 0;
+    let validTempCount = 0;
+    let maxWindState = null;
+    let maxRainState = null;
+    let validPressureSum = 0;
+    let validPressureCount = 0;
+    let modelDataTime = null;
 
-  STATES_AND_UTS.forEach((state) => {
-    const distanceKm = Math.round(
-      calculateDistanceKm(
-        state.center[0],
-        state.center[1],
-        ACTIVE_DEPRESSION_SYSTEM.centerLat,
-        ACTIVE_DEPRESSION_SYSTEM.centerLon
-      )
-    );
+    STATES_AND_UTS.forEach((state, index) => {
+      const currentData = resultsArray[index]?.current || null;
 
-    let windSpeed = 16;
-    let rain = 0.0;
-    if (state.id === "IN-MP") { windSpeed = 38; rain = 48.5; }
-    else if (state.id === "IN-CT" || state.id === "IN-CG") { windSpeed = 32; rain = 32.0; }
-    else if (state.id === "IN-UP") { windSpeed = 26; rain = 14.5; }
-    else if (state.id === "IN-JH") { windSpeed = 22; rain = 8.0; }
-    else if (state.id === "IN-OD" || state.id === "IN-OR") { windSpeed = 28; rain = 12.0; }
+      if (!currentData) {
+        stateMeteorologyMap[state.id] = {
+          location: state.name,
+          stateId: state.id,
+          region: state.region,
+          capital: state.capital,
+          latitude: state.center[0],
+          longitude: state.center[1],
+          temperatureC: null,
+          humidityPct: null,
+          pressureHpa: null,
+          windSpeedKmph: null,
+          windDirectionDeg: null,
+          windDirectionLabel: null,
+          windGustKmph: null,
+          rainfallMm: null,
+          precipitationProbabilityPct: null,
+          observationTime: null,
+          checkedAt: checkedAtTime,
+          source: "OPEN-METEO",
+          provenance: "MODEL",
+          hasData: false,
+          status: "DATA UNAVAILABLE"
+        };
+        return;
+      }
 
-    const depressionInfluence = calculateDepressionInfluence(distanceKm, windSpeed, rain);
+      if (!modelDataTime && currentData.time) {
+        modelDataTime = formatOpenMeteoTimeToIST(currentData.time);
+      }
 
-    stateMeteorologyMap[state.id] = {
-      id: state.id,
-      name: state.name,
-      region: state.region,
-      center: state.center,
-      capital: state.capital,
-      temperature: 28.0,
-      humidity: 78,
-      windSpeed,
-      windDirection: 215,
-      windGust: Math.round(windSpeed * 1.3),
-      rain,
-      distanceToDepressionKm: distanceKm,
-      depressionInfluencePct: depressionInfluence,
-      source: "Open-Meteo (Cached Model)",
-      provenance: "LIVE WEATHER — CURRENT MODEL DATA (Fallback)",
-      updatedAt: "23:00 IST"
+      const temp = currentData.temperature_2m != null ? Math.round(currentData.temperature_2m * 10) / 10 : null;
+      const humidity = currentData.relative_humidity_2m != null ? Math.round(currentData.relative_humidity_2m) : null;
+      const pressure = currentData.surface_pressure != null ? Math.round(currentData.surface_pressure) : null;
+      const rain = currentData.precipitation != null ? Math.round(currentData.precipitation * 10) / 10 : null;
+      const windSpeed = currentData.wind_speed_10m != null ? Math.round(currentData.wind_speed_10m) : null;
+      const windDir = currentData.wind_direction_10m != null ? Math.round(currentData.wind_direction_10m) : null;
+      const windGust = currentData.wind_gusts_10m != null ? Math.round(currentData.wind_gusts_10m) : null;
+      const dirLabel = getWindCompassLabel(windDir);
+      const obsTime = formatOpenMeteoTimeToIST(currentData.time) || modelDataTime;
+
+      if (temp != null) {
+        validTempSum += temp;
+        validTempCount++;
+      }
+      if (pressure != null) {
+        validPressureSum += pressure;
+        validPressureCount++;
+      }
+      if (windSpeed != null && (!maxWindState || windSpeed > (maxWindState.windSpeedKmph || 0))) {
+        maxWindState = { name: state.name, windSpeedKmph: windSpeed, windDirectionLabel: dirLabel, windDirectionDeg: windDir };
+      }
+      if (rain != null && rain > 0 && (!maxRainState || rain > (maxRainState.rainfallMm || 0))) {
+        maxRainState = { name: state.name, rainfallMm: rain };
+      }
+
+      const stateRecord = {
+        location: state.name,
+        stateId: state.id,
+        region: state.region,
+        capital: state.capital,
+        latitude: state.center[0],
+        longitude: state.center[1],
+        temperatureC: temp,
+        humidityPct: humidity,
+        pressureHpa: pressure,
+        windSpeedKmph: windSpeed,
+        windDirectionDeg: windDir,
+        windDirectionLabel: dirLabel,
+        windGustKmph: windGust,
+        rainfallMm: rain,
+        precipitationProbabilityPct: null,
+        observationTime: obsTime,
+        checkedAt: checkedAtTime,
+        source: "OPEN-METEO",
+        provenance: "MODEL",
+        hasData: true,
+        status: "MODEL DATA"
+      };
+
+      stateMeteorologyMap[state.id] = stateRecord;
+
+      if (windSpeed != null && windDir != null) {
+        windGridPoints.push({
+          lat: state.center[0],
+          lon: state.center[1],
+          name: state.name,
+          speed: windSpeed,
+          direction: windDir,
+          gust: windGust || windSpeed
+        });
+      }
+    });
+
+    cachedWeatherData = {
+      success: true,
+      states: stateMeteorologyMap,
+      windPoints: windGridPoints,
+      nationalSummary: {
+        meanTemperatureC: validTempCount > 0 ? Math.round((validTempSum / validTempCount) * 10) / 10 : null,
+        meanPressureHpa: validPressureCount > 0 ? Math.round(validPressureSum / validPressureCount) : null,
+        maxWindState,
+        maxRainState
+      },
+      modelDataTime: modelDataTime || checkedAtTime,
+      checkedAt: checkedAtTime,
+      source: "OPEN-METEO",
+      provenance: "MODEL",
+      modelAvailable: true
     };
 
-    windGridPoints.push({
-      lat: state.center[0],
-      lon: state.center[1],
-      name: state.name,
-      speed: windSpeed,
-      direction: 215,
-      gust: Math.round(windSpeed * 1.3)
-    });
-  });
+    lastFetchTimestamp = now;
+    return cachedWeatherData;
+  } catch (err) {
+    console.warn("Open-Meteo API fetch unavailable:", err.message);
 
-  return {
-    provenance: "LIVE WEATHER — CURRENT MODEL DATA (Fallback)",
-    sourcing_note: "Live meteorological model data fallback. NOT the REMAL historical cyclone simulation.",
-    states: stateMeteorologyMap,
-    windPoints: windGridPoints,
-    activeSystem: ACTIVE_DEPRESSION_SYSTEM,
-    fetchedAt: new Date().toISOString(),
-    lastUpdatedFormatted: "23:00 IST",
-    nextRefreshMinutes: 10
-  };
+    // Honest unavailable state — zero fake fallback numbers
+    const stateMeteorologyMap = {};
+    STATES_AND_UTS.forEach((state) => {
+      stateMeteorologyMap[state.id] = {
+        location: state.name,
+        stateId: state.id,
+        region: state.region,
+        capital: state.capital,
+        latitude: state.center[0],
+        longitude: state.center[1],
+        temperatureC: null,
+        humidityPct: null,
+        pressureHpa: null,
+        windSpeedKmph: null,
+        windDirectionDeg: null,
+        windDirectionLabel: null,
+        windGustKmph: null,
+        rainfallMm: null,
+        precipitationProbabilityPct: null,
+        observationTime: null,
+        checkedAt: checkedAtTime,
+        source: "OPEN-METEO (OFFLINE)",
+        provenance: "MODEL",
+        hasData: false,
+        status: "DATA UNAVAILABLE"
+      };
+    });
+
+    return {
+      success: false,
+      error: err.message,
+      states: stateMeteorologyMap,
+      windPoints: [], // Empty: do NOT generate random or fake vectors
+      nationalSummary: {
+        meanTemperatureC: null,
+        meanPressureHpa: null,
+        maxWindState: null,
+        maxRainState: null
+      },
+      modelDataTime: null,
+      checkedAt: checkedAtTime,
+      source: "OPEN-METEO",
+      provenance: "MODEL",
+      modelAvailable: false
+    };
+  }
 }

@@ -17,7 +17,8 @@ export default function OperationalDrawerModal({
   onClose,
   weatherData,
   onSelectState,
-  onSelectAlert: _onSelectAlert
+  onSelectAlert: _onSelectAlert,
+  onLocateOnMap
 }) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -31,7 +32,7 @@ export default function OperationalDrawerModal({
       >
         {/* 1. SATELLITE VIEWER */}
         {drawerType === "satellite" && (
-          <SatellitePanel onClose={onClose} />
+          <SatellitePanel onClose={onClose} onLocateOnMap={onLocateOnMap} />
         )}
 
         {/* 2. IMD METEOROLOGICAL BULLETINS */}

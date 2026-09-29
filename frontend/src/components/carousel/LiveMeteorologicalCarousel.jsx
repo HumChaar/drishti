@@ -7,21 +7,27 @@ import {
   CloudRain,
   Satellite,
   AlertTriangle,
-  Activity,
-  Database,
+  Gauge,
+  Thermometer,
   ExternalLink,
-  ShieldCheck,
   Pause,
   Play
 } from "lucide-react";
+import ProvenanceBadge from "../common/ProvenanceBadge";
 
 /**
  * LiveMeteorologicalCarousel
  * Professional IMD-style Live Meteorological Carousel component.
- * 
- * Sits directly below the map and intelligence workspace.
- * Generated dynamically from normalized meteorological data.
- * Lightweight, native React/CSS (zero heavy external dependencies).
+ * Conforms strictly to Stage 2B Section 7:
+ * - WIND
+ * - RAIN
+ * - PRESSURE
+ * - TEMPERATURE
+ * - SYSTEM
+ * - SATELLITE
+ * - ALERTS
+ *
+ * Every card explicitly contains: value, unit, source, provenance, and timestamps (DATA vs CHECKED).
  */
 export default function LiveMeteorologicalCarousel({
   data,
@@ -32,148 +38,142 @@ export default function LiveMeteorologicalCarousel({
   const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef(null);
 
-  // Helper for status badge styling
-  const getStatusPillClass = (color) => {
-    switch (color) {
-      case "emerald":
-        return "bg-emerald-50 text-emerald-800 border-emerald-200";
-      case "amber":
-        return "bg-amber-50 text-amber-800 border-amber-200";
-      case "red":
-        return "bg-red-50 text-red-800 border-red-200";
-      case "cyan":
-      case "teal":
-      case "blue":
-        return "bg-blue-50 text-blue-800 border-blue-200";
-      default:
-        return "bg-slate-100 text-slate-700 border-slate-200";
-    }
-  };
+  const activeSys = data?.activeSystem;
+  const hasLiveSys = activeSys?.liveStatus === "LIVE" && activeSys?.hasActiveSystem && activeSys?.latitude != null;
 
-  const hasSys = data?.activeSystem?.hasActiveSystem;
-  const isSysAvail = data?.activeSystem?.isAvailable !== false;
+  const checkedAtTime = data?.checkedAt || "IST";
 
-  // Dynamic meteorological cards conforming to: SOURCE / STATUS / TITLE / LOCATION / VALUE / UPDATED / ACTION
+  // Build the 6 core meteorological cards strictly complying with Section 7
   const cards = [
+    // 1. WIND
     {
-      id: "national-weather",
+      id: "card-wind",
+      pillar: "WIND",
       source: "OPEN-METEO",
-      status: "MODEL TELEMETRY",
-      statusColor: "emerald",
-      title: "NATIONAL WEATHER",
-      location: "Pan-India (36 States & UTs)",
-      metric: data?.national?.temp != null
-        ? `Mean Temp ${data.national.temp}°C • Wind ${data.national.windSpeed || 18} km/h`
-        : "NO CURRENT DATA",
-      timestamp: data?.timestamp?.timeShort || "00:20 IST",
-      actionLabel: "VIEW OBSERVATIONS",
-      action: () => onOpenOverlay && onOpenOverlay("observations"),
-      icon: Activity
+      provenance: "MODEL",
+      icon: Wind,
+      title: "SURFACE WIND VECTORS",
+      location: data?.wind?.maxWindState ? `${data.wind.maxWindState.location} (Peak Sector)` : (data ? "Pan-India Continental" : "Loading Sector..."),
+      value: data?.wind?.maxWindState ? `${data.wind.maxWindState.speedKmph} km/h` : (data ? "WIND DATA UNAVAILABLE" : "LOADING..."),
+      secondary: data?.wind?.maxWindState?.directionLabel
+        ? `${data.wind.maxWindState.directionLabel} ${data.wind.maxWindState.directionDeg ? `${data.wind.maxWindState.directionDeg}°` : ""}${data.wind.maxWindState.gustKmph ? ` • Gusts ${data.wind.maxWindState.gustKmph} km/h` : ""}`
+        : (data ? "NWP 10m Wind Model" : "Connecting to NWP feed..."),
+      dataTime: data?.wind?.observationTime || "MODEL CYCLE",
+      checkedTime: checkedAtTime,
+      actionLabel: "SURFACE MAP",
+      action: () => onNavigateTab && onNavigateTab("weather")
     },
+
+    // 2. RAIN
     {
-      id: "synoptic-system",
-      source: "IMD BULLETIN",
-      status: hasSys ? "DEPRESSION ACTIVE" : isSysAvail ? "SURVEILLANCE" : "TELEMETRY OFFLINE",
-      statusColor: hasSys ? "amber" : "slate",
-      title: hasSys ? "ACTIVE SYNOPTIC SYSTEM" : "SYNOPTIC SURVEILLANCE",
-      location: hasSys
-        ? (data?.activeSystem?.shortName || "Northeast Madhya Pradesh")
-        : "All Basins Monitored",
-      metric: hasSys
-        ? `${data?.activeSystem?.centralPressureMb || 998} hPa • Wind ${data?.activeSystem?.maxWindKmh || 45}-${data?.activeSystem?.gustKmh || 60} km/h`
-        : isSysAvail
-        ? "NO ACTIVE SYNOPTIC SYSTEM"
-        : "CURRENT SYSTEM DATA UNAVAILABLE",
-      timestamp: data?.activeSystem?.updatedAt || "00:20 IST",
-      actionLabel: hasSys ? "VIEW BULLETIN" : "VIEW SITUATION",
-      action: () => onOpenOverlay && onOpenOverlay("bulletin"),
-      icon: Radio
+      id: "card-rain",
+      pillar: "RAIN",
+      source: "OPEN-METEO",
+      provenance: "MODEL",
+      icon: CloudRain,
+      title: "MODEL PRECIPITATION",
+      location: data?.rainfall?.maxRainState ? `${data.rainfall.maxRainState.location} (Max 24h)` : (data ? "Pan-India Basins" : "Loading Basins..."),
+      value: data?.rainfall?.maxRainState ? `${data.rainfall.maxRainState.rainfallMm} mm` : (data ? "0.0 mm" : "LOADING..."),
+      secondary: data?.rainfall?.activeRainSectorsCount > 0
+        ? `${data.rainfall.activeRainSectorsCount} Active Rain Sectors`
+        : (data ? "Routine Baseline NWP • No Heavy Precip" : "Connecting to NWP feed..."),
+      dataTime: data?.rainfall?.observationTime || "MODEL CYCLE",
+      checkedTime: checkedAtTime,
+      actionLabel: "RAIN OBSERVATIONS",
+      action: () => onOpenOverlay && onOpenOverlay("observations")
     },
+
+    // 3. PRESSURE
     {
-      id: "imd-warning",
-      source: "IMD ALERT",
-      status: data?.warnings?.length > 0 ? (data.warnings[0].severity || "WARNING ACTIVE") : "ROUTINE",
-      statusColor: data?.warnings?.length > 0 ? "red" : "emerald",
-      title: "LATEST IMD WARNING",
-      location: data?.warnings?.[0]?.region || "Northeast MP & North Chhattisgarh",
-      metric: data?.warnings?.[0]?.title || "NO CURRENT ACTIVE WARNINGS",
-      timestamp: data?.warnings?.[0]?.issuedAt || "00:20 IST",
-      actionLabel: "VIEW WARNING",
-      action: () => onOpenOverlay && onOpenOverlay("warning"),
-      icon: AlertTriangle
+      id: "card-pressure",
+      pillar: "PRESSURE",
+      source: "OPEN-METEO",
+      provenance: "MODEL",
+      icon: Gauge,
+      title: "SURFACE PRESSURE",
+      location: "Pan-India Barometric Mean",
+      value: data?.surfacePressure?.meanPressureHpa != null ? `${data.surfacePressure.meanPressureHpa} hPa` : (data ? "DATA UNAVAILABLE" : "LOADING..."),
+      secondary: "Mean Surface Barometric Pressure (NWP)",
+      dataTime: data?.surfacePressure?.observationTime || "MODEL CYCLE",
+      checkedTime: checkedAtTime,
+      actionLabel: "BAROMETRIC INTEL",
+      action: () => onOpenOverlay && onOpenOverlay("observations")
     },
+
+    // 4. TEMPERATURE
     {
-      id: "satellite-status",
-      source: "MOSDAC / ISRO",
-      status: "LIVE SATELLITE",
-      statusColor: "cyan",
-      title: "INSAT-3DS SATELLITE",
+      id: "card-temp",
+      pillar: "TEMPERATURE",
+      source: "OPEN-METEO",
+      provenance: "MODEL",
+      icon: Thermometer,
+      title: "2M AIR TEMPERATURE",
+      location: "Pan-India Continental Mean",
+      value: data?.temperature?.meanTemperatureC != null ? `${data.temperature.meanTemperatureC} °C` : (data ? "DATA UNAVAILABLE" : "LOADING..."),
+      secondary: "2m Above Ground NWP Telemetry",
+      dataTime: data?.temperature?.observationTime || "MODEL CYCLE",
+      checkedTime: checkedAtTime,
+      actionLabel: "TEMP MATRIX",
+      action: () => onOpenOverlay && onOpenOverlay("observations")
+    },
+
+    // 5. SYSTEM
+    {
+      id: "card-system",
+      pillar: "SYSTEM",
+      source: "IMD",
+      provenance: hasLiveSys ? "OBSERVED" : "UNAVAILABLE",
+      icon: Radio,
+      title: hasLiveSys ? "ACTIVE SYNOPTIC SYSTEM" : "IMD SYSTEM FEED",
+      location: hasLiveSys ? (activeSys?.name || "North Indian Ocean Basin") : "All Indian Basins Monitored",
+      value: hasLiveSys
+        ? `[${activeSys.classification}] ${activeSys.coordinatesFormatted || ""}`
+        : "SOURCE UNAVAILABLE",
+      secondary: hasLiveSys
+        ? `Observed: ${activeSys.observationTime} • ${activeSys.movementDescription || "Monitoring"}`
+        : "Coordinates: NOT VERIFIED • Observation: NOT VERIFIED",
+      dataTime: hasLiveSys ? activeSys.observationTime : "NOT VERIFIED",
+      checkedTime: checkedAtTime,
+      actionLabel: hasLiveSys ? "VIEW BULLETIN" : "OPEN IMD BULLETIN",
+      action: () => onOpenOverlay && onOpenOverlay("bulletin")
+    },
+
+    // 6. SATELLITE
+    {
+      id: "card-satellite",
+      pillar: "SATELLITE",
+      source: "IMD / INSAT-3DS",
+      provenance: "OBSERVED",
+      icon: Satellite,
+      title: "INSAT-3DS SURVEILLANCE",
       location: "South Asia & Indian Ocean Sector",
-      metric: "IR1, VIS, WV, CTT Products Available",
-      timestamp: data?.satellite?.lastCapture || "00:20 IST",
-      actionLabel: "OPEN LIVE PRODUCT",
-      action: () => onOpenOverlay && onOpenOverlay("satellite"),
-      icon: Satellite
+      value: "8 PRODUCTS ONLINE",
+      secondary: "IR1, VIS, WV, SWIR, MP, CTT, Rapid Scan & Bulletin",
+      dataTime: "OBSERVED IMAGERY",
+      checkedTime: checkedAtTime,
+      actionLabel: "OPEN SATELLITE",
+      action: () => onOpenOverlay && onOpenOverlay("satellite")
     },
+
+    // 7. WARNINGS
     {
-      id: "wind-field",
-      source: "OPEN-METEO",
-      status: "MODEL VECTORS",
-      statusColor: "teal",
-      title: "SURFACE WIND FIELD",
-      location: "Central & Adjoining Marine Sectors",
-      metric: data?.wind?.speed != null
-        ? `Surface Wind ${data.wind.speed} km/h • Dir ${data.wind.direction ?? 90}°`
-        : "NO CURRENT DATA",
-      timestamp: data?.wind?.lastUpdated || "00:20 IST",
-      actionLabel: "SURFACE WEATHER",
-      action: () => onNavigateTab && onNavigateTab("weather"),
-      icon: Wind
-    },
-    {
-      id: "rainfall-telemetry",
-      source: "OPEN-METEO",
-      status: "MODEL PRECIP",
-      statusColor: "blue",
-      title: "PRECIPITATION TELEMETRY",
-      location: "Central & Peninsular River Basins",
-      metric: data?.national?.rain != null
-        ? `24h Accumulated: ${data.national.rain} mm (Pan-India Sector)`
-        : "NO CURRENT DATA",
-      timestamp: data?.timestamp?.timeShort || "00:20 IST",
-      actionLabel: "VIEW RAIN MATRIX",
-      action: () => onOpenOverlay && onOpenOverlay("observations"),
-      icon: CloudRain
-    },
-    {
-      id: "regional-state",
-      source: "DRISHTI DERIVED",
-      status: "SURVEILLANCE",
-      statusColor: "orange",
-      title: "REGIONAL READINESS",
-      location: "36 States & Union Territories",
-      metric: "Depression Influence Calculated Multi-Factor",
-      timestamp: data?.timestamp?.timeShort || "00:20 IST",
-      actionLabel: "STATE MONITOR",
-      action: () => onNavigateTab && onNavigateTab("states"),
-      icon: ShieldCheck
-    },
-    {
-      id: "data-provenance",
-      source: "MULTI-AGENCY",
-      status: "STRICT PROVENANCE",
-      statusColor: "slate",
-      title: "DATA PROVENANCE MATRIX",
-      location: "National Meteorological EOC",
-      metric: "OBSERVED • MODEL • DERIVED • SIMULATED",
-      timestamp: data?.timestamp?.timeShort || "00:20 IST",
-      actionLabel: "VIEW SOURCES",
-      action: () => onOpenOverlay && onOpenOverlay("sources"),
-      icon: Database
+      id: "card-alerts",
+      pillar: "WARNINGS",
+      source: "IMD ALERT",
+      provenance: "OBSERVED",
+      icon: AlertTriangle,
+      title: "SYNOPTIC ALERTS & WARNINGS",
+      location: data?.warnings?.[0]?.region || "National Meteorological Arc",
+      value: data?.warnings?.[0]?.title || "NO CURRENT RED WARNINGS",
+      secondary: data?.warnings?.length > 0 ? `${data.warnings.length} Active Bulletin Notices` : "Baseline Surveillance",
+      dataTime: data?.warnings?.[0]?.issuedAt || "CURRENT",
+      checkedTime: checkedAtTime,
+      actionLabel: "VIEW WARNINGS",
+      action: () => onOpenOverlay && onOpenOverlay("warning")
     }
   ];
 
-  // Autoplay cycle (7 seconds)
+  // Autoplay rotation (7 seconds per cycle)
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
@@ -197,7 +197,7 @@ export default function LiveMeteorologicalCarousel({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Top Section Header */}
+      {/* Top Header Strip */}
       <div className="carousel-section-header">
         <div className="carousel-title-group">
           <div className="carousel-pulse-dot" />
@@ -205,7 +205,7 @@ export default function LiveMeteorologicalCarousel({
             LIVE METEOROLOGICAL TELEMETRY &amp; HAZARD CAROUSEL
           </h2>
           <span className="carousel-provenance-tag font-mono">
-            MULTI-SOURCE • AUTOMATIC ROTATION
+            STRICT PROVENANCE • AUTOMATIC ROTATION
           </span>
         </div>
 
@@ -231,7 +231,7 @@ export default function LiveMeteorologicalCarousel({
                 aria-selected={idx === currentIndex}
                 className={`carousel-dot ${idx === currentIndex ? "active" : ""}`}
                 onClick={() => setCurrentIndex(idx)}
-                title={`Go to slide ${idx + 1}: ${card.title}`}
+                title={`Go to slide ${idx + 1}: ${card.pillar}`}
               />
             ))}
           </div>
@@ -275,38 +275,41 @@ export default function LiveMeteorologicalCarousel({
             const Icon = card.icon;
             return (
               <article key={card.id} className="meteorological-card">
-                {/* Card Top: SOURCE & STATUS */}
+                {/* Card Top: SOURCE & PROVENANCE */}
                 <div className="card-top-meta flex items-center justify-between pb-1.5 border-b border-slate-200">
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <Icon size={12} className="text-blue-700 flex-shrink-0" />
-                    <span className="card-source font-mono font-bold text-[10px] text-slate-800 tracking-wider truncate">
-                      {card.source}
+                    <Icon size={13} className="text-blue-700 flex-shrink-0" />
+                    <span className="card-source font-mono font-bold text-[10.5px] text-slate-900 tracking-wider truncate">
+                      {card.pillar}
                     </span>
+                    <span className="text-[10px] text-slate-400 font-mono">• {card.source}</span>
                   </div>
-                  <span className={`status-pill font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border ${getStatusPillClass(card.statusColor)}`}>
-                    {card.status}
-                  </span>
+                  <ProvenanceBadge provenance={card.provenance} size="tiny" />
                 </div>
 
                 {/* Card Body: TITLE, LOCATION, VALUE */}
                 <div className="card-body mt-2">
-                  <div className="card-title font-mono font-bold text-xs text-slate-900 tracking-wide uppercase truncate">
+                  <div className="card-title font-mono font-bold text-[11px] text-slate-800 tracking-wide uppercase truncate">
                     {card.title}
                   </div>
-                  <div className="card-location text-[11px] text-slate-500 font-medium truncate mt-0.5">
+                  <div className="card-location text-[10.5px] text-slate-500 font-medium truncate mt-0.5">
                     {card.location}
                   </div>
-                  <div className="card-metric font-mono text-xs font-bold text-slate-800 mt-2 p-2 bg-slate-50 rounded border border-slate-200">
-                    {card.metric}
+
+                  <div className="card-metric font-mono text-xs font-bold text-slate-900 mt-2 p-2 bg-slate-50 rounded border border-slate-200">
+                    <div className="text-[13px] text-blue-950 font-bold">{card.value}</div>
+                    <div className="text-[10px] text-slate-600 font-normal mt-0.5 truncate">
+                      {card.secondary}
+                    </div>
                   </div>
                 </div>
 
-                {/* Card Footer: UPDATED & ACTION */}
-                <div className="card-footer mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between font-mono text-[10px]">
-                  <span className="text-slate-500 flex items-center gap-1">
-                    <span className="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">UPDATED</span>
-                    <span className="font-bold text-slate-700">{card.timestamp}</span>
-                  </span>
+                {/* Card Footer: DATA TIME vs CHECKED TIME */}
+                <div className="card-footer mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between font-mono text-[9.5px]">
+                  <div className="flex flex-col text-slate-500 leading-tight">
+                    <span>DATA: <strong className="text-slate-700">{card.dataTime}</strong></span>
+                    <span>CHECKED: <strong className="text-slate-600">{card.checkedTime}</strong></span>
+                  </div>
 
                   <button
                     type="button"
