@@ -20,7 +20,16 @@ export default function ProvenanceBadge({
   let colorClasses = "bg-slate-100 text-slate-700 border-slate-300";
   let label = provUpper;
 
-  if (provUpper.includes("OBSERVED")) {
+  if (provUpper.includes("DEMO")) {
+    colorClasses = "bg-rose-50 text-rose-800 border-rose-300";
+    label = "DEMO / SIMULATED";
+  } else if (provUpper.includes("HISTORICAL")) {
+    colorClasses = "bg-rose-50 text-rose-800 border-rose-300";
+    label = "HISTORICAL";
+  } else if (provUpper.includes("SIMULATED")) {
+    colorClasses = "bg-rose-50 text-rose-800 border-rose-300";
+    label = "SIMULATED";
+  } else if (provUpper.includes("OBSERVED")) {
     colorClasses = "bg-emerald-50 text-emerald-800 border-emerald-300";
     label = "OBSERVED";
   } else if (provUpper.includes("MODEL")) {
@@ -29,9 +38,6 @@ export default function ProvenanceBadge({
   } else if (provUpper.includes("DERIVED")) {
     colorClasses = "bg-amber-50 text-amber-900 border-amber-300";
     label = "DERIVED";
-  } else if (provUpper.includes("SIMULATED")) {
-    colorClasses = "bg-rose-50 text-rose-800 border-rose-300";
-    label = "SIMULATED";
   } else if (provUpper.includes("UNAVAILABLE") || provUpper.includes("OFFLINE")) {
     colorClasses = "bg-slate-100 text-slate-600 border-slate-300";
     label = "UNAVAILABLE";

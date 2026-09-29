@@ -85,11 +85,11 @@ export default function OperationalDrawerModal({
                         background: "#4ade80", display: "inline-block",
                         animation: "pulse 2s infinite"
                       }} />
-                      LIVE
+                      DEMO
                     </span>
                   </div>
                   <div style={{ fontSize: "10px", color: "#64748b", letterSpacing: "0.04em" }}>
-                    AUTHORITATIVE SOURCE: INDIA METEOROLOGICAL DEPARTMENT
+                    DEMO / SIMULATED METEOROLOGICAL DATA • REFERENCE SCENARIO
                   </div>
                 </div>
               </div>
@@ -122,7 +122,7 @@ export default function OperationalDrawerModal({
                 background: "rgba(56,189,248,0.1)", color: "#38bdf8",
                 border: "1px solid rgba(56,189,248,0.2)", letterSpacing: "0.05em"
               }}>
-                OBSERVED / AUTHORITATIVE BULLETIN
+                DEMO / SIMULATED METEOROLOGICAL DATA
               </span>
             </div>
 
@@ -219,8 +219,8 @@ export default function OperationalDrawerModal({
               background: "rgba(15,23,42,0.8)",
               flexShrink: 0
             }}>
-              <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: IMD NATIONAL SYNOPTIC WEATHER REPORT</span>
-              <span style={{ fontSize: "10px", color: "#38bdf8", fontWeight: 700 }}>MoES • IMD</span>
+              <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: DEMO / SIMULATED METEOROLOGICAL DATA</span>
+              <span style={{ fontSize: "10px", color: "#38bdf8", fontWeight: 700 }}>DEMO SCENARIO</span>
             </div>
           </div>
         )}
@@ -308,11 +308,11 @@ export default function OperationalDrawerModal({
                 <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-slate-200">
                   <strong className="text-slate-900 font-bold">1. INDIA METEOROLOGICAL DEPARTMENT (IMD)</strong>
                   <span className="badge-provenance text-[9px] bg-blue-100 text-blue-900 font-bold">
-                    OBSERVED / AUTHORITATIVE BULLETIN
+                    DEMO / SIMULATED METEOROLOGICAL DATA
                   </span>
                 </div>
                 <div className="text-[11px] font-sans text-slate-600 mb-2">
-                  Official national synoptic bulletins, marine squall advisories, CAP RSS emergency alerts, and cyclonic disturbance advisories.
+                  National synoptic bulletins, marine squall advisories, and CAP emergency alerts (demonstration scenarios calibrated to official IMD formats).
                 </div>
                 <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline flex items-center gap-1 text-[11px]">
                   <span>https://mausam.imd.gov.in</span>
@@ -340,7 +340,7 @@ export default function OperationalDrawerModal({
                 <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-slate-200">
                   <strong className="text-slate-900 font-bold">3. OPEN-METEO WEATHER MODEL</strong>
                   <span className="badge-provenance text-[9px] bg-emerald-100 text-emerald-900 font-bold">
-                    CURRENT MODEL DATA
+                    LIVE WEATHER — CURRENT MODEL DATA
                   </span>
                 </div>
                 <div className="text-[11px] font-sans text-slate-600 mb-2">
@@ -368,7 +368,7 @@ export default function OperationalDrawerModal({
                 <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-slate-200">
                   <strong className="text-slate-900 font-bold">5. CYCLONE REMAL 2024 BENCHMARK</strong>
                   <span className="badge-provenance text-[9px] bg-red-100 text-red-900 font-bold">
-                    HISTORICAL SIMULATION
+                    HISTORICAL SIMULATION — CYCLONE REMAL 2024
                   </span>
                 </div>
                 <div className="text-[11px] font-sans text-slate-600">

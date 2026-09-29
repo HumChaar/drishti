@@ -5,6 +5,7 @@ Includes depression influence computation and oceanic wind points.
 
 PROVENANCE:
 - LIVE WEATHER — CURRENT MODEL DATA (Open-Meteo NWP)
+- DEMO / SIMULATED METEOROLOGICAL DATA (Synoptic Depression Centroid)
 - Strictly segregated from HISTORICAL SIMULATION (Cyclone REMAL 2024)
 """
 
@@ -74,15 +75,15 @@ _ACTIVE_DEPRESSION = ActiveDepressionSystem(
     name="Depression over Northeast Madhya Pradesh & adjoining North Chhattisgarh",
     shortName="Northeast MP Depression",
     status="DEPRESSION",
-    observedDate="TODAY IST",
+    observedDate="DEMO SCENARIO",
     centerLat=24.2,
     centerLon=81.5,
     centralPressureMb=998,
     maxWindKmh=45,
     gustKmh=60,
     movement="West-Northwestwards @ 14 km/h",
-    source="IMD NATIONAL SYNOPTIC WEATHER REPORT",
-    classification="OBSERVED / AUTHORITATIVE BULLETIN"
+    source="DEMO / SIMULATED DATA",
+    classification="DEMO / SIMULATED METEOROLOGICAL DATA"
 )
 
 # Oceanic / maritime offshore wind points

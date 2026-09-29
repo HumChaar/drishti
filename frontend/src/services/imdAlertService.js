@@ -2,13 +2,14 @@
  * DRISHTI IMD Alert & Emergency Notification Service
  *
  * Strict Provenance Standard:
- * - OBSERVED: Official IMD Authoritative Bulletins & Warnings
+ * - DEMO / SIMULATED: Static demonstration bulletins & alerts
  * - DRISHTI DERIVED: Multi-factor synthesized indicators
- * - HISTORICAL SIMULATION: Replay scenarios (Remal 2024)
+ * - HISTORICAL SIMULATION — CYCLONE REMAL 2024: Replay scenarios
  *
  * DATA INTEGRITY RULES:
  * - Never synthesize timestamps with local clock and present them as official observation times.
  * - Never present unverified depressions or arbitrary coordinates.
+ * - Static/demo alerts and bulletins must be explicitly classified as DEMO / SIMULATED METEOROLOGICAL DATA.
  */
 
 export const ACTIVE_EMERGENCY_ALERTS = [
@@ -19,10 +20,10 @@ export const ACTIVE_EMERGENCY_ALERTS = [
     severity: "WARNING", // CRITICAL | WARNING | ALERT | WATCH | INFORMATION
     severityColor: "#dc2626", // Red / Orange
     region: "Central India, Gangetic Plain & Adjoining Riverine Basins",
-    issuedAt: "IMD NATIONAL SYNOPTIC ADVISORY",
+    issuedAt: "DEMO SCENARIO ADVISORY",
     validUntil: "ROUTINE ADVISORY CYCLE",
-    source: "IMD",
-    provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
+    source: "DEMO / SIMULATED DATA",
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
     summary:
       "Active monsoon trough across Central India. Isolated heavy to very heavy rainfall likely in low-lying riverine basins with localized waterlogging.",
     action: "VIEW SITUATION",
@@ -36,10 +37,10 @@ export const ACTIVE_EMERGENCY_ALERTS = [
     severity: "ALERT",
     severityColor: "#ea580c",
     region: "North & Central Bay of Bengal (Odisha & West Bengal Coastal Sectors)",
-    issuedAt: "IMD MARINE ADVISORY",
+    issuedAt: "DEMO MARINE ADVISORY",
     validUntil: "CONTINUOUS OBSERVATION",
-    source: "IMD",
-    provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
+    source: "DEMO / SIMULATED DATA",
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
     summary:
       "Squally wind speed reaching 45-55 km/h gusting to 65 km/h over North BoB. Sea condition rough to very rough. Fishermen advised not to venture into deep sea.",
     action: "VIEW MARINE BULLETIN",
@@ -53,10 +54,10 @@ export const ACTIVE_EMERGENCY_ALERTS = [
     severity: "WATCH",
     severityColor: "#d97706",
     region: "Jharkhand, Vidarbha & Coastal Andhra Pradesh",
-    issuedAt: "IMD DOPPLER RADAR NOWCAST",
+    issuedAt: "DEMO RADAR NOWCAST",
     validUntil: "NEXT 3 HOURS",
-    source: "IMD",
-    provenance: "OBSERVED / DOPPLER RADAR NOWCAST",
+    source: "DEMO / SIMULATED DATA",
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
     summary:
       "Moderate to intense convective clouds observed on Paradip & Nagpur DWR. Lightning strikes with gusty winds 30-40 km/h expected during next 3 hours.",
     action: "VIEW RADAR",
@@ -73,7 +74,7 @@ export const ACTIVE_EMERGENCY_ALERTS = [
     issuedAt: "HISTORICAL CALIBRATION (MAY 2024)",
     validUntil: "SESSION REPLAY",
     source: "DRISHTI",
-    provenance: "HISTORICAL SIMULATION",
+    provenance: "HISTORICAL SIMULATION — CYCLONE REMAL 2024",
     summary:
       "Calibrated storm trajectory exercise with deterministic 8-district risk scoring, SegFormer inundation inference, and Gemini multilingual decision support.",
     action: "LAUNCH CYCLONE MODE",
@@ -87,10 +88,10 @@ export const SYSTEM_NOTIFICATIONS = [
     id: "notif-1",
     type: "WARNING",
     title: "Monsoon Convection Advisory: Central India & Gangetic Plain",
-    time: "OFFICIAL BULLETIN",
+    time: "DEMO CYCLE",
     region: "Central India",
-    source: "IMD",
-    provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
+    source: "DEMO / SIMULATED DATA",
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
     isRead: false
   },
   {
@@ -100,17 +101,17 @@ export const SYSTEM_NOTIFICATIONS = [
     time: "MODEL CYCLE",
     region: "Pan-India (36 States & UTs)",
     source: "OPEN-METEO",
-    provenance: "CURRENT MODEL DATA",
+    provenance: "LIVE WEATHER — CURRENT MODEL DATA",
     isRead: false
   },
   {
     id: "notif-3",
     type: "BULLETIN",
     title: "IMD Sea Bulletin IMD-SEA-BOB Active",
-    time: "OFFICIAL BULLETIN",
+    time: "DEMO CYCLE",
     region: "Bay of Bengal",
-    source: "IMD",
-    provenance: "OBSERVED",
+    source: "DEMO / SIMULATED DATA",
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
     isRead: false
   },
   {
@@ -130,9 +131,9 @@ export const ACTIVE_BULLETINS = [
     id: "bul-imd-syn-01",
     bulletinNo: "IMD-ALL-INDIA-WEATHER-SUMMARY",
     headline: "All India Daily Weather Summary & Synoptic Features",
-    issuedAt: "IMD NATIONAL WEATHER REPORT",
-    source: "IMD National Weather Forecasting Centre",
-    provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
+    issuedAt: "DEMO / SIMULATED REPORT",
+    source: "DEMO / SIMULATED DATA",
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
     region: "Indian Subcontinent & Oceanic Basins",
     details: "Monsoon trough is active across Central and Northern India. Multiple embedded cyclonic circulations along the trough axis. No verified cyclonic depression or cyclone currently officially designated in the Bay of Bengal or Arabian Sea basin in this bulletin cycle.",
     seaCondition: "Moderate to Rough over Central & North Bay of Bengal",
@@ -145,9 +146,9 @@ export const ACTIVE_BULLETINS = [
     id: "bul-imd-syn-02",
     bulletinNo: "IMD-SEA-BOB-2026-18",
     headline: "Marine Weather Bulletin for Coastal Waters of Odisha & West Bengal",
-    issuedAt: "IMD REGIONAL BULLETIN",
-    source: "IMD Regional Specialised Meteorological Centre",
-    provenance: "OBSERVED / AUTHORITATIVE BULLETIN",
+    issuedAt: "DEMO / SIMULATED BULLETIN",
+    source: "DEMO / SIMULATED DATA",
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
     region: "Coastal Odisha, Coastal West Bengal & North Bay of Bengal",
     details: "Monsoon is vigorous over North Bay of Bengal. Southwest monsoon current strong with intermittent gale squalls. Port signals: Distant Warning Signal No. II hoisted at Paradip, Dhamra and Sagar Island ports.",
     seaCondition: "High to Very High in offshore reaches",

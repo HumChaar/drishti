@@ -310,13 +310,14 @@ export default function OverlayManager({
               iconBg="rgba(56,189,248,0.15)"
               iconColor="rgba(56,189,248,0.3)"
               title="IMD NATIONAL & MARINE METEOROLOGICAL BULLETINS"
-              subtitle="AUTHORITATIVE SOURCE: INDIA METEOROLOGICAL DEPARTMENT"
-              badge="LIVE"
+              subtitle="DEMO / SIMULATED METEOROLOGICAL DATA • REFERENCE SCENARIO"
+              badge="DEMO"
+              badgeColor={{ bg: "rgba(56,189,248,0.15)", text: "#38bdf8", border: "rgba(56,189,248,0.3)", dot: "#38bdf8" }}
               onClose={onClose}
             />
             <SubBar
               left={`${(data?.bulletins || []).length} BULLETIN${(data?.bulletins || []).length !== 1 ? "S" : ""} ACTIVE`}
-              right="OBSERVED / AUTHORITATIVE BULLETIN"
+              right="DEMO / SIMULATED METEOROLOGICAL DATA"
             />
             <div style={{ padding: "16px 20px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "16px" }}>
               {(data?.bulletins || []).map((b, bIdx) => (
@@ -357,8 +358,8 @@ export default function OverlayManager({
               ))}
             </div>
             <div style={MODAL.footer}>
-              <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: IMD NATIONAL SYNOPTIC WEATHER REPORT</span>
-              <span style={{ fontSize: "10px", color: "#38bdf8", fontWeight: 700 }}>MoES • IMD</span>
+              <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: DEMO / SIMULATED METEOROLOGICAL DATA</span>
+              <span style={{ fontSize: "10px", color: "#38bdf8", fontWeight: 700 }}>DEMO SCENARIO</span>
             </div>
           </div>
         )}
@@ -373,14 +374,14 @@ export default function OverlayManager({
               iconBg="rgba(239,68,68,0.15)"
               iconColor="rgba(239,68,68,0.3)"
               title="IMD NATIONAL WEATHER WARNINGS & ALERTS"
-              subtitle="AUTHORITATIVE SOURCE: INDIA METEOROLOGICAL DEPARTMENT"
-              badge="ACTIVE"
+              subtitle="DEMO / SIMULATED METEOROLOGICAL DATA • REFERENCE SCENARIO"
+              badge="DEMO"
               badgeColor={{ bg: "rgba(239,68,68,0.15)", text: "#f87171", border: "rgba(239,68,68,0.3)", dot: "#f87171" }}
               onClose={onClose}
             />
             <SubBar
               left={`${(data?.warnings || []).length} ALERT${(data?.warnings || []).length !== 1 ? "S" : ""} ISSUED`}
-              right="OBSERVED / AUTHORITATIVE ALERT"
+              right="DEMO / SIMULATED METEOROLOGICAL DATA"
               accentColor="rgba(239,68,68,0.05)"
               borderColor="rgba(239,68,68,0.1)"
             />
@@ -416,8 +417,8 @@ export default function OverlayManager({
               })}
             </div>
             <div style={MODAL.footer}>
-              <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: IMD CAP RSS ALERT FEED</span>
-              <span style={{ fontSize: "10px", color: "#f87171", fontWeight: 700 }}>MoES • IMD</span>
+              <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: DEMO / SIMULATED METEOROLOGICAL DATA</span>
+              <span style={{ fontSize: "10px", color: "#f87171", fontWeight: 700 }}>DEMO SCENARIO</span>
             </div>
           </div>
         )}
@@ -441,10 +442,10 @@ export default function OverlayManager({
               {[
                 {
                   num: "01", name: "INDIA METEOROLOGICAL DEPARTMENT (IMD)",
-                  badge: "OBSERVED / AUTHORITATIVE BULLETIN",
+                  badge: "DEMO / SIMULATED METEOROLOGICAL DATA",
                   badgeColor: "#38bdf8", badgeBg: "rgba(56,189,248,0.1)", badgeBorder: "rgba(56,189,248,0.2)",
                   accent: "rgba(56,189,248,0.06)", accentBorder: "rgba(56,189,248,0.12)",
-                  desc: "Official national synoptic bulletins, marine squall advisories, CAP RSS emergency alerts, and cyclonic disturbance advisories.",
+                  desc: "National synoptic bulletins, marine squall advisories, and CAP emergency alerts (demonstration scenarios calibrated to official IMD formats).",
                   url: "https://mausam.imd.gov.in", urlLabel: "mausam.imd.gov.in"
                 },
                 {
@@ -457,7 +458,7 @@ export default function OverlayManager({
                 },
                 {
                   num: "03", name: "OPEN-METEO WEATHER MODEL",
-                  badge: "CURRENT MODEL DATA",
+                  badge: "LIVE WEATHER — CURRENT MODEL DATA",
                   badgeColor: "#4ade80", badgeBg: "rgba(34,197,94,0.1)", badgeBorder: "rgba(34,197,94,0.2)",
                   accent: "rgba(34,197,94,0.06)", accentBorder: "rgba(34,197,94,0.12)",
                   desc: "Frontend-accessible numerical weather prediction: 10m wind speed, direction, gusts, 2m temperature, relative humidity, and precipitation.",
@@ -473,7 +474,7 @@ export default function OverlayManager({
                 },
                 {
                   num: "05", name: "CYCLONE REMAL 2024 BENCHMARK",
-                  badge: "HISTORICAL SIMULATION",
+                  badge: "HISTORICAL SIMULATION — CYCLONE REMAL 2024",
                   badgeColor: "#f87171", badgeBg: "rgba(239,68,68,0.1)", badgeBorder: "rgba(239,68,68,0.2)",
                   accent: "rgba(239,68,68,0.06)", accentBorder: "rgba(239,68,68,0.12)",
                   desc: "Calibrated historical operational exercise replay over Bay of Bengal / Odisha-WB arc for emergency decision training and risk validation.",

@@ -549,7 +549,7 @@ export const NATIONAL_HAZARD_REGISTRY = [
     severityDisaster: "SEVERE (SCS, 110 KM/H)",
     lastUpdate: "IMD Synoptic Bulletin",
     source: "IMD Cyclone Warning Division (RSMC New Delhi)",
-    provenance: "OBSERVED / SIMULATED",
+    provenance: "HISTORICAL SIMULATION — CYCLONE REMAL 2024",
     connected: true
   },
   {
@@ -575,10 +575,10 @@ export const NATIONAL_HAZARD_REGISTRY = [
     affectedRegionDisaster: "Odisha & Gangetic West Bengal",
     severityNormal: "LOW",
     severityDisaster: "VERY HEAVY (120-180 MM)",
-    lastUpdate: "IMD AWS Real-time",
+    lastUpdate: "IMD AWS (Demo Scenario)",
     source: "IMD Automated Weather Station (AWS) Grid",
-    provenance: "OBSERVED",
-    connected: true
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
+    connected: false
   },
   {
     id: "coastal",
@@ -589,10 +589,10 @@ export const NATIONAL_HAZARD_REGISTRY = [
     affectedRegionDisaster: "Odisha-West Bengal Coastline",
     severityNormal: "NORMAL",
     severityDisaster: "CRITICAL (PHENOMENAL SEA)",
-    lastUpdate: "INCOIS Marine Forecast",
+    lastUpdate: "INCOIS Marine Forecast (Demo Scenario)",
     source: "INCOIS Wave Rider Buoy Network & IMD Marine",
-    provenance: "OBSERVED / SIMULATED",
-    connected: true
+    provenance: "DEMO / SIMULATED METEOROLOGICAL DATA",
+    connected: false
   },
   {
     id: "earthquake",
@@ -605,7 +605,7 @@ export const NATIONAL_HAZARD_REGISTRY = [
     severityDisaster: "NO EVENT M4.0+",
     lastUpdate: "National Center for Seismology",
     source: "National Center for Seismology (NCS) / MoES",
-    provenance: "OBSERVED",
+    provenance: "NOT CONNECTED",
     connected: false
   },
   {
@@ -619,7 +619,7 @@ export const NATIONAL_HAZARD_REGISTRY = [
     severityDisaster: "LOW",
     lastUpdate: "IMD NWFC Bulletin",
     source: "IMD National Weather Forecasting Centre",
-    provenance: "OBSERVED",
+    provenance: "NOT CONNECTED",
     connected: false
   },
   {

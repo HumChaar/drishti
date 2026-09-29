@@ -321,17 +321,17 @@ export async function getNormalizedMeteorology(operatingMode = "NORMAL", activeS
     modelAvailable: weatherAvailable
   };
 
-  // 9. Warnings & Alerts (OBSERVED from IMD Bulletins)
+  // 9. Warnings & Alerts (DEMO / SIMULATED from demonstration scenarios)
   const normalizedWarnings = ACTIVE_EMERGENCY_ALERTS.map((alert) => ({
     ...alert,
-    provenance: alert.provenance || PROVENANCE_LEVELS.OBSERVED,
+    provenance: alert.provenance || PROVENANCE_LEVELS.SIMULATED,
     issuedAt: alert.issuedAt || `${istNow.dateOnly} • ${istNow.timeShort}`
   }));
 
-  // 10. Bulletins (OBSERVED from IMD)
+  // 10. Bulletins (DEMO / SIMULATED from demonstration scenarios)
   const normalizedBulletins = ACTIVE_BULLETINS.map((bulletin) => ({
     ...bulletin,
-    provenance: bulletin.provenance || PROVENANCE_LEVELS.OBSERVED,
+    provenance: bulletin.provenance || PROVENANCE_LEVELS.SIMULATED,
     issuedAt: bulletin.issuedAt || `${istNow.dateOnly} • ${istNow.timeShort}`
   }));
 
@@ -372,7 +372,7 @@ export async function getNormalizedMeteorology(operatingMode = "NORMAL", activeS
     states: normalizedStates,
     statesById,
 
-    // IMD Official Products (OBSERVED)
+    // Demonstration & Advisory Products
     warnings: normalizedWarnings,
     bulletins: normalizedBulletins,
     satellite,
@@ -392,10 +392,10 @@ export async function getNormalizedMeteorology(operatingMode = "NORMAL", activeS
     },
 
     provenanceMatrix: {
-      OBSERVED: "IMD Official Synoptic Weather Bulletins, Warnings & Satellite Feeds",
-      MODEL: "Open-Meteo High-Resolution Numerical Weather Prediction (NWP)",
+      OBSERVED: "INSAT-3DS Satellite Imagery (Direct Live Hotlinks)",
+      MODEL: "LIVE WEATHER — CURRENT MODEL DATA (Open-Meteo NWP)",
       DERIVED: "DRISHTI Spatial System Distance & Haversine Proximity Calculation",
-      SIMULATED: "Cyclone Remal May 2024 Calibrated Disaster Exercise"
+      SIMULATED: "HISTORICAL SIMULATION — CYCLONE REMAL 2024 & DEMO METEOROLOGICAL DATA"
     }
   };
 }

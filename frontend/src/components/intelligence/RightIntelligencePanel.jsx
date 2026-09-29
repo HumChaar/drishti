@@ -90,10 +90,10 @@ export default function RightIntelligencePanel({
                       </span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 text-[9px] font-bold font-mono">
-                        LIVE / IMD
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold font-mono ${activeSystem.liveStatus === "LIVE" ? "bg-emerald-100 text-emerald-900 border border-emerald-300" : "bg-amber-100 text-amber-900 border border-amber-300"}`}>
+                        {activeSystem.liveStatus === "LIVE" ? "LIVE / IMD" : "DEMO / SIMULATED"}
                       </span>
-                      <ProvenanceBadge provenance="OBSERVED" size="tiny" />
+                      <ProvenanceBadge provenance={activeSystem.liveStatus === "LIVE" ? "OBSERVED" : (activeSystem.provenance || "DEMO / SIMULATED METEOROLOGICAL DATA")} size="tiny" />
                     </div>
                   </div>
 
@@ -529,9 +529,9 @@ export default function RightIntelligencePanel({
         <div className="dossier-content-scroll">
           <div className="flex flex-col gap-2.5 text-xs font-mono text-slate-700">
             <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
-              <strong className="text-slate-900 block mb-0.5">AUTHORITATIVE METEOROLOGY</strong>
-              <div className="text-[11px] text-slate-600">IMD National Synoptic Weather Bulletins, CAP RSS, &amp; Tropical Cyclone Outlooks.</div>
-              <span className="badge-provenance mt-1 inline-block text-[9px]">OBSERVED / AUTHORITATIVE</span>
+              <strong className="text-slate-900 block mb-0.5">SYNOPTIC METEOROLOGY (DEMO SCENARIOS)</strong>
+              <div className="text-[11px] text-slate-600">IMD Synoptic Weather Bulletins, CAP Advisories, &amp; Tropical Cyclone Outlooks.</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">DEMO / SIMULATED METEOROLOGICAL DATA</span>
             </div>
 
             <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
@@ -543,7 +543,7 @@ export default function RightIntelligencePanel({
             <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
               <strong className="text-slate-900 block mb-0.5">SURFACE NUMERICAL WEATHER PREDICTION</strong>
               <div className="text-[11px] text-slate-600">Open-Meteo Current Weather &amp; Wind Vector model data.</div>
-              <span className="badge-provenance mt-1 inline-block text-[9px]">CURRENT MODEL DATA</span>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">LIVE WEATHER — CURRENT MODEL DATA</span>
             </div>
 
             <div className="p-2.5 bg-slate-50 rounded border border-slate-200">

@@ -455,7 +455,7 @@ export default function MapContainer({
                         [{sys.classification || "DEPRESSION"}]
                       </span>
                       <span className="badge-provenance text-[9px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.5 rounded">
-                        {sys.provenance || "OBSERVED"}
+                        {sys.provenance || (sys.liveStatus === "LIVE" ? "OBSERVED" : "DEMO / SIMULATED")}
                       </span>
                     </div>
                     <div style={{ fontWeight: "bold", color: "#0f172a", fontSize: "12px", marginTop: "4px" }}>
@@ -805,8 +805,8 @@ export default function MapContainer({
           </span>
           <span className="watermark-text font-mono">
             {isNormal
-              ? "ALL 36 STATES & UTs MONITORED • METEOROLOGY: OPEN-METEO (MODEL) • BULLETINS: IMD (OBSERVED)"
-              : "REMAL 2024 • INUNDATION & SURGE METRICS ARE DERIVED SIMULATIONS — NOT LIVE FLOOD POLYGONS"}
+              ? "ALL 36 STATES & UTs MONITORED • LIVE WEATHER: OPEN-METEO (MODEL) • BULLETINS: DEMO / SIMULATED"
+              : "HISTORICAL SIMULATION — CYCLONE REMAL 2024 • INUNDATION & SURGE METRICS ARE DERIVED SIMULATIONS — NOT LIVE FLOOD POLYGONS"}
           </span>
         </div>
       </div>
