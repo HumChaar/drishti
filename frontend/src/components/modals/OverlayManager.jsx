@@ -178,53 +178,196 @@ export default function OverlayManager({
 
         {/* 3. IMD METEOROLOGICAL BULLETINS */}
         {overlayKey === "bulletin" && (
-          <div className="drawer-panel-card bg-white rounded-lg border border-slate-300 shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
-            <div className="drawer-header bg-slate-900 text-white px-4 py-3 flex items-center justify-between border-b border-slate-700">
-              <div className="flex items-center gap-2">
-                <Radio size={16} className="text-blue-400" />
-                <h3 className="font-mono text-sm font-bold tracking-wide">
-                  IMD NATIONAL &amp; MARINE METEOROLOGICAL BULLETINS
-                </h3>
+          <div style={{
+            background: "#0f172a",
+            borderRadius: "12px",
+            border: "1px solid #1e3a5f",
+            boxShadow: "0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(56,189,248,0.08)",
+            maxWidth: "680px",
+            width: "100%",
+            maxHeight: "85vh",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            fontFamily: "var(--font-mono, monospace)"
+          }}>
+            {/* Header */}
+            <div style={{
+              background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0c1e3a 100%)",
+              borderBottom: "1px solid rgba(56,189,248,0.2)",
+              padding: "16px 20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexShrink: 0
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div style={{
+                  width: "36px", height: "36px", borderRadius: "8px",
+                  background: "rgba(56,189,248,0.15)",
+                  border: "1px solid rgba(56,189,248,0.3)",
+                  display: "flex", alignItems: "center", justifyContent: "center"
+                }}>
+                  <Radio size={18} style={{ color: "#38bdf8" }} />
+                </div>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }}>
+                    <h3 style={{ color: "#f1f5f9", fontSize: "13px", fontWeight: 800, letterSpacing: "0.06em", margin: 0 }}>
+                      IMD NATIONAL &amp; MARINE METEOROLOGICAL BULLETINS
+                    </h3>
+                    <span style={{
+                      fontSize: "9px", fontWeight: 700, padding: "1px 6px", borderRadius: "3px",
+                      background: "rgba(34,197,94,0.15)", color: "#4ade80",
+                      border: "1px solid rgba(34,197,94,0.3)",
+                      display: "flex", alignItems: "center", gap: "4px"
+                    }}>
+                      <span style={{
+                        width: "5px", height: "5px", borderRadius: "50%",
+                        background: "#4ade80",
+                        display: "inline-block",
+                        animation: "pulse 2s infinite"
+                      }} />
+                      LIVE
+                    </span>
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", letterSpacing: "0.04em" }}>
+                    AUTHORITATIVE SOURCE: INDIA METEOROLOGICAL DEPARTMENT
+                  </div>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="text-slate-400 hover:text-white p-1 rounded"
+                style={{
+                  background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "6px", color: "#94a3b8", cursor: "pointer",
+                  width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center"
+                }}
                 aria-label="Close"
               >
-                <X size={16} />
+                <X size={14} />
               </button>
             </div>
 
-            <div className="p-4 overflow-y-auto flex flex-col gap-3 font-mono text-xs">
-              <div className="p-2.5 bg-blue-50 border border-blue-200 rounded text-slate-700 flex items-center justify-between">
-                <span>AUTHORITATIVE SOURCE: INDIA METEOROLOGICAL DEPARTMENT</span>
-                <span className="badge-provenance text-[9px] bg-blue-100 text-blue-900 font-mono">
-                  OBSERVED / AUTHORITATIVE BULLETIN
-                </span>
-              </div>
+            {/* Source Badge Bar */}
+            <div style={{
+              background: "rgba(56,189,248,0.05)",
+              borderBottom: "1px solid rgba(56,189,248,0.1)",
+              padding: "8px 20px",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              flexShrink: 0
+            }}>
+              <span style={{ fontSize: "10px", color: "#64748b", letterSpacing: "0.06em" }}>
+                {(data?.bulletins || []).length} BULLETIN{(data?.bulletins || []).length !== 1 ? "S" : ""} ACTIVE
+              </span>
+              <span style={{
+                fontSize: "9px", fontWeight: 700, padding: "2px 8px", borderRadius: "3px",
+                background: "rgba(56,189,248,0.1)", color: "#38bdf8",
+                border: "1px solid rgba(56,189,248,0.2)", letterSpacing: "0.05em"
+              }}>
+                OBSERVED / AUTHORITATIVE BULLETIN
+              </span>
+            </div>
 
-              {(data?.bulletins || []).map((b) => (
-                <div key={b.id} className="p-4 bg-slate-50 border border-slate-300 rounded-lg">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-200 mb-2">
-                    <span className="font-bold text-slate-900 text-sm">BULLETIN ID: {b.bulletinNo}</span>
-                    <span className="text-slate-500 font-medium">{b.issuedAt}</span>
-                  </div>
-                  <h4 className="font-bold text-slate-800 text-xs mb-1.5">{b.headline}</h4>
-                  <p className="font-sans text-xs text-slate-700 leading-relaxed mb-3">{b.details}</p>
-
-                  <div className="grid grid-cols-2 gap-2 text-[11px] p-2 bg-white rounded border border-slate-200">
-                    <div><strong>Sea Condition:</strong> {b.seaCondition}</div>
-                    <div><strong>Wave Height:</strong> {b.significantWaveHeightMeters}m ({b.waveDirection})</div>
-                    <div className="col-span-2 text-red-700 font-bold">
-                      <strong>Squall Warning:</strong> {b.squallWarning}
+            {/* Bulletin Cards */}
+            <div style={{ padding: "16px 20px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "16px" }}>
+              {(data?.bulletins || []).map((b, bIdx) => (
+                <div key={b.id} style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: "10px",
+                  overflow: "hidden"
+                }}>
+                  {/* Bulletin ID Header */}
+                  <div style={{
+                    padding: "12px 16px",
+                    background: "rgba(30,58,95,0.5)",
+                    borderBottom: "1px solid rgba(56,189,248,0.15)",
+                    display: "flex", alignItems: "center", justifyContent: "space-between"
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span style={{
+                        width: "22px", height: "22px", borderRadius: "50%",
+                        background: "rgba(56,189,248,0.2)", border: "1px solid rgba(56,189,248,0.4)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: "9px", fontWeight: 800, color: "#38bdf8"
+                      }}>{bIdx + 1}</span>
+                      <span style={{ fontSize: "11px", fontWeight: 800, color: "#e2e8f0", letterSpacing: "0.04em" }}>
+                        {b.bulletinNo}
+                      </span>
                     </div>
-                    <div className="col-span-2 p-2 bg-red-50 text-red-800 rounded border border-red-200">
-                      <strong>Fisherman Warning:</strong> {b.fishermenAdvisory}
+                    <span style={{ fontSize: "10px", color: "#64748b", fontWeight: 600 }}>{b.issuedAt}</span>
+                  </div>
+
+                  {/* Headline */}
+                  <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                    <h4 style={{ fontSize: "12px", fontWeight: 800, color: "#f8fafc", margin: "0 0 6px 0", letterSpacing: "0.02em" }}>
+                      {b.headline}
+                    </h4>
+                    <p style={{ fontSize: "11px", color: "#94a3b8", lineHeight: 1.6, margin: 0, fontFamily: "sans-serif", fontWeight: 400 }}>
+                      {b.details}
+                    </p>
+                  </div>
+
+                  {/* Metrics Grid */}
+                  <div style={{ padding: "12px 16px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                    {/* Sea Condition */}
+                    <div style={{
+                      padding: "10px 12px", borderRadius: "8px",
+                      background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.2)"
+                    }}>
+                      <div style={{ fontSize: "9px", fontWeight: 700, color: "#0ea5e9", letterSpacing: "0.06em", marginBottom: "4px" }}>SEA CONDITION</div>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#e2e8f0" }}>{b.seaCondition}</div>
+                    </div>
+                    {/* Wave Height */}
+                    <div style={{
+                      padding: "10px 12px", borderRadius: "8px",
+                      background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.2)"
+                    }}>
+                      <div style={{ fontSize: "9px", fontWeight: 700, color: "#818cf8", letterSpacing: "0.06em", marginBottom: "4px" }}>WAVE HEIGHT</div>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#e2e8f0" }}>
+                        {b.significantWaveHeightMeters}m
+                        <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 500, marginLeft: "4px" }}>({b.waveDirection})</span>
+                      </div>
+                    </div>
+                    {/* Squall Warning - full width */}
+                    <div style={{
+                      gridColumn: "1 / -1", padding: "10px 12px", borderRadius: "8px",
+                      background: "rgba(251,146,60,0.08)", border: "1px solid rgba(251,146,60,0.25)"
+                    }}>
+                      <div style={{ fontSize: "9px", fontWeight: 700, color: "#fb923c", letterSpacing: "0.06em", marginBottom: "4px" }}>
+                        ⚡ SQUALL WARNING
+                      </div>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#fed7aa" }}>{b.squallWarning}</div>
+                    </div>
+                    {/* Fishermen Advisory - full width */}
+                    <div style={{
+                      gridColumn: "1 / -1", padding: "12px", borderRadius: "8px",
+                      background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)"
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "5px" }}>
+                        <AlertTriangle size={11} style={{ color: "#f87171", flexShrink: 0 }} />
+                        <div style={{ fontSize: "9px", fontWeight: 700, color: "#f87171", letterSpacing: "0.06em" }}>FISHERMEN ADVISORY</div>
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#fca5a5", lineHeight: 1.5, fontFamily: "sans-serif", fontWeight: 500 }}>
+                        {b.fishermenAdvisory}
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Footer */}
+            <div style={{
+              padding: "10px 20px",
+              borderTop: "1px solid rgba(255,255,255,0.06)",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              background: "rgba(15,23,42,0.8)",
+              flexShrink: 0
+            }}>
+              <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: IMD NATIONAL SYNOPTIC WEATHER REPORT</span>
+              <span style={{ fontSize: "10px", color: "#38bdf8", fontWeight: 700 }}>MoES • IMD</span>
             </div>
           </div>
         )}
