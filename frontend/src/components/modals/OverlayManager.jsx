@@ -18,6 +18,8 @@ import {
   MapPin
 } from "lucide-react";
 import SatellitePanel from "../satellite/SatellitePanel";
+import VerificationPanel from "../verification/VerificationPanel";
+import ReviewQueueModal from "../verification/ReviewQueueModal";
 import { STATES_AND_UTS } from "../../data/indiaGeography";
 
 /**
@@ -720,6 +722,60 @@ export default function OverlayManager({
               <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: HISTORICAL SIMULATION • NOT A LIVE WARNING</span>
               <span style={{ fontSize: "10px", color: "#f87171", fontWeight: 700 }}>DRISHTI EXERCISE</span>
             </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════
+            9. AI FLOOD EVIDENCE VERIFICATION OVERLAY
+        ══════════════════════════════════════════════════════ */}
+        {overlayKey === "verification" && (
+          <div style={{ ...MODAL.wrap, maxWidth: "640px", border: "1px solid rgba(56,189,248,0.2)" }}>
+            <ModalHeader
+              icon={<ShieldCheck size={18} style={{ color: "#38bdf8" }} />}
+              iconBg="rgba(56,189,248,0.15)"
+              iconColor="rgba(56,189,248,0.3)"
+              title="AI FLOOD EVIDENCE VERIFICATION"
+              subtitle="SECOND-OPINION VERIFICATION LAYER — NOT GROUND TRUTH"
+              badge={data?.verificationData?.verification?.verdict?.verdict?.toUpperCase() ?? "ABSTAIN"}
+              badgeColor={{ bg: "rgba(56,189,248,0.15)", text: "#38bdf8", border: "rgba(56,189,248,0.3)", dot: "#38bdf8" }}
+              onClose={onClose}
+            />
+            <SubBar
+              left={`RISK: ${data?.verificationData?.risk?.central_risk ?? "—"} [CENTRAL] | RANGE: ${data?.verificationData?.risk?.risk_lower ?? "—"}–${data?.verificationData?.risk?.risk_upper ?? "—"}`}
+              right="[AI VERIFICATION] DERIVED"
+              accentColor="rgba(56,189,248,0.05)"
+              borderColor="rgba(56,189,248,0.1)"
+            />
+            <div style={{ overflowY: "auto" }}>
+              <VerificationPanel verificationData={data?.verificationData} />
+            </div>
+            <div style={MODAL.footer}>
+              <span style={{ fontSize: "10px", color: "#475569", letterSpacing: "0.04em" }}>PROVENANCE: AI VERIFICATION LAYER — MVP THRESHOLDS NOT CALIBRATED</span>
+              <span style={{ fontSize: "10px", color: "#38bdf8", fontWeight: 700 }}>DRISHTI VERIFICATION</span>
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════
+            10. HUMAN REVIEW QUEUE OVERLAY
+        ══════════════════════════════════════════════════════ */}
+        {overlayKey === "review_queue" && (
+          <div style={{ ...MODAL.wrap, maxWidth: "700px", border: "1px solid rgba(234,179,8,0.2)" }}>
+            <ModalHeader
+              icon={<AlertTriangle size={18} style={{ color: "#fbbf24" }} />}
+              iconBg="rgba(234,179,8,0.15)"
+              iconColor="rgba(234,179,8,0.3)"
+              title="HUMAN REVIEW QUEUE"
+              subtitle="UNCERTAIN FLOOD EVIDENCE — REQUIRES WATCH OFFICER DECISION"
+              badge={`${(data?.reviewQueue || []).filter(i => i.review_status === "PENDING").length} PENDING`}
+              badgeColor={{ bg: "rgba(234,179,8,0.15)", text: "#fbbf24", border: "rgba(234,179,8,0.3)", dot: "#fbbf24" }}
+              onClose={onClose}
+            />
+            <ReviewQueueModal
+              items={data?.reviewQueue ?? []}
+              loading={data?.reviewQueueLoading ?? false}
+              onDecisionSubmitted={data?.onReviewDecisionSubmitted}
+            />
           </div>
         )}
 

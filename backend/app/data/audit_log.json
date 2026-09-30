@@ -1,0 +1,134 @@
+[
+  {
+    "entry_id": "audit_4d5dbe1560ae",
+    "timestamp": "2026-09-29T16:01:16.166601+00:00",
+    "event_type": "VERIFICATION_RUN",
+    "user_reviewer": null,
+    "event_id": "CYCLONE_REMAL_2024",
+    "zone_id": "REMAL-ZONE-001",
+    "model_version": "SegFormer-B0 (best_clean)",
+    "verification_verdict": "abstain",
+    "risk_score": 72,
+    "risk_lower": 62,
+    "risk_upper": 82,
+    "review_decision": null,
+    "reviewer_note": null,
+    "evidence_sources": [
+      "[AI MODEL PREDICTION] SegFormer-B0 SAR Dual-Polarization Flood Segmentation",
+      "Sentinel-2 optical evidence: INSUFFICIENT",
+      "Permanent water check: NOT FLAGGED",
+      "[AI VERIFICATION] Gemini structured verifier (second opinion only)"
+    ],
+    "provenance": "[AUDIT] DRISHTI Verification Layer"
+  },
+  {
+    "entry_id": "audit_3580c86c5f5d",
+    "timestamp": "2026-09-29T16:01:16.173091+00:00",
+    "event_type": "VERIFICATION_RUN",
+    "user_reviewer": null,
+    "event_id": "CYCLONE_REMAL_2024",
+    "zone_id": "REMAL-ZONE-001",
+    "model_version": "SegFormer-B0 (best_clean)",
+    "verification_verdict": "abstain",
+    "risk_score": 86,
+    "risk_lower": 76,
+    "risk_upper": 96,
+    "review_decision": null,
+    "reviewer_note": null,
+    "evidence_sources": [
+      "[AI MODEL PREDICTION] SegFormer-B0 SAR Dual-Polarization Flood Segmentation",
+      "Sentinel-2 optical evidence: INSUFFICIENT",
+      "Permanent water check: NOT FLAGGED",
+      "[AI VERIFICATION] Gemini structured verifier (second opinion only)"
+    ],
+    "provenance": "[AUDIT] DRISHTI Verification Layer"
+  },
+  {
+    "entry_id": "audit_ddc74f88f729",
+    "timestamp": "2026-09-29T16:07:30.667640+00:00",
+    "event_type": "VERIFICATION_RUN",
+    "user_reviewer": null,
+    "event_id": "CYCLONE_REMAL_2024",
+    "zone_id": "REMAL-ZONE-001",
+    "model_version": "SegFormer-B0 (best_clean)",
+    "verification_verdict": "abstain",
+    "risk_score": 72,
+    "risk_lower": 62,
+    "risk_upper": 82,
+    "review_decision": null,
+    "reviewer_note": null,
+    "evidence_sources": [
+      "[AI MODEL PREDICTION] SegFormer-B0 SAR Dual-Polarization Flood Segmentation",
+      "Sentinel-2 optical evidence: INSUFFICIENT",
+      "Permanent water check: NOT FLAGGED",
+      "[AI VERIFICATION] Gemini structured verifier (second opinion only)"
+    ],
+    "provenance": "[AUDIT] DRISHTI Verification Layer"
+  },
+  {
+    "entry_id": "audit_568fc03c4168",
+    "timestamp": "2026-09-29T16:07:30.671147+00:00",
+    "event_type": "VERIFICATION_RUN",
+    "user_reviewer": null,
+    "event_id": "CYCLONE_REMAL_2024",
+    "zone_id": "REMAL-ZONE-001",
+    "model_version": "SegFormer-B0 (best_clean)",
+    "verification_verdict": "abstain",
+    "risk_score": 86,
+    "risk_lower": 76,
+    "risk_upper": 96,
+    "review_decision": null,
+    "reviewer_note": null,
+    "evidence_sources": [
+      "[AI MODEL PREDICTION] SegFormer-B0 SAR Dual-Polarization Flood Segmentation",
+      "Sentinel-2 optical evidence: INSUFFICIENT",
+      "Permanent water check: NOT FLAGGED",
+      "[AI VERIFICATION] Gemini structured verifier (second opinion only)"
+    ],
+    "provenance": "[AUDIT] DRISHTI Verification Layer"
+  },
+  {
+    "entry_id": "audit_1a447f5ecf8a",
+    "timestamp": "2026-09-29T16:16:32.699973+00:00",
+    "event_type": "VERIFICATION_RUN",
+    "user_reviewer": null,
+    "event_id": "CYCLONE_REMAL_2024",
+    "zone_id": "REMAL-ZONE-001",
+    "model_version": "SegFormer-B0 (best_clean)",
+    "verification_verdict": "abstain",
+    "risk_score": 72,
+    "risk_lower": 62,
+    "risk_upper": 82,
+    "review_decision": null,
+    "reviewer_note": null,
+    "evidence_sources": [
+      "[AI MODEL PREDICTION] SegFormer-B0 SAR Dual-Polarization Flood Segmentation",
+      "Sentinel-2 optical evidence: INSUFFICIENT",
+      "Permanent water check: NOT FLAGGED",
+      "[AI VERIFICATION] Gemini structured verifier (second opinion only)"
+    ],
+    "provenance": "[AUDIT] DRISHTI Verification Layer"
+  },
+  {
+    "entry_id": "audit_7d1f9ba33878",
+    "timestamp": "2026-09-29T16:16:32.705603+00:00",
+    "event_type": "VERIFICATION_RUN",
+    "user_reviewer": null,
+    "event_id": "CYCLONE_REMAL_2024",
+    "zone_id": "REMAL-ZONE-001",
+    "model_version": "SegFormer-B0 (best_clean)",
+    "verification_verdict": "abstain",
+    "risk_score": 86,
+    "risk_lower": 76,
+    "risk_upper": 96,
+    "review_decision": null,
+    "reviewer_note": null,
+    "evidence_sources": [
+      "[AI MODEL PREDICTION] SegFormer-B0 SAR Dual-Polarization Flood Segmentation",
+      "Sentinel-2 optical evidence: INSUFFICIENT",
+      "Permanent water check: NOT FLAGGED",
+      "[AI VERIFICATION] Gemini structured verifier (second opinion only)"
+    ],
+    "provenance": "[AUDIT] DRISHTI Verification Layer"
+  }
+]

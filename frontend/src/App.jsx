@@ -25,6 +25,7 @@ import cycloneApi from "./services/cycloneApi";
 import riskApi from "./services/riskApi";
 import weatherApi from "./services/weatherApi";
 import { getNormalizedMeteorology } from "./services/meteorologicalDataService";
+import { runVerification, getReviewQueue, submitReviewDecision } from "./services/verificationApi";
 
 import "./App.css";
 
@@ -48,8 +49,85 @@ export default function App() {
   const [normalizedData, setNormalizedData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
 
+  // AI Flood Evidence Verification & Uncertainty Layer state
+  const [verificationData, setVerificationData] = useState(null);
+  const [reviewQueue, setReviewQueue] = useState([]);
+  const [reviewQueueLoading, setReviewQueueLoading] = useState(false);
+
   // Single Overlay Manager System (Only ONE overlay open at any time)
   const [activeOverlay, setActiveOverlay] = useState(null);
+
+  // Poll human review queue periodically (every 30 seconds)
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchQueue() {
+      setReviewQueueLoading(true);
+      try {
+        const items = await getReviewQueue();
+        if (isMounted && Array.isArray(items)) {
+          setReviewQueue(items);
+        }
+      } catch (err) {
+        console.warn("Failed to fetch review queue:", err);
+      } finally {
+        if (isMounted) setReviewQueueLoading(false);
+      }
+    }
+    fetchQueue();
+    const interval = setInterval(fetchQueue, 30000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleReviewDecisionSubmitted = useCallback(async (itemId, action, reason, user = "watch_officer_01") => {
+    try {
+      await submitReviewDecision(itemId, action, reason, user);
+      const updatedItems = await getReviewQueue();
+      setReviewQueue(updatedItems);
+      logSessionActivity({
+        event: `HUMAN REVIEW: ${action}`,
+        category: "VERIFICATION",
+        region: "WATCH OFFICER",
+        details: `Item ${itemId} ${action.toLowerCase()}ed: ${reason}`
+      });
+    } catch (err) {
+      console.error("Error submitting review decision:", err);
+    }
+  }, [logSessionActivity]);
+
+  const handleTriggerVerification = useCallback(async (district) => {
+    const target = district || selectedDistrict || (districtsData && districtsData[0]);
+    if (!target) return;
+
+    const bbox = target.bounds || {
+      min_lon: (target.lng || 86.9) - 0.25,
+      min_lat: (target.lat || 21.5) - 0.25,
+      max_lon: (target.lng || 86.9) + 0.25,
+      max_lat: (target.lat || 21.5) + 0.25
+    };
+    const centralScore = target.riskScore ?? target.risk ?? 75;
+
+    try {
+      const result = await runVerification({
+        roi: bbox,
+        district_id: target.id || target.name || "BALASORE",
+        central_risk_score: centralScore,
+        timesteps: [activeStepId]
+      });
+      setVerificationData(result);
+      setActiveOverlay("verification");
+      logSessionActivity({
+        event: "AI FLOOD VERIFICATION RUN",
+        category: "VERIFICATION",
+        region: target.name || "BALASORE",
+        details: `Verdict: ${result.verification?.verdict?.verdict || "UNKNOWN"} | Range: [${result.risk?.risk_lower}–${result.risk?.risk_upper}]`
+      });
+    } catch (err) {
+      console.error("Failed to run verification:", err);
+    }
+  }, [selectedDistrict, districtsData, activeStepId, logSessionActivity]);
 
   // Focused synoptic system for dual-view map centering
   const [focusedSystem, setFocusedSystem] = useState(null);
@@ -237,8 +315,12 @@ export default function App() {
 
   const handleSelectRailItem = (itemId) => {
     setActiveRailItem(itemId);
-    if (["warnings", "bulletins", "satellite", "radar", "observations"].includes(itemId)) {
-      handleOpenOverlay(itemId);
+    if (["warnings", "bulletins", "satellite", "radar", "observations", "verification", "review_queue"].includes(itemId)) {
+      if (itemId === "verification" && !verificationData) {
+        handleTriggerVerification(selectedDistrict);
+      } else {
+        handleOpenOverlay(itemId);
+      }
     } else if (itemId === "risk") {
       setActiveTab("risk");
     } else if (itemId === "infra") {
@@ -591,7 +673,13 @@ export default function App() {
       <OverlayManager
         activeOverlay={activeOverlay}
         onClose={() => setActiveOverlay(null)}
-        data={normalizedData}
+        data={{
+          ...normalizedData,
+          verificationData,
+          reviewQueue,
+          reviewQueueLoading,
+          onReviewDecisionSubmitted: handleReviewDecisionSubmitted
+        }}
         onSelectState={setSelectedState}
         onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
         onLocateOnMap={handleLocateSystemOnMap}

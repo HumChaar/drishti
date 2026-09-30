@@ -807,3 +807,281 @@ class GeminiAdvisory(BaseModel):
     provenance_chain: Optional[Dict[str, str]] = Field(None, description="Explicit 5-tier pipeline provenance trace")
 
 
+# ========================================================
+# VERIFICATION LAYER SCHEMAS
+# AI Flood Evidence Verification + Uncertainty Layer
+# ========================================================
+
+class VerificationVerdict(BaseModel):
+    """
+    Structured Gemini verifier output.
+    Gemini returns ONLY this schema — it does not calculate risk scores.
+    """
+    verdict: str = Field(
+        ...,
+        description="agree | partial | disagree | abstain",
+        examples=["agree", "partial", "disagree", "abstain"]
+    )
+    failure_mode: str = Field(
+        ...,
+        description=(
+            "none | permanent_water | radar_shadow | wind_roughened_water | "
+            "smooth_surface | cloud_contamination | mixed_signal | insufficient_evidence"
+        )
+    )
+    evidence_quality: str = Field(
+        ...,
+        description="high | moderate | low"
+    )
+    disagreement_level: float = Field(
+        ...,
+        ge=0.0,
+        le=1.0,
+        description="Disagreement magnitude from 0.0 (full agreement) to 1.0 (full contradiction)"
+    )
+    reason: str = Field(
+        ...,
+        description="Short evidence-based explanation. Must not invent measurements or claim unavailable imagery exists."
+    )
+
+
+class CloudQualityResult(BaseModel):
+    """
+    Deterministic cloud quality assessment for a Sentinel-2 scene.
+    MVP thresholds — not scientifically validated.
+    """
+    quality: str = Field(
+        ...,
+        description="CLEAR | PARTIAL | CLOUDY | INSUFFICIENT"
+    )
+    cloudy_pixel_pct: Optional[float] = Field(None, description="CLOUDY_PIXEL_PERCENTAGE from scene metadata")
+    cloud_prob_mean: Optional[float] = Field(None, description="Mean cloud probability from S2_CLOUD_PROBABILITY")
+    scene_date: Optional[str] = Field(None, description="ISO date of the best available Sentinel-2 scene")
+    scene_id: Optional[str] = Field(None, description="Sentinel-2 scene system:index")
+    usable: bool = Field(False, description="True if optical evidence is usable for verification")
+    provenance: str = Field("DERIVED", description="Evidence category: LIVE | HISTORICAL | DERIVED | CACHED")
+    note: str = Field(
+        "Cloud gate thresholds are MVP engineering defaults — not scientifically calibrated.",
+        description="Disclaimer on threshold calibration status"
+    )
+
+
+class PermanentWaterResult(BaseModel):
+    """
+    Deterministic permanent water reference check.
+    Uses JRC Global Surface Water or equivalent authoritative dataset.
+    """
+    dataset: str = Field("JRC/GSW1_4/GlobalSurfaceWater", description="Reference dataset used")
+    overlap_fraction: float = Field(
+        0.0,
+        ge=0.0,
+        le=1.0,
+        description="Fraction of predicted flood area that overlaps known permanent water"
+    )
+    is_flagged: bool = Field(
+        False,
+        description="True if overlap exceeds threshold — possible permanent water false positive"
+    )
+    flag_label: Optional[str] = Field(
+        None,
+        description="'possible_permanent_water_false_positive' if flagged, else None"
+    )
+    provenance: str = Field("DERIVED", description="Evidence category")
+    note: str = Field(
+        "This check does NOT remove the flood prediction. It is verification evidence, not ground truth.",
+        description="Safety disclaimer"
+    )
+
+
+class VerificationResult(BaseModel):
+    """
+    Complete structured output from the AI Flood Evidence Verification Layer.
+    Contains the Gemini verdict, cloud quality, permanent water check, and provenance.
+    """
+    verification_id: str = Field(..., description="Unique verification run ID")
+    event_id: str = Field(..., description="Event or scenario ID (e.g. 'CYCLONE_REMAL_2024')")
+    roi: Dict[str, float] = Field(..., description="Region of interest: min_lon, min_lat, max_lon, max_lat")
+    risk_zone_id: Optional[str] = Field(None, description="Risk zone or district ID")
+    timestamp: str = Field(..., description="ISO 8601 timestamp of verification run")
+
+    # Core verdict from Gemini verifier
+    verdict: VerificationVerdict
+
+    # Supporting evidence gates
+    cloud_quality: CloudQualityResult
+    permanent_water: PermanentWaterResult
+
+    # Evidence quality flags
+    sentinel2_available: bool = Field(False, description="True if Sentinel-2 imagery was retrieved")
+    sentinel2_scene_date: Optional[str] = Field(None, description="Date of Sentinel-2 scene used")
+
+    # Provenance
+    provenance: Dict[str, str] = Field(
+        default_factory=dict,
+        description="Per-source provenance category: LIVE | HISTORICAL | DERIVED | SIMULATED | CACHED"
+    )
+    source_description: str = Field(
+        "[AI VERIFICATION] Independent multimodal flood evidence cross-check. "
+        "Gemini verified/challenged SegFormer-derived flood evidence.",
+        description="Human-readable description of what this verification represents"
+    )
+
+
+class RiskUncertaintyResult(BaseModel):
+    """
+    Deterministic risk uncertainty range calculated from the verification verdict.
+    The central risk score is NEVER modified.
+    Uncertainty is represented as a range around the central score.
+    """
+    central_risk: int = Field(..., description="Original deterministic risk score (0–100). NEVER MODIFIED.")
+    risk_band: str = Field(..., description="Risk band of central score: LOW | MODERATE | HIGH | EXTREME")
+    uncertainty_adjustment: int = Field(..., description="Uncertainty ±points applied based on verification verdict")
+    risk_lower: int = Field(..., ge=0, le=100, description="Lower bound of risk range = max(0, central - adjustment)")
+    risk_upper: int = Field(..., ge=0, le=100, description="Upper bound of risk range = min(100, central + adjustment)")
+    risk_lower_band: str = Field(..., description="Risk band at lower bound")
+    risk_upper_band: str = Field(..., description="Risk band at upper bound")
+    band_boundaries_crossed: List[int] = Field(
+        default_factory=list,
+        description="Risk band boundary values {45, 65, 80} that fall inside [risk_lower, risk_upper]"
+    )
+    requires_human_review: bool = Field(
+        False,
+        description="True if uncertainty interval crosses a risk-band boundary"
+    )
+    human_review_reason: Optional[str] = Field(
+        None,
+        description="Explanation of why human review is required, e.g. 'Uncertainty interval crosses HIGH/EXTREME boundary'"
+    )
+    formula: str = Field(
+        ...,
+        description="Transparent formula used: central ± adjustment, bounded to [0, 100]"
+    )
+    policy_note: str = Field(
+        "Uncertainty adjustments are MVP engineering baselines — not scientifically calibrated values.",
+        description="Disclaimer on policy calibration status"
+    )
+
+
+class ReviewStatus(str, Enum):
+    PENDING = "PENDING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+    ESCALATED = "ESCALATED"
+
+
+class ReviewItem(BaseModel):
+    """
+    Human review queue item for uncertain or band-crossing risk decisions.
+    """
+    review_id: str = Field(..., description="Unique review item ID")
+    created_at: str = Field(..., description="ISO 8601 timestamp of queue entry")
+
+    # Location
+    location: Optional[str] = Field(None, description="Human-readable location or district name")
+    roi: Optional[Dict[str, float]] = Field(None, description="Region of interest")
+    risk_zone_id: Optional[str] = Field(None, description="Risk zone or district ID")
+
+    # Event
+    event_id: str = Field(..., description="Event ID")
+
+    # Risk
+    central_risk: int = Field(..., description="Central deterministic risk score (0–100)")
+    risk_lower: int = Field(..., description="Risk uncertainty lower bound")
+    risk_upper: int = Field(..., description="Risk uncertainty upper bound")
+    risk_band: str = Field(..., description="Risk band of central score")
+    uncertainty_adjustment: int = Field(..., description="Uncertainty ±points")
+
+    # Verification
+    verification_verdict: str = Field(..., description="Gemini verifier verdict")
+    failure_mode: str = Field(..., description="Identified failure mode")
+    evidence_quality: str = Field(..., description="Evidence quality level")
+    disagreement_level: float = Field(..., description="Disagreement level 0–1")
+
+    # Exposure
+    affected_population: Optional[int] = Field(None, description="Estimated affected population")
+    affected_road_km: Optional[float] = Field(None, description="Affected road length (km)")
+    affected_hospitals: Optional[int] = Field(None, description="Number of affected hospitals")
+
+    # Evidence sources
+    evidence_sources: List[str] = Field(default_factory=list, description="List of evidence source descriptions")
+
+    # Provenance
+    model_version: str = Field("SegFormer-B0 (best_clean)", description="Primary flood model version")
+    provenance: str = Field(..., description="Provenance string")
+
+    # Review state
+    review_status: ReviewStatus = Field(ReviewStatus.PENDING, description="Current review status")
+    reviewer_name: Optional[str] = Field(None, description="Name of reviewer")
+    reviewer_note: Optional[str] = Field(None, description="Optional reviewer note")
+    reviewed_at: Optional[str] = Field(None, description="ISO 8601 timestamp of review decision")
+
+    # Why flagged
+    flag_reason: str = Field(..., description="Explanation of why this item requires human review")
+
+
+class ReviewDecisionRequest(BaseModel):
+    """Request body for submitting a human review decision."""
+    action: str = Field(..., description="'APPROVE', 'REJECT', or 'ESCALATE'")
+    reviewer_name: Optional[str] = Field("Watch Officer", description="Name or callsign of reviewer")
+    reviewer_note: Optional[str] = Field(None, description="Optional reviewer note or rationale")
+
+
+class VerificationRunRequest(BaseModel):
+    """Request body for POST /api/verification/run"""
+    event_id: str = Field("CYCLONE_REMAL_2024", description="Event or scenario identifier")
+    roi: Dict[str, float] = Field(
+        ...,
+        description="Region of interest with keys: min_lon, min_lat, max_lon, max_lat",
+        examples=[{"min_lon": 87.5, "min_lat": 22.0, "max_lon": 88.0, "max_lat": 22.5}]
+    )
+    risk_zone_id: Optional[str] = Field(None, description="Risk zone or district ID for review queue")
+    risk_score: int = Field(..., ge=0, le=100, description="Central deterministic risk score from risk engine")
+    use_sentinel2: bool = Field(True, description="Whether to attempt Sentinel-2 retrieval via GEE")
+    use_permanent_water: bool = Field(True, description="Whether to check permanent water reference")
+
+    # Optional context for Gemini verifier
+    flood_percentage: Optional[float] = Field(None, description="SegFormer flood extent %")
+    flood_probability: Optional[float] = Field(None, description="SegFormer mean flood probability")
+    terrain_summary: Optional[str] = Field(None, description="Brief terrain description for verifier")
+    event_metadata: Optional[Dict[str, Any]] = Field(None, description="Supplementary event context")
+
+    # Exposure context for review queue
+    affected_population: Optional[int] = Field(None)
+    affected_road_km: Optional[float] = Field(None)
+    affected_hospitals: Optional[int] = Field(None)
+
+
+class VerificationRunResponse(BaseModel):
+    """Response body for POST /api/verification/run"""
+    verification: VerificationResult
+    risk: RiskUncertaintyResult
+    human_review: Dict[str, Any] = Field(
+        ...,
+        description="Human review requirement: {required, reason, review_id}"
+    )
+    provenance: Dict[str, str] = Field(default_factory=dict)
+    pipeline_note: str = Field(
+        "Drishti does not blindly trust a single AI flood prediction. It cross-checks "
+        "model-derived evidence with independent observations, represents disagreement as "
+        "uncertainty, and routes decision-sensitive cases to human review.",
+        description="System communication statement"
+    )
+
+
+class AuditLogEntry(BaseModel):
+    """Single audit log entry for a verification or review event."""
+    entry_id: str
+    timestamp: str
+    event_type: str = Field(..., description="'VERIFICATION_RUN' | 'REVIEW_DECISION' | 'VERIFICATION_ERROR'")
+    user_reviewer: Optional[str] = Field(None)
+    event_id: str
+    zone_id: Optional[str] = Field(None)
+    model_version: str = Field("SegFormer-B0 (best_clean)")
+    verification_verdict: Optional[str] = Field(None)
+    risk_score: Optional[int] = Field(None)
+    risk_lower: Optional[int] = Field(None)
+    risk_upper: Optional[int] = Field(None)
+    review_decision: Optional[str] = Field(None)
+    reviewer_note: Optional[str] = Field(None)
+    evidence_sources: List[str] = Field(default_factory=list)
+    provenance: str = Field("[AUDIT] DRISHTI Verification Layer")

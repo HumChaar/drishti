@@ -1,18 +1,14 @@
 import React, { useState } from "react";
-import { 
-  Sparkles, 
+import {
+  Sparkles,
   ArrowUpRight,
   ExternalLink,
   Wind,
   CloudRain,
   Gauge,
   Thermometer,
-  Radio,
-  Navigation,
-  Crosshair,
-  AlertTriangle,
-  RefreshCw,
-  Route
+  Compass,
+  Radio
 } from "lucide-react";
 import ProvenanceBadge from "../common/ProvenanceBadge";
 import { fetchNearbyFacilities } from "../../services/nearbyServicesService.js";
@@ -30,12 +26,7 @@ export default function RightIntelligencePanel({
   currentScenario = null,
   activeStepId = "NOW",
   onLaunchDisasterMode = null,
-  onOpenDrawer: _onOpenDrawer = null,
-  activeRoute = null,
-  onSelectRoute = null,
-  onClearRoute = null,
-  userLocation = null,
-  onSetUserLocation = null
+  onOpenDrawer: _onOpenDrawer = null
 }) {
   const [activeTab, setActiveTab] = useState("SITUATION");
 
@@ -52,8 +43,8 @@ export default function RightIntelligencePanel({
   // Active state weather record (only if selected, otherwise national overview)
   const stateRecord = selectedState && weatherData?.states
     ? (Array.isArray(weatherData.states)
-        ? weatherData.states.find(s => s.stateId === selectedState.id || s.id === selectedState.id)
-        : weatherData.states[selectedState.id])
+      ? weatherData.states.find(s => s.stateId === selectedState.id || s.id === selectedState.id)
+      : weatherData.states[selectedState.id])
     : null;
 
   const activeSystem = weatherData?.activeSystem || null;
@@ -68,16 +59,16 @@ export default function RightIntelligencePanel({
   const windValue = hasWind
     ? `${stateRecord.windSpeedKmph} km/h`
     : (stateRecord?.windSpeed != null && !isNaN(stateRecord.windSpeed)
-        ? `${stateRecord.windSpeed} km/h`
-        : "DATA UNAVAILABLE");
+      ? `${stateRecord.windSpeed} km/h`
+      : "DATA UNAVAILABLE");
 
   // Rainfall: Only display numeric measurement if actual value is present in model response
   const hasRain = stateRecord?.rainfallMm != null && !isNaN(stateRecord.rainfallMm);
   const rainValue = hasRain
     ? `${stateRecord.rainfallMm} mm`
     : (stateRecord?.rain != null && !isNaN(stateRecord.rain)
-        ? `${stateRecord.rain} mm`
-        : "DATA UNAVAILABLE");
+      ? `${stateRecord.rain} mm`
+      : "DATA UNAVAILABLE");
 
   const hasPressure = stateRecord?.pressureHpa != null && !isNaN(stateRecord.pressureHpa);
   const pressureValue = hasPressure ? `${stateRecord.pressureHpa} hPa` : "DATA UNAVAILABLE";
@@ -86,8 +77,8 @@ export default function RightIntelligencePanel({
   const tempValue = hasTemp
     ? `${stateRecord.temperatureC} °C`
     : (stateRecord?.temperature != null && !isNaN(stateRecord.temperature)
-        ? `${stateRecord.temperature} °C`
-        : "DATA UNAVAILABLE");
+      ? `${stateRecord.temperature} °C`
+      : "DATA UNAVAILABLE");
 
   // Explicit user-triggered location request (Strict: NO automatic geolocation request)
   const handleRequestLocation = (overrideCoords = null) => {
@@ -742,10 +733,9 @@ export default function RightIntelligencePanel({
                 </div>
                 <div className="text-right">
                   <span className="text-[9px] text-slate-500 block">RISK SCORE</span>
-                  <span className={`text-base font-bold ${
-                    activeRisk?.riskScore >= 70 ? "text-red-700" :
-                    activeRisk?.riskScore >= 40 ? "text-amber-700" : "text-emerald-700"
-                  }`}>
+                  <span className={`text-base font-bold ${activeRisk?.riskScore >= 70 ? "text-red-700" :
+                      activeRisk?.riskScore >= 40 ? "text-amber-700" : "text-emerald-700"
+                    }`}>
                     {activeRisk?.riskScore != null ? `${activeRisk.riskScore}/100` : "22/100"}
                   </span>
                 </div>
@@ -769,6 +759,38 @@ export default function RightIntelligencePanel({
                 </div>
               </div>
 
+              {/* AI Verification & Uncertainty Layer Card */}
+              <div className="mt-3 p-2.5 bg-slate-900 border border-sky-500/30 rounded font-mono text-[11px] flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-sky-400 flex items-center gap-1.5">
+                    <ShieldCheck size={14} className="text-sky-400" />
+                    AI VERIFICATION LAYER
+                  </span>
+                  <span className="text-[9px] bg-sky-950 text-sky-300 border border-sky-600/40 px-1.5 py-0.5 rounded font-bold">
+                    [AI VERIFICATION]
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-400 font-sans leading-tight m-0">
+                  Multimodal second opinion (Sentinel-2 optical, cloud gating &amp; permanent water check). Does not modify central risk score.
+                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => onOpenDrawer && onOpenDrawer("verification")}
+                    className="flex-1 py-1.5 px-2 bg-sky-600 hover:bg-sky-500 text-white rounded text-[10px] font-bold tracking-wide transition-colors cursor-pointer border border-sky-400/30"
+                  >
+                    🛡 AI VERIFY
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onOpenDrawer && onOpenDrawer("review_queue")}
+                    className="flex-1 py-1.5 px-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-[10px] font-bold tracking-wide transition-colors cursor-pointer border border-amber-400/30"
+                  >
+                    ⚠ HUMAN QUEUE
+                  </button>
+                </div>
+              </div>
+
               <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[9.5px] text-slate-500">
                 <span>PRESERVED DETERMINISTIC RISK ENGINE</span>
                 <span className="badge-provenance">BACKEND DETERMINISTIC</span>
@@ -787,11 +809,10 @@ export default function RightIntelligencePanel({
               <div key={asset.id} className="p-2.5 bg-white rounded border border-slate-200 shadow-sm text-xs">
                 <div className="flex items-center justify-between font-bold text-slate-800">
                   <span>{asset.name}</span>
-                  <span className={`text-[9.5px] px-1.5 py-0.2 rounded ${
-                    asset.exposureLevel === "HIGH" ? "bg-red-100 text-red-800" :
-                    asset.exposureLevel === "MEDIUM" ? "bg-amber-100 text-amber-800" :
-                    "bg-emerald-100 text-emerald-800"
-                  }`}>
+                  <span className={`text-[9.5px] px-1.5 py-0.2 rounded ${asset.exposureLevel === "HIGH" ? "bg-red-100 text-red-800" :
+                      asset.exposureLevel === "MEDIUM" ? "bg-amber-100 text-amber-800" :
+                        "bg-emerald-100 text-emerald-800"
+                    }`}>
                     {asset.exposureLevel || "SECURE"}
                   </span>
                 </div>

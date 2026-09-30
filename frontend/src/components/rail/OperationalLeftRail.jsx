@@ -33,7 +33,9 @@ export default function OperationalLeftRail({
     { id: "wind", label: "WIND", icon: Wind, color: "text-teal-600", isLayerToggle: true, layerKey: "wind" },
     { id: "rainfall", label: "RAINFALL", icon: CloudRain, color: "text-indigo-600", isLayerToggle: true, layerKey: "rain" },
     { id: "cyclone", label: "CYCLONE", icon: Waves, color: "text-orange-600", count: "DEP" },
-    { id: "observations", label: "OBSERVATIONS", icon: Activity, color: "text-slate-700", count: "AWS" }
+    { id: "observations", label: "OBSERVATIONS", icon: Activity, color: "text-slate-700", count: "AWS" },
+    { id: "verification", label: "AI VERIFY", icon: ShieldCheck, color: "text-sky-500", count: "2nd" },
+    { id: "review_queue", label: "HUMAN QUEUE", icon: AlertTriangle, color: "text-amber-500", count: "REVIEW" }
   ];
 
   const disasterItems = [
@@ -43,6 +45,8 @@ export default function OperationalLeftRail({
     { id: "risk", label: "RISK MATRIX", icon: Layers, color: "text-red-600", count: "8 DIST" },
     { id: "infra", label: "INFRASTRUCTURE", icon: Anchor, color: "text-blue-700", count: "11 ASSETS" },
     { id: "evidence", label: "EVIDENCE", icon: ShieldCheck, color: "text-emerald-600", count: "VERIFIED" },
+    { id: "verification", label: "AI VERIFY", icon: ShieldCheck, color: "text-sky-500", count: "2nd" },
+    { id: "review_queue", label: "HUMAN QUEUE", icon: AlertTriangle, color: "text-amber-500", count: "REVIEW" },
     { id: "advisory", label: "ADVISORY", icon: Sparkles, color: "text-orange-600", count: "AI SOP" }
   ];
 
