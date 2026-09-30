@@ -170,7 +170,6 @@ export default function App() {
   const handleToggleLayer = (layerKey) => {
     setLayerStates((prev) => ({ ...prev, [layerKey]: !prev[layerKey] }));
   };
-
   // Load and periodically refresh normalized meteorological data layer
   useEffect(() => {
     let isMounted = true;
