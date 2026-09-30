@@ -3,3 +3,37 @@ uvicorn[standard]>=0.32.0
 pydantic>=2.9.0
 pydantic-settings>=2.6.0
 httpx>=0.27.0
+numpy
+# ================================
+# DRISHTI Backend
+# ================================
+
+# API
+fastapi>=0.115.0,<1.0.0
+uvicorn[standard]>=0.32.0,<1.0.0
+
+# Configuration / validation
+pydantic>=2.9.0,<3.0.0
+pydantic-settings>=2.6.0,<3.0.0
+
+# HTTP / external API communication
+httpx>=0.27.0,<1.0.0
+
+# Numerical processing
+numpy>=2.0.0,<3.0.0
+
+# ================================
+# SegFormer-B0 Flood Inference
+# ================================
+
+# CPU PyTorch for Render deployment
+torch>=2.6.0,<3.0.0
+
+# Hugging Face SegFormer
+transformers>=4.45.0,<5.0.0
+
+# Model weights
+safetensors>=0.4.5,<1.0.0
+
+# ONNX model validation/export support
+onnx>=1.16.0,<2.0.0
