@@ -56,6 +56,10 @@ export default function App() {
   // Focused synoptic system for dual-view map centering
   const [focusedSystem, setFocusedSystem] = useState(null);
 
+  // Active road routing & user location state for Leaflet rendering
+  const [activeRoute, setActiveRoute] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+
   // Rail & Layer states
   const [activeRailItem, setActiveRailItem] = useState("warnings");
   const [layerStates, setLayerStates] = useState({
@@ -359,6 +363,9 @@ export default function App() {
                 weatherData={weatherData}
                 focusedSystem={focusedSystem}
                 onResetFocus={handleResetNationalView}
+                activeRoute={activeRoute}
+                userLocation={userLocation}
+                onClearRoute={() => setActiveRoute(null)}
               />
 
               {/* Disaster Mode Timeline & Directives */}
@@ -393,6 +400,11 @@ export default function App() {
               activeStepId={activeStepId}
               onLaunchDisasterMode={() => setOperatingMode("DISASTER")}
               onOpenDrawer={handleOpenOverlay}
+              activeRoute={activeRoute}
+              onSelectRoute={setActiveRoute}
+              onClearRoute={() => setActiveRoute(null)}
+              userLocation={userLocation}
+              onSetUserLocation={setUserLocation}
             />
           </div>
         )}
