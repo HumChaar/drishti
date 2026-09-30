@@ -112,22 +112,27 @@ class TestStage6GeminiReasoning(unittest.TestCase):
 
     def test_06_missing_evidence_handling(self):
         """Verifies that missing evidence fields are explicitly marked 'Evidence unavailable.'"""
-        custom_req = {
-            "district_id": "test_district",
-            "risk_score": 50,
-            "risk_band": "MODERATE",
-            "evidence": {
-                "vulnerable_population": 0  # Missing / zero demographic evidence
-            },
-            "contributing_factors": {},
-            "decision_recommendations": []
-        }
-        res = self.client.post("/api/reasoning/advisory", json=custom_req)
-        self.assertEqual(res.status_code, 200)
-        data = res.json()
+        original_key = gemini_service.get_api_key()
+        try:
+            gemini_service.get_api_key = lambda: ""
+            custom_req = {
+                "district_id": "test_district",
+                "risk_score": 50,
+                "risk_band": "MODERATE",
+                "evidence": {
+                    "vulnerable_population": 0  # Missing / zero demographic evidence
+                },
+                "contributing_factors": {},
+                "decision_recommendations": []
+            }
+            res = self.client.post("/api/reasoning/advisory", json=custom_req)
+            self.assertEqual(res.status_code, 200)
+            data = res.json()
 
-        self.assertEqual(data["exposure_summary"], "Evidence unavailable.")
-        print("PASS: Missing evidence handled gracefully -> 'Evidence unavailable.'")
+            self.assertEqual(data["exposure_summary"], "Evidence unavailable.")
+            print("PASS: Missing evidence handled gracefully -> 'Evidence unavailable.'")
+        finally:
+            gemini_service.get_api_key = lambda: original_key
 
     def test_07_structured_input_and_output_schemas(self):
         """Verifies strict Pydantic parsing of GeminiReasoningRequest and GeminiAdvisory."""
@@ -165,14 +170,19 @@ class TestStage6GeminiReasoning(unittest.TestCase):
 
     def test_08_deterministic_mock_repeatability(self):
         """Verifies 100% deterministic repeatability in mock mode."""
-        res1 = self.client.get("/api/reasoning/advisory/od_balasore?step_id=NOW").json()
-        res2 = self.client.get("/api/reasoning/advisory/od_balasore?step_id=NOW").json()
+        original_key = gemini_service.get_api_key()
+        try:
+            gemini_service.get_api_key = lambda: ""
+            res1 = self.client.get("/api/reasoning/advisory/od_balasore?step_id=NOW").json()
+            res2 = self.client.get("/api/reasoning/advisory/od_balasore?step_id=NOW").json()
 
-        self.assertEqual(res1["headline"], res2["headline"])
-        self.assertEqual(res1["situation_summary"], res2["situation_summary"])
-        self.assertEqual(res1["key_risk_drivers"], res2["key_risk_drivers"])
-        self.assertEqual(res1["recommended_actions"], res2["recommended_actions"])
-        print("PASS: Deterministic mock repeatability confirmed (zero drift)")
+            self.assertEqual(res1["headline"], res2["headline"])
+            self.assertEqual(res1["situation_summary"], res2["situation_summary"])
+            self.assertEqual(res1["key_risk_drivers"], res2["key_risk_drivers"])
+            self.assertEqual(res1["recommended_actions"], res2["recommended_actions"])
+            print("PASS: Deterministic mock repeatability confirmed (zero drift)")
+        finally:
+            gemini_service.get_api_key = lambda: original_key
 
 
 if __name__ == "__main__":

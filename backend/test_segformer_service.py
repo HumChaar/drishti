@@ -12,7 +12,9 @@ Validates:
 import os
 import sys
 import numpy as np
-import torch
+import pytest
+
+torch = pytest.importorskip("torch", reason="PyTorch not installed; skipping SegFormer service tests")
 from fastapi.testclient import TestClient
 
 from app.main import app
