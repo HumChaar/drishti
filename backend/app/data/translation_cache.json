@@ -3771,5 +3771,579 @@
     "context": "Screen Translation",
     "translated": "ভারতীয় উপমহাদেশ ও সামুদ্রিক অববাহিকা",
     "created_at": "2026-09-30T09:34:36.715182+00:00"
+  },
+  "bc6c32aa5ee1642dd16c4714a8dffd619fa5592e24e6e85c8b0cbfaed2230f63": {
+    "source": "DEMO",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "ডেমো",
+    "created_at": "2026-09-30T13:43:12.200963+00:00"
+  },
+  "e7b3997b191f4673a9d8bc6172b2986ee48276e9742f60725930f110726f719a": {
+    "source": "Loading Sector...",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সেক্টর লোড হচ্ছে...",
+    "created_at": "2026-09-30T13:43:12.200963+00:00"
+  },
+  "5213899de8333535002da3e42ac818664f347f68321b527a7acf977ff53eb8ba": {
+    "source": "LOADING...",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "লোড হচ্ছে...",
+    "created_at": "2026-09-30T13:43:12.200963+00:00"
+  },
+  "4bf01abda07818bd46caccbe09f771972aed794572a0e8baed8edd90a0e7eca7": {
+    "source": "Connecting to NWP feed...",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "NWP ফিডের সাথে সংযোগ স্থাপন করা হচ্ছে...",
+    "created_at": "2026-09-30T13:43:12.200963+00:00"
+  },
+  "f021d0fdad5b73a33b9ebcb6e494b23dbd6a9f48ae70256767d7f5cddaf0b628": {
+    "source": "Loading Basins...",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "অববাহিকা লোড হচ্ছে...",
+    "created_at": "2026-09-30T13:43:12.200963+00:00"
+  },
+  "ebc062b3db55a7c5402ccf957576521a352f3faf003bcaa8b8923118d61d6d48": {
+    "source": "National Meteorological Arc",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "জাতীয় আবহাওয়া সংক্রান্ত আর্চ",
+    "created_at": "2026-09-30T13:43:12.200963+00:00"
+  },
+  "7c3d1bddf73113f360a07a352ecf800a6688fd9b492a376fa39fe0d6939eebe0": {
+    "source": "NO CURRENT RED WARNINGS",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "কোনো বর্তমান লাল সতর্কতা নেই",
+    "created_at": "2026-09-30T13:43:12.200963+00:00"
+  },
+  "c73c1ff2345e16e5290c34ed55ac661cd8b65091f83e514d90c488e5220e5003": {
+    "source": "Baseline Surveillance",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "বেসলাইন নজরদারি",
+    "created_at": "2026-09-30T13:43:12.200963+00:00"
+  },
+  "7b117b3e350f5914571eeee8950891648c2546b17f8c1df859a08baa2b6518bd": {
+    "source": "Maharashtra (Peak Sector)",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "মহারাষ্ট্র (পিক সেক্টর)",
+    "created_at": "2026-09-30T13:43:15.915073+00:00"
+  },
+  "710e075194c9697cdc53afba658e23cc08ec4abe5bb156938d85088f5432e899": {
+    "source": "12 km/h",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "12 km/h",
+    "created_at": "2026-09-30T13:43:15.915073+00:00"
+  },
+  "764bae75f9d2aedfce07a7fb9787922e46b99eae5d968d281a3dc05cdaea4cff": {
+    "source": "NNE 14° • Gusts 21 km/h",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "NNE 14° • দমকা হাওয়া 21 km/h",
+    "created_at": "2026-09-30T13:43:15.915073+00:00"
+  },
+  "ac0ef59b39715bfc19f540f183fa037b0f4eadfcce5a374be3eebcc13fa0ef55": {
+    "source": "Nagaland (Max 24h)",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "নাগাল্যান্ড (সর্বোচ্চ ২৪ঘণ্টা)",
+    "created_at": "2026-09-30T13:43:15.915073+00:00"
+  },
+  "a8554714b3ecfcd87cc9d1a082fa54d28eba5d74d09e704f27330436f47d77f4": {
+    "source": "0.3 mm",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "0.3 mm",
+    "created_at": "2026-09-30T13:43:15.915073+00:00"
+  },
+  "a487fcbe6b97ac5796137ea50e4ba4951b94615f5d0e63b8f8dbb91b7fc53e18": {
+    "source": "3 Active Rain Sectors",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "৩টি সক্রিয় বৃষ্টির ক্ষেত্র",
+    "created_at": "2026-09-30T13:43:15.915073+00:00"
+  },
+  "d9ac04cbbbeb55e143efbcd4c63ae2802c8c6cd658a495267d9da1ceefcbd5a2": {
+    "source": "943 hPa",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "943 hPa",
+    "created_at": "2026-09-30T13:43:15.915073+00:00"
+  },
+  "260b60f1bade584dc1d49cb665c77206efc3c7387e0b5262c08a078ab1c76d2b": {
+    "source": "24.4 °C",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "24.4 °C",
+    "created_at": "2026-09-30T13:43:15.915073+00:00"
+  },
+  "007feab439485c2a7d06c821deaf62c45ae4b7c0e5bb6cf9be9f055ccf588ff9": {
+    "source": "Maharashtra (Peak Sector)",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ମହାରାଷ୍ଟ୍ର (ଶିଖର ସେକ୍ଟର)",
+    "created_at": "2026-09-30T13:43:18.171901+00:00"
+  },
+  "9da3cbb31a152885899d22c0821a6208f670d99fb15b067f97a08be19281f36a": {
+    "source": "12 km/h",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "12 km/h",
+    "created_at": "2026-09-30T13:43:18.171901+00:00"
+  },
+  "b66d825daf8bc1fa360a0bd6ab173df09d39af171e39176198941f2f4fcfec31": {
+    "source": "NNE 14° • Gusts 21 km/h",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "NNE 14° • ଝଟକା ପବନ 21 km/h",
+    "created_at": "2026-09-30T13:43:18.171901+00:00"
+  },
+  "ba0a765cf30cd546652c48d486913cc611fc425ff60e3353a6fc75570b96d92b": {
+    "source": "Nagaland (Max 24h)",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ନାଗାଲାଣ୍ଡ (ସର୍ବାଧିକ 24h)",
+    "created_at": "2026-09-30T13:43:18.171901+00:00"
+  },
+  "c02d81055231640964aeaf60c36ec20d99ff20051d2b10d83637e4bd2d4b2010": {
+    "source": "0.3 mm",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "0.3 mm",
+    "created_at": "2026-09-30T13:43:18.171901+00:00"
+  },
+  "c46cec8d50555a4d87235c92a7e9e9e8302d501fef06524658ae9817e7df9013": {
+    "source": "3 Active Rain Sectors",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "3ଟି ସକ୍ରିୟ ବର୍ଷା ସେକ୍ଟର",
+    "created_at": "2026-09-30T13:43:18.171901+00:00"
+  },
+  "ff5a8693b7dc1aaf448686b8132f817cffd11b63853815a1330f73164ee86eed": {
+    "source": "943 hPa",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "943 hPa",
+    "created_at": "2026-09-30T13:43:18.171901+00:00"
+  },
+  "dcfbe9ab7addf8553975625d752b92d9be14e273dea00b7cac34d7f5fce3db17": {
+    "source": "24.4 °C",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "24.4 °C",
+    "created_at": "2026-09-30T13:43:18.171901+00:00"
+  },
+  "679caec4ccebc50089b427438e4a6c9fadfb208939ca66cc36fd2ce1a7a141f0": {
+    "source": "TELEMETRY DOSSIER",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଟେଲିମେଟ୍ରି ଡୋସିୟର",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "9943faa7ac30db98c1533517312ee7353f4c06a9bd3e017d220c004521233768": {
+    "source": "PAN-INDIA (36 NODES)",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପାନ୍-ଇଣ୍ଡିଆ (୩୬ ନୋଡ୍)",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "79caf25344df18d891568d08b6249ca01e6385396bf1ad9c98e41f1eabdd062c": {
+    "source": "SOURCE: OPEN-METEO CURRENT WEATHER NWP",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଉତ୍ସ: ଓପନ୍-ମେଟିଓ କରେଣ୍ଟ୍ ୱେଦର୍ NWP",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "db43808f8172d070e479a5c00c0042ab2fe7e1e2e3a8a0d08cb3042c810d3fb8": {
+    "source": "MODEL",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ମଡେଲ୍",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "e61b13835ddf176f6d818785a656fc5684c72bf8a27dc28349f74920d4040add": {
+    "source": "MODEL • 24h NWP",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ମଡେଲ୍ • 24h NWP",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "beba84d261127a8534d20b12b83b26191b0853ea06e459d13b10dbe95c04545d": {
+    "source": "RELATIVE HUMIDITY",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଆପେକ୍ଷିକ ଆର୍ଦ୍ରତା",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "37ef82e04be38362ab9bc8e5945421258f78bb453b8e731555edcd4aed83e478": {
+    "source": "SYSTEM PROXIMITY",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସିଷ୍ଟମ୍ ନିକଟବର୍ତ୍ତୀତା",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "77c4b267755746e70ea75d5aaaf5749513ad70653b487eb1fb737e52e2a0980e": {
+    "source": "None Active",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "କୌଣସିଟି ସକ୍ରିୟ ନାହିଁ",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "50ba3fc3ec0f982d58916042e19d9cd541d4046d41089e6d03826b1f5c56ba41": {
+    "source": "DERIVED CALC",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପ୍ରାପ୍ତ ଗଣନା",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "29f3027d8758fe7423b51458b7d66293860f74d47d2ebcbb772d2cf48856c7b9": {
+    "source": "Provenance Rule:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଉତ୍ସ ନିୟମ:",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "ad9d9be18e31dcfc378f66cda9a7c97468e239d1714a258c6d2723f8540dad93": {
+    "source": "Surface variables are provided by Open-Meteo High-Resolution Numerical Weather Prediction (MODEL). Distances to synoptic centers are calculated directly by DRISHTI (DERIVED).",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଭୂପୃଷ୍ଠ ଭେରିଏବଲ୍ ଗୁଡ଼ିକ ଓପନ୍-ମେଟିଓ ହାଇ-ରିଜୋଲ୍ୟୁସନ୍ ନ୍ୟୁମେରିକାଲ୍ ୱେଦର୍ ପ୍ରିଡିକ୍ସନ୍ (MODEL) ଦ୍ୱାରା ପ୍ରଦାନ କରାଯାଇଛି। ସିନାପ୍ଟିକ୍ କେନ୍ଦ୍ରଗୁଡ଼ିକର ଦୂରତା DRISHTI (DERIVED) ଦ୍ୱାରା ସିଧାସଳଖ ଗଣନା କରାଯାଏ।",
+    "created_at": "2026-09-30T13:43:40.937575+00:00"
+  },
+  "f5f77c0de604bb2b69fa7ead42023c6ebe5d80c22d87a2745f00e8b0e5e865f3": {
+    "source": "SYNOPTIC METEOROLOGY (DEMO SCENARIOS)",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସିନୋପ୍ଟିକ୍ ପାଣିପାଗ ବିଜ୍ଞାନ (ଡେମୋ ପରିସ୍ଥିତି)",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "624589b3d6f684c02966f94ea0bf408caca11a6ee4cf8bb6788fd5c84e9a0db7": {
+    "source": "IMD Synoptic Weather Bulletins, CAP Advisories, and Tropical Cyclone Outlooks.",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "IMD ସିନୋପ୍ଟିକ୍ ପାଣିପାଗ ବୁଲେଟିନ୍, CAP ପରାମର୍ଶ, ଏବଂ ଟ୍ରପିକାଲ୍ ସାଇକ୍ଲୋନ୍ ଆକଳନ।",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "a7653a41870b31f5b59ef251de6a06d153e95f45e4946a4c392ac9b2a3ab2d21": {
+    "source": "DEMO / SIMULATED METEOROLOGICAL DATA",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଡେମୋ / ସିମୁଲେଟେଡ୍ ପାଣିପାଗ ତଥ୍ୟ",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "91fc21156adb6c8f222f008466b1d9b95b054dfc3a10b0b69c40f309abd2a137": {
+    "source": "SATELLITE REMOTE SENSING",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଉପଗ୍ରହ (ସାଟେଲାଇଟ୍) ଦୂରସଞ୍ଚାର",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "56c579958490399eeb15e3829ec5bac58281c19e2f206abea8d8f2b3bff0beff": {
+    "source": "ISRO / MOSDAC INSAT-3DS Imager products (IR1, VIS, WV, CTT).",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ISRO / MOSDAC INSAT-3DS ଇମେଜର୍ ଉତ୍ପାଦ (IR1, VIS, WV, CTT)।",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "c1a90badd9af080f8cd983577c41211d8c6be2ed71a002e3f292208bcfcb0b43": {
+    "source": "OBSERVED / SATELLITE PRODUCT",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପର୍ଯ୍ୟବେକ୍ଷିତ / ସାଟେଲାଇଟ୍ ଉତ୍ପାଦ",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "93d33929640f2b9b7993fcecc35438934d39f790963a89fd4c6a588cd659a9d2": {
+    "source": "SURFACE NUMERICAL WEATHER PREDICTION",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଭୂପୃଷ୍ଠ ସଂଖ୍ୟାତ୍ମକ ପାଣିପାଗ ପୂର୍ବାନୁମାନ",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "02caf50eb0e6d7a41f89f5ed6bbc658e8c045c09a739ea70bb065b946968a925": {
+    "source": "Open-Meteo Current Weather and Wind Vector model data.",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଓପନ୍-ମେଟିଓ (Open-Meteo) ଚଳିତ ପାଣିପାଗ ଏବଂ ପବନ ଭେକ୍ଟର ମଡେଲ୍ ତଥ୍ୟ।",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "d952a6c6528807aef9e2f35871a4f1862c7e85b42012dcc86ef56e7cf223ead7": {
+    "source": "LIVE WEATHER - CURRENT MODEL DATA",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଲାଇଭ୍ ପାଣିପାଗ - ଚଳିତ ମଡେଲ୍ ତଥ୍ୟ",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "e3be46251a96d5622925d8c6bd3553625b83b01977d53bbd69661419ec72b3c3": {
+    "source": "DEPRESSION INFLUENCE %",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଅବପାତ (ଡ଼ିପ୍ରେସନ୍) ପ୍ରଭାବ %",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "ae63c5514354d7832f8dde325b63ca209a142a5be9cb64fabfea11643b0babe0": {
+    "source": "Calculated transparently from synoptic centroid proximity, wind, and precipitation.",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସିନୋପ୍ଟିକ୍ ସେଣ୍ଟ୍ରଏଡ୍ ନିକଟବର୍ତ୍ତୀତା, ପବନ ଏବଂ ବର୍ଷା ଆଧାରରେ ସ୍ୱଚ୍ଛ ଭାବରେ ଗଣନା କରାଯାଇଛି।",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "331cf4ce78f7561ac59dbfa92ac9eec83534dcacd2c0c8272f8b56e390ccb1ec": {
+    "source": "DRISHTI DERIVED",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "DRISHTI ଦ୍ୱାରା ପ୍ରାପ୍ତ",
+    "created_at": "2026-09-30T13:43:46.211178+00:00"
+  },
+  "10224a8d18966672de7c407f13b8476bbe3a75dd58153558040bf3f0ea397589": {
+    "source": "TARGET DISTRICT",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଲକ୍ଷ୍ୟ ଜିଲ୍ଲା",
+    "created_at": "2026-09-30T13:43:49.375780+00:00"
+  },
+  "1d982ca109ba593672c50b788bc2f6becbb6530e503e2348d5052b5113521c27": {
+    "source": "TOP DRIVERS (DETERMINISTIC ENGINE):",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପ୍ରମୁଖ କାରଣଗୁଡ଼ିକ (ଡିଟରମିନିଷ୍ଟିକ ଇଞ୍ଜିନ୍):",
+    "created_at": "2026-09-30T13:43:49.375780+00:00"
+  },
+  "70324397ed858eae2aa0c51e4a8a34ffdda8847380b5eb5eba9bd0e41899d36a": {
+    "source": "Wind Hazard Exposure",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପବନର ବିପଦ ସଂସ୍ପର୍ଶ",
+    "created_at": "2026-09-30T13:43:49.375780+00:00"
+  },
+  "8082ee65724d55818305065f677ea2374714080554ac358fa0d976cb3dd37bfe": {
+    "source": "High",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଅଧିକ",
+    "created_at": "2026-09-30T13:43:49.375780+00:00"
+  },
+  "14a30c33adff9621bc2e7b80f563901534699c0e3f468d5e7e86c4d7e83e9018": {
+    "source": "Coastal Surge Proximity",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଉପକୂଳବର୍ତ୍ତୀ ଜୁଆଡ଼ ନିକଟବର୍ତ୍ତୀତା",
+    "created_at": "2026-09-30T13:43:49.375780+00:00"
+  },
+  "e21152e9d193983051b2b4b9a1fda89e8dd27d906e6a97e70b90f8327b2a5667": {
+    "source": "Moderate",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ମଧ୍ୟମ",
+    "created_at": "2026-09-30T13:43:49.375780+00:00"
+  },
+  "9a91401a14c3cb1c61f5c85929ab7ab2f8ffcfec6ad5e805d68878c2af48cde2": {
+    "source": "Socio-Economic Vulnerability",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସାମାଜିକ-ଅର୍ଥନୈତିକ ଦୁର୍ବଳତା",
+    "created_at": "2026-09-30T13:43:49.375780+00:00"
+  },
+  "dd831ee97dba4c1c7deff2466daba3f0608e1101a34faf240e23746ac5419c55": {
+    "source": "Baseline",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ମୂଳସ୍ତର",
+    "created_at": "2026-09-30T13:43:49.375780+00:00"
+  },
+  "06f2c94dead7499cf7b54b8d2f3b9176fdd69543027ea91d363745fcb2518605": {
+    "source": "CRITICAL INFRASTRUCTURE ASSET EXPOSURE",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ମୌଳିକ କାଠାମାଞ୍ଚା ସମ୍ପତ୍ତିର ସଙ୍କଟ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "6e7fef406940fc660fbacdc56922de415a298f1926254e7259b67e6e768299af": {
+    "source": "Paradip Major Deepwater Port",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପାରାଦୀପ ପ୍ରମୁଖ ଗଭୀର ଜଳ ବନ୍ଦର",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "14623a3437b8537e0f909cba62d2fc429ae358e681ac5a85dca13344bc6bdf32": {
+    "source": "Suspended Operations",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସ୍ଥଗିତ କାର୍ଯ୍ୟକ୍ରମ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "54c1e30b69a67f4b1871eb4035e5033c099de494caa954f2b2fe7db8ad7e9f1d": {
+    "source": "Category:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ବର୍ଗ:",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "30e41e72825573fe293152d42b4754bc21e68b574d2b8acaf5fbda70fbdc71f9": {
+    "source": "Port",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ବନ୍ଦର",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "7cbb88733a5eaf0c20dcca0a7569ebac97d4f9a837308d881bd8491103d593f2": {
+    "source": "District:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଜିଲ୍ଲା:",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "820b9a6e03cc51276b72f19526c3a8fabac78a337d2c061466c34df566698af8": {
+    "source": "Coastal Sector",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଉପକୂଳବର୍ତ୍ତୀ ଅଞ୍ଚଳ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "1c0d952c62e7aaa7620d448094dd4317ce238de07d7461501a64f334cd5e05a2": {
+    "source": "Dhamra Port LNG & Bulk Terminal",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଧାମରା ବନ୍ଦର ଏଲ.ଏନ୍.ଜି. ଏବଂ ବଲ୍କ ଟର୍ମିନାଲ୍",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "3268b117054ee8cc8c217c8ed506a582bc4d79cde91c8bf57f0170bfb2b2d0b5": {
+    "source": "Haldia Industrial Dock Complex",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ହଳଦିଆ ଶିଳ୍ପ ଡକ୍ କମ୍ପ୍ଲେକ୍ସ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "272b5dbbc39eb744391932483b0473866d0cabb28a142adcc5253129c4b552e9": {
+    "source": "Emergency Hold",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଜରୁରୀକାଳୀନ ଅଟକ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "f9c2d612b76e4a6c7d1fc57cc1ab45b0baa6dd2912a4af5dec432e86750f8f4c": {
+    "source": "Rajnagar Multipurpose Cyclone Shelter",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ରାଜନଗର ବହୁମୁଖୀ ବାତ୍ୟା ଆଶ୍ରୟସ୍ଥଳ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "8493469742088ee3b89f736b53a36135fb837c2b7a406c9968d14e1b230b1369": {
+    "source": "Active - High Occupancy",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସକ୍ରିୟ - ଅଧିକ ଅଧିକାରୀ/ଲୋକଙ୍କ ସଂଖ୍ୟା",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "0f3e105d70b6bbec347477f58ff9d3accb4e6af5744ac92f32ca425008303251": {
+    "source": "Shelter",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଆଶ୍ରୟସ୍ଥଳ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "2bd8ddf24c953cf8c0c1ca2241695be9a19d65a5f6477f161b79ee7afe78b7ca": {
+    "source": "Erasama Coastal Relief Center",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଏରସାମା ଉପକୂଳବର୍ତ୍ତୀ ରିଲିଫ୍ କେନ୍ଦ୍ର",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "6dfc001dddf8e3db4f7864dba4b735a7d27d7bb9ac26de8405e60ebe7bf2ee0c": {
+    "source": "Active - Near Capacity",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସକ୍ରିୟ -କ୍ଷମତା ନିକଟବର୍ତ୍ତୀ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "a223d6596594b597a2892e2c5e9a948864309b28833c45472dc190048d6d8c08": {
+    "source": "Chandipur Sea-Face Cyclone Shelter",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଚାନ୍ଦିପୁର ସମୁଦ୍ରକୂଳ ବାତ୍ୟା ଆଶ୍ରୟସ୍ଥଳ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "29a73fede00325f1d09592099520acbbfe55002605ac12b538accb6684e7e7ca": {
+    "source": "Active - Ready",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସକ୍ରିୟ - ପ୍ରସ୍ତୁତ",
+    "created_at": "2026-09-30T13:43:56.305631+00:00"
+  },
+  "4541a8c1dfb911c680dfd84a417f311e0111b5e51032e291737109056a6d0a52": {
+    "source": "AI EXPLANATION AND DECISION DIRECTIVE",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "AI ସ୍ପଷ୍ଟୀକରଣ ଏବଂ ନିଷ୍ପତ୍ତି ନିର୍ଦ୍ଦେଶିକା",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "d1a5930483ec4cc84777780460f3b090e9a298c75c0360f40b8efa2d9a42736b": {
+    "source": "Spatial risk analysis suggests elevated flood inundation potential across low-lying riverine sectors in Northeast Madhya Pradesh and adjoining areas. Human authorization is mandatory prior to EOC directive dispatch.",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସ୍ଥାନିକ ବିପଦ ବିଶ୍ଳେଷଣ ଉତ୍ତର-ପୂର୍ବ ମଧ୍ୟପ୍ରଦେଶ ଏବଂ ସଂଲଗ୍ନ ଅଞ୍ଚଳର ନମ୍ବୁଭୂମି ନଦୀ ଅଞ୍ଚଳରେ ବନ୍ୟା ଜଳମଗ୍ନ ହେବାର ସମ୍ଭାବନାକୁ ସୂଚାଉଛି। EOC ନିର୍ଦ୍ଦେଶ ପଠାଇବା ପୂର୍ବରୁ ମାନବ ଅନୁମୋଦନ ବାଧ୍ୟତାମୂଳକ ଅଟେ।",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "53bb53d7cfb0f742f7591bd73584b3f347f5f045b48902cc608d0ffff97e85c5": {
+    "source": "1. AI Explanation:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "୧. AI ସ୍ପଷ୍ଟୀକରଣ:",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "bb0a83e2af01945ced500b03974f9accffc6faa3fcdb54ea04bd09d1eed42de9": {
+    "source": "Multi-source synthesis of Open-Meteo wind field, IMD bulletin trajectory, and catchment runoff parameters.",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "Open-Meteo ପବନ କ୍ଷେତ୍ର, IMD ବୁଲେଟିନ୍ ପଥ, ଏବଂ ଜଳପ୍ରବାହ ପାରାମିଟରଗୁଡ଼ିକର ବହୁ-ଉତ୍ତର ସଂଶ୍ଳେଷଣ।",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "89d42c8c4b29e842fcb13fbeb0fb8a2ff9b40eae9dee475f2bb9cad13154f5e5": {
+    "source": "2. Human Review:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "୨. ମାନବ ସମୀକ୍ଷା:",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "c6d545e29b28a6316f288c337f24da61a930afae21e220b17c63d59d83febfe7": {
+    "source": "COMPLETED (VERIFIED BY NEOC METEOROLOGIST)",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସମ୍ପୂର୍ଣ୍ଣ ହୋଇଛି (NEOC ପାଣିପାଗ ବିଜ୍ଞାନୀଙ୍କ ଦ୍ୱାରା ଯାଞ୍ଚ କରାଯାଇଛି)",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "7491f953e9af2923b1d83e5e79c5bab3d720784f4e692c5694992feb41fe9c05": {
+    "source": "3. Approval Status:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "୩. ଅନୁମୋଦନ ସ୍ଥିତି:",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "b944ad10f8222fd6369c3c4b98d5998f6bfb8613fad45349a4f1d34025675afd": {
+    "source": "AUTHORIZED FOR OPERATIONAL ACTION",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପରିଚାଳନାଗତ କାର୍ଯ୍ୟ ପାଇଁ ଅନୁମୋଦିତ",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "6e210ec1aa10b27bda64ccf14a83c453a4cebef602cabdc0688f5ab212c0468a": {
+    "source": "4. Dispatch Status:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "୪. ପ୍ରେରଣ ସ୍ଥିତି:",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
+  },
+  "b8ec8dd82959647bf2804b26f5a120ceb1c08126a9d1a7df1782fccc922738f4": {
+    "source": "TRANSMITTED TO STATE EOCs",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ରାଜ୍ୟ EOC ଗୁଡ଼ିକ ନିକଟକୁ ପଠାଯାଇଛି",
+    "created_at": "2026-09-30T13:43:59.579817+00:00"
   }
 }
