@@ -1,6 +1,8 @@
 import { AlertCircle, Cpu, Globe, Server } from "lucide-react";
+import { useLanguage } from "../../language";
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="drishti-footer">
       <div className="footer-content">
@@ -9,12 +11,12 @@ export default function Footer() {
           <div className="flex items-start gap-2.5">
             <AlertCircle size={18} className="text-amber-400 shrink-0 mt-0.5" />
             <div className="disclaimer-text">
-              <span className="font-bold text-amber-300">OPERATIONAL EXERCISE & SIMULATION NOTICE:</span>
-              {" "}DRISHTI (Disaster Risk Intelligence & Surveillance Hazard Tracking Interface) MVP is currently running in{" "}
-              <strong>Simulated Historical Replay Mode (Cyclone REMAL 2024 Archive)</strong>. All data points, trajectory lines, surge estimates, and district vulnerability indices are generated for system verification and exercise validation. For real-time life safety advisories and evacuation instructions, refer strictly to official bulletins issued by the India Meteorological Department (IMD) and State Disaster Management Authorities (OSDMA / WBDMA).
+              <span className="font-bold text-amber-300">{t("OPERATIONAL EXERCISE & SIMULATION NOTICE:")}</span>
+              {" "}{t("DRISHTI (Disaster Risk Intelligence & Surveillance Hazard Tracking Interface) MVP is running in Simulated Historical Replay Mode (Cyclone REMAL 2024 Archive). For real-time life safety advisories and evacuation instructions, refer strictly to official bulletins issued by IMD and State Disaster Management Authorities.")}
             </div>
           </div>
         </div>
+
 
         {/* System Meta and Architecture */}
         <div className="footer-bottom-row">

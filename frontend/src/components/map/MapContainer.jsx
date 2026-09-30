@@ -15,6 +15,7 @@ import L from "leaflet";
 import { Layers, Wind } from "lucide-react";
 import { STATES_AND_UTS } from "../../data/indiaGeography";
 import WindCanvasOverlay from "./WindCanvasOverlay";
+import { useLanguage } from "../../language";
 
 // Subcomponent to smoothly animate map viewport to target coordinates and ensure full dimensions
 function MapViewController({ center, zoom }) {
@@ -124,6 +125,7 @@ export default function MapContainer({
   focusedSystem = null,
   onResetFocus = null
 }) {
+  const { t } = useLanguage();
   const isNormal = operatingMode === "NORMAL";
 
   const [layers, setLayers] = useState({
@@ -735,7 +737,7 @@ export default function MapContainer({
                 }}
                 title="Return to full India synoptic overview"
               >
-                RETURN TO NATIONAL VIEW
+                {t("RETURN TO NATIONAL VIEW")}
               </button>
             )}
           </div>
@@ -763,10 +765,10 @@ export default function MapContainer({
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", fontWeight: "bold", marginBottom: "4px", borderBottom: "1px solid #334155", paddingBottom: "4px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                 <Wind size={12} color="#06b6d4" />
-                <span style={{ color: "#f8fafc" }}>WIND SPEED (km/h)</span>
+                <span style={{ color: "#f8fafc" }}>{t("WIND SPEED (km/h)")}</span>
               </div>
               <span style={{ fontSize: "9px", padding: "1px 4px", background: "#1e3a8a", color: "#93c5fd", border: "1px solid #3b82f6", borderRadius: "2px", fontWeight: 600 }}>
-                MODEL • OPEN-METEO
+                {t("MODEL • OPEN-METEO")}
               </span>
             </div>
             {weatherData?.windPoints && weatherData.windPoints.length > 0 ? (
@@ -786,13 +788,13 @@ export default function MapContainer({
                   </span>
                 </div>
                 <div style={{ fontSize: "9px", color: "#94a3b8", marginTop: "4px", borderTop: "1px solid #334155", paddingTop: "2px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <span>NWP 10m VECTORS</span>
-                  <span>{weatherData?.nationalSummary?.maxWindState ? `PEAK: ${weatherData.nationalSummary.maxWindState.windSpeedKmph} km/h ${weatherData.nationalSummary.maxWindState.windDirectionLabel || ""}` : "MODEL ACTIVE"}</span>
+                  <span>{t("10m Model Vectors")}</span>
+                  <span>{weatherData?.nationalSummary?.maxWindState ? `PEAK: ${weatherData.nationalSummary.maxWindState.windSpeedKmph} km/h ${weatherData.nationalSummary.maxWindState.windDirectionLabel || ""}` : t("MODEL ACTIVE")}</span>
                 </div>
               </>
             ) : (
               <div style={{ color: "#f87171", fontWeight: "bold", padding: "3px 0" }}>
-                WIND DATA UNAVAILABLE
+                {t("DATA UNAVAILABLE")}
               </div>
             )}
           </div>
@@ -801,12 +803,12 @@ export default function MapContainer({
         {/* Map Truthful Provenance Watermark */}
         <div className="map-truthful-watermark">
           <span className="watermark-tag font-mono font-bold">
-            {isNormal ? "PAN-INDIA SURVEILLANCE" : "CALIBRATED HISTORICAL EXERCISE"}
+            {t(isNormal ? "PAN-INDIA SURVEILLANCE" : "CALIBRATED HISTORICAL EXERCISE")}
           </span>
           <span className="watermark-text font-mono">
-            {isNormal
+            {t(isNormal
               ? "ALL 36 STATES & UTs MONITORED • LIVE WEATHER: OPEN-METEO (MODEL) • BULLETINS: DEMO / SIMULATED"
-              : "HISTORICAL SIMULATION — CYCLONE REMAL 2024 • INUNDATION & SURGE METRICS ARE DERIVED SIMULATIONS — NOT LIVE FLOOD POLYGONS"}
+              : "HISTORICAL SIMULATION — CYCLONE REMAL 2024 • INUNDATION & SURGE METRICS ARE DERIVED SIMULATIONS — NOT LIVE FLOOD POLYGONS")}
           </span>
         </div>
       </div>

@@ -22,17 +22,13 @@ from app.models.schemas import (
     AdvisoryResponse,
     AdvisoryReviewRequest
 )
+from app.core.config import settings
 from app.services.evidence_service import evidence_service
 from app.services.risk_service import risk_service
 from app.services.risk_engine import transparent_risk_engine
+from app.language.contract import SUPPORTED_LANGUAGES, is_supported_language
+from app.language.service import translation_service
 
-# Supported Multilingual ISO codes
-SUPPORTED_LANGUAGES = {
-    "en": "English",
-    "or": "Odia (ଓଡ଼ିଆ)",
-    "bn": "Bengali (বাংলা)",
-    "hi": "Hindi (हिन्दी)"
-}
 
 # Pre-calibrated multilingual templates for Deterministic / Demo Fallback
 DEMO_ADVISORIES: Dict[str, Dict[str, Any]] = {
@@ -455,8 +451,8 @@ Produce an operational advisory with priority emergency directives formatted as 
 }}
 """
 
-        # Supported model endpoints
-        models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
+        # Supported model endpoints with centralized model config
+        models = [settings.GEMINI_MODEL, "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
         headers = {"Content-Type": "application/json"}
 
         payload = {
@@ -508,6 +504,69 @@ Produce an operational advisory with priority emergency directives formatted as 
 
         return None
 
+    def _translate_advisory_content(
+        self,
+        content: StructuredAdvisoryContent,
+        target_language: str,
+        district_name: str
+    ) -> StructuredAdvisoryContent:
+        """
+        Translates a canonical English advisory into the target language using
+        the unified DRISHTI translation service in a single batched call.
+        """
+        if not target_language or target_language.lower().strip() == "en":
+            return content
+
+        items = [
+            {"id": "summary", "text": content.summary},
+            {"id": "risk_explanation", "text": content.risk_explanation},
+            {"id": "affected_population", "text": content.affected_population},
+        ]
+        for i, concern in enumerate(content.infrastructure_concerns):
+            items.append({"id": f"infra_{i}", "text": concern})
+
+        for i, act in enumerate(content.priority_actions):
+            items.append({"id": f"act_title_{i}", "text": act.title})
+            items.append({"id": f"act_desc_{i}", "text": act.description})
+            items.append({"id": f"act_rat_{i}", "text": act.rationale})
+
+        context_hint = f"Emergency cyclone advisory for {district_name}"
+        translated_batch = translation_service.translate_batch(
+            items=items,
+            target_language=target_language,
+            context=context_hint
+        )
+        trans_map = {item["id"]: item["text"] for item in translated_batch}
+
+        translated_concerns = [
+            trans_map.get(f"infra_{i}", concern)
+            for i, concern in enumerate(content.infrastructure_concerns)
+        ]
+
+        translated_actions = []
+        for i, act in enumerate(content.priority_actions):
+            translated_actions.append(AdvisoryPriorityAction(
+                action_id=act.action_id,
+                priority=act.priority,
+                action_type=act.action_type,
+                title=trans_map.get(f"act_title_{i}", act.title),
+                description=trans_map.get(f"act_desc_{i}", act.description),
+                target_agency=act.target_agency,
+                rationale=trans_map.get(f"act_rat_{i}", act.rationale)
+            ))
+
+        return StructuredAdvisoryContent(
+            summary=trans_map.get("summary", content.summary),
+            risk_explanation=trans_map.get("risk_explanation", content.risk_explanation),
+            priority_actions=translated_actions,
+            affected_population=trans_map.get("affected_population", content.affected_population),
+            infrastructure_concerns=translated_concerns,
+            confidence=content.confidence,
+            evidence_used=content.evidence_used,
+            provenance=f"{content.provenance} (Translated into {target_language.upper()})",
+            requires_human_approval=content.requires_human_approval
+        )
+
     def generate_advisory(
         self,
         district_id: str,
@@ -526,14 +585,20 @@ Produce an operational advisory with priority emergency directives formatted as 
         advisory_content: Optional[StructuredAdvisoryContent] = None
         mode = "DEMO_FALLBACK"
 
+        # Generate canonical English advisory first (canonical, grounded, reviewable)
         if api_key:
-            advisory_content = self._call_gemini_api(api_key, profile, language=language)
+            advisory_content = self._call_gemini_api(api_key, profile, language="en")
             if advisory_content:
                 mode = "LIVE_GEMINI"
 
         if not advisory_content:
-            advisory_content = self._generate_fallback_advisory(profile, language=language)
+            advisory_content = self._generate_fallback_advisory(profile, language="en")
             mode = "DEMO_FALLBACK"
+
+        # Route through unified translation service for non-English target languages
+        if language and language.lower().strip() != "en":
+            advisory_content = self._translate_advisory_content(advisory_content, language, profile.district_name)
+
 
         advisory_id = f"adv-{district_id}-{normalized_step}-{uuid.uuid4().hex[:6]}"
 

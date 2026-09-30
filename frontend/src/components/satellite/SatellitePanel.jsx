@@ -25,6 +25,7 @@ import {
   fetchActiveSynopticSystems,
   OFFICIAL_CYCLONE_PORTALS
 } from "../../services/synopticSystemService";
+import { useLanguage } from "../../language";
 
 // Re-export for any modules importing from SatellitePanel
 export { SATELLITE_PRODUCTS };
@@ -52,6 +53,7 @@ export default function SatellitePanel({
   _isOverlayActive = false,
   _onToggleOverlay
 }) {
+  const { t } = useLanguage();
   const [selectedProduct, setSelectedProduct] = useState(SATELLITE_PRODUCTS[0]);
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
@@ -158,28 +160,28 @@ export default function SatellitePanel({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-xs font-bold font-mono tracking-wider text-slate-100">
-                SATELLITE INTELLIGENCE
+                {t("SATELLITE INTELLIGENCE")}
               </h3>
               <span className="text-[10px] font-mono text-cyan-400 font-semibold">
                 • INSAT-3DS
               </span>
             </div>
             <div className="text-[10px] text-slate-400 font-mono">
-              SOURCE: IMD / INSAT-3DS • SPACE APPLICATIONS CENTRE (ISRO)
+              {t("SOURCE: IMD / INSAT-3DS • SPACE APPLICATIONS CENTRE (ISRO)")}
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="badge-provenance text-[9px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded font-mono font-bold tracking-wide">
-            STATUS: OBSERVED
+            {t("STATUS: OBSERVED")}
           </span>
           {onClose && (
             <button
               type="button"
               onClick={onClose}
               className="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800 transition-colors"
-              title="Close Satellite Intelligence Panel"
+              title={t("Close Satellite Intelligence Panel")}
               aria-label="Close"
             >
               <X size={16} />
@@ -219,10 +221,10 @@ export default function SatellitePanel({
           <div className="absolute inset-0 z-10 bg-slate-950 flex flex-col items-center justify-center gap-2.5">
             <RefreshCw size={24} className="text-cyan-400 animate-spin" />
             <span className="text-xs font-mono text-slate-300">
-              CONNECTING TO OFFICIAL IMD SATELLITE STREAM...
+              {t("CONNECTING TO OFFICIAL IMD SATELLITE STREAM...")}
             </span>
             <span className="text-[10px] font-mono text-slate-500">
-              {selectedProduct.name}
+              {t(selectedProduct.name)}
             </span>
           </div>
         )}
@@ -249,11 +251,10 @@ export default function SatellitePanel({
               <AlertTriangle size={28} />
             </div>
             <div className="text-xs font-bold font-mono text-red-300 tracking-wider mb-1">
-              SATELLITE DATA UNAVAILABLE
+              {t("SATELLITE DATA UNAVAILABLE")}
             </div>
             <p className="text-[11px] font-mono text-slate-400 max-w-md mb-3 leading-relaxed">
-              Official satellite imagery could not be retrieved directly from the remote IMD endpoint.
-              Direct browser access may be constrained by network connectivity or server maintenance.
+              {t("Official satellite imagery could not be retrieved directly from the remote IMD endpoint. Direct browser access may be constrained by network connectivity or server maintenance.")}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <a
@@ -262,7 +263,7 @@ export default function SatellitePanel({
                 rel="noopener noreferrer"
                 className="px-3 py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white rounded text-xs font-mono font-bold flex items-center gap-1.5 transition-colors"
               >
-                <span>OPEN IMD SATELLITE</span>
+                <span>{t("OPEN IMD SATELLITE")}</span>
                 <ExternalLink size={12} />
               </a>
               <a
@@ -271,7 +272,7 @@ export default function SatellitePanel({
                 rel="noopener noreferrer"
                 className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-mono font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors"
               >
-                <span>OPEN IMD RAPID SCAN</span>
+                <span>{t("OPEN IMD RAPID SCAN")}</span>
                 <ExternalLink size={12} />
               </a>
               <a
@@ -280,7 +281,7 @@ export default function SatellitePanel({
                 rel="noopener noreferrer"
                 className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-mono font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors"
               >
-                <span>OPEN MOSDAC</span>
+                <span>{t("OPEN MOSDAC")}</span>
                 <ExternalLink size={12} />
               </a>
             </div>
@@ -301,7 +302,7 @@ export default function SatellitePanel({
                   <div className="flex flex-col">
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-amber-200 tracking-wider">
-                        ACTIVE SYSTEM: {primarySystem.classification}
+                        {t("ACTIVE SYSTEM:")} {t(primarySystem.classification)}
                       </span>
                       <span className="px-1 py-0.2 bg-amber-950/80 border border-amber-700/60 rounded text-[9px] text-amber-400 font-bold">
                         {primarySystem.coordinatesFormatted}
@@ -315,10 +316,10 @@ export default function SatellitePanel({
                     type="button"
                     onClick={() => onLocateOnMap(primarySystem)}
                     className="px-2.5 py-1.5 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold font-mono text-[10.5px] flex items-center gap-1.5 shadow-lg transition-transform active:scale-95"
-                    title="Center and view exact coordinates on Leaflet Operational Map"
+                    title={t("Center and view exact coordinates on Leaflet Operational Map")}
                   >
                     <Compass size={13} className="text-slate-950" />
-                    <span>LOCATE ON MAP</span>
+                    <span>{t("LOCATE ON MAP")}</span>
                   </button>
                 )}
               </div>
@@ -331,7 +332,7 @@ export default function SatellitePanel({
               </div>
               <div className="px-2 py-1 rounded bg-black/80 backdrop-blur-sm border border-slate-700 text-[10px] font-mono text-slate-300 flex items-center gap-1 shadow">
                 <Clock size={10} className="text-cyan-400" />
-                <span>CHECKED: {lastCheckedTime}</span>
+                <span>{t("CHECKED:")} {lastCheckedTime}</span>
               </div>
             </div>
           </>
@@ -348,7 +349,7 @@ export default function SatellitePanel({
               <div className="flex items-center gap-2">
                 <Activity size={14} className="text-amber-400 shrink-0" />
                 <span className="font-bold text-slate-100 text-[11.5px] tracking-wide">
-                  ACTIVE METEOROLOGICAL SYSTEM
+                  {t("ACTIVE METEOROLOGICAL SYSTEM")}
                 </span>
               </div>
 
@@ -356,12 +357,12 @@ export default function SatellitePanel({
               {synopticData?.liveStatus === "LIVE" ? (
                 <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 text-[9.5px] font-bold flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>LIVE / IMD OBSERVED</span>
+                  <span>{t("LIVE / IMD OBSERVED")}</span>
                 </span>
               ) : (
                 <span className="px-2 py-0.5 rounded bg-slate-900 text-amber-300 border border-amber-800/60 text-[9.5px] font-bold flex items-center gap-1">
                   <AlertTriangle size={10} className="text-amber-400" />
-                  <span>IMD SYSTEM FEED: SOURCE UNAVAILABLE</span>
+                  <span>{t("IMD SYSTEM FEED: SOURCE UNAVAILABLE")}</span>
                 </span>
               )}
             </div>
@@ -372,7 +373,7 @@ export default function SatellitePanel({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded bg-amber-600 text-slate-950 font-bold text-[11px] tracking-wider">
-                      [{primarySystem.classification}]
+                      [{t(primarySystem.classification)}]
                     </span>
                     <span className="font-bold text-slate-200 text-xs">
                       {primarySystem.name}
@@ -383,21 +384,21 @@ export default function SatellitePanel({
                 {/* Location & Precise Coordinates */}
                 <div className="p-2 rounded bg-slate-950/80 border border-slate-800 text-[11px] grid grid-cols-2 gap-2">
                   <div className="col-span-2">
-                    <span className="text-slate-400 block text-[9.5px]">LOCATION / SECTOR:</span>
+                    <span className="text-slate-400 block text-[9.5px]">{t("LOCATION / SECTOR:")}</span>
                     <span className="text-slate-200 font-semibold">
-                      {primarySystem.locationDescription || "Indian Subcontinent & Oceanic Basins"}
+                      {primarySystem.locationDescription || t("Indian Subcontinent & Oceanic Basins")}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-slate-400 block text-[9.5px]">SYSTEM COORDINATES:</span>
+                    <span className="text-slate-400 block text-[9.5px]">{t("SYSTEM COORDINATES:")}</span>
                     <span className="text-amber-300 font-bold text-xs">
                       {primarySystem.coordinatesFormatted}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-slate-400 block text-[9.5px]">LATITUDE / LONGITUDE:</span>
+                    <span className="text-slate-400 block text-[9.5px]">{t("LATITUDE / LONGITUDE:")}</span>
                     <span className="text-slate-300 font-bold">
                       {primarySystem.latitudeFormatted} • {primarySystem.longitudeFormatted}
                     </span>
@@ -409,45 +410,45 @@ export default function SatellitePanel({
                   <div className="p-1.5 rounded bg-slate-950/60 border border-slate-800/80">
                     <div className="flex items-center gap-1 text-slate-400 text-[9px] mb-0.5">
                       <Wind size={10} className="text-teal-400" />
-                      <span>MAX WIND</span>
+                      <span>{t("MAX WIND")}</span>
                     </div>
                     <div className="font-bold text-teal-300">
-                      {primarySystem.maxWindKmph ? `${primarySystem.maxWindKmph} km/h` : "Not reported"}
+                      {primarySystem.maxWindKmph ? `${primarySystem.maxWindKmph} km/h` : t("Not reported")}
                     </div>
                     {primarySystem.gustKmph && (
-                      <div className="text-[9px] text-slate-400">Gusts: {primarySystem.gustKmph} km/h</div>
+                      <div className="text-[9px] text-slate-400">{t("Gusts:")} {primarySystem.gustKmph} km/h</div>
                     )}
                   </div>
 
                   <div className="p-1.5 rounded bg-slate-950/60 border border-slate-800/80">
                     <div className="flex items-center gap-1 text-slate-400 text-[9px] mb-0.5">
                       <Gauge size={10} className="text-blue-400" />
-                      <span>PRESSURE</span>
+                      <span>{t("PRESSURE")}</span>
                     </div>
                     <div className="font-bold text-blue-300">
-                      {primarySystem.pressureHpa ? `${primarySystem.pressureHpa} hPa` : "Not reported"}
+                      {primarySystem.pressureHpa ? `${primarySystem.pressureHpa} hPa` : t("Not reported")}
                     </div>
-                    <div className="text-[9px] text-slate-400">Central core</div>
+                    <div className="text-[9px] text-slate-400">{t("Central core")}</div>
                   </div>
 
                   <div className="p-1.5 rounded bg-slate-950/60 border border-slate-800/80">
                     <div className="flex items-center gap-1 text-slate-400 text-[9px] mb-0.5">
                       <Navigation size={10} className="text-amber-400" />
-                      <span>MOVEMENT</span>
+                      <span>{t("MOVEMENT")}</span>
                     </div>
                     <div className="font-bold text-amber-300 truncate">
-                      {primarySystem.movementDescription || "Monitoring"}
+                      {primarySystem.movementDescription ? t(primarySystem.movementDescription) : t("Monitoring")}
                     </div>
-                    <div className="text-[9px] text-slate-400">Synoptic vector</div>
+                    <div className="text-[9px] text-slate-400">{t("Synoptic vector")}</div>
                   </div>
                 </div>
 
                 {/* Sourcing & Action Controls */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/80">
                   <div className="text-[10px] text-slate-400">
-                    <span>Observation: <strong className="text-slate-200">{primarySystem.observationTime}</strong></span>
+                    <span>{t("Observation:")} <strong className="text-slate-200">{primarySystem.observationTime}</strong></span>
                     <span className="mx-1.5">•</span>
-                    <span>Source: <strong className="text-slate-300">{primarySystem.source}</strong></span>
+                    <span>{t("Source:")} <strong className="text-slate-300">{primarySystem.source}</strong></span>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -456,10 +457,10 @@ export default function SatellitePanel({
                         type="button"
                         onClick={() => onLocateOnMap(primarySystem)}
                         className="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-slate-950 rounded font-bold text-[10.5px] flex items-center gap-1 shadow transition-colors"
-                        title="Center Leaflet operational map on active system coordinates"
+                        title={t("Center Leaflet operational map on active system coordinates")}
                       >
                         <Compass size={12} />
-                        <span>LOCATE ON MAP</span>
+                        <span>{t("LOCATE ON MAP")}</span>
                       </button>
                     )}
 
@@ -468,9 +469,9 @@ export default function SatellitePanel({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[10.5px] flex items-center gap-1 transition-colors"
-                      title="Open official IMD Cyclone Information portal"
+                      title={t("Open official IMD Cyclone Information portal")}
                     >
-                      <span>OPEN IMD SOURCE</span>
+                      <span>{t("OPEN IMD SOURCE")}</span>
                       <ExternalLink size={10} />
                     </a>
                   </div>
@@ -480,49 +481,49 @@ export default function SatellitePanel({
               <div className="flex flex-col gap-2.5">
                 <div className="flex items-center justify-between">
                   <span className="px-2 py-0.5 rounded bg-slate-800 text-amber-400 border border-amber-900/60 font-bold text-[11px] tracking-wider">
-                    [IMD SYSTEM FEED]
+                    [{t("IMD SYSTEM FEED")}]
                   </span>
                   <span className="font-bold text-slate-300 text-xs">
-                    SOURCE UNAVAILABLE
+                    {t("SOURCE UNAVAILABLE")}
                   </span>
                 </div>
 
                 {/* Coordinates & Observation NOT VERIFIED */}
                 <div className="p-2.5 rounded bg-slate-950/80 border border-slate-800 text-[11px] grid grid-cols-2 gap-2">
                   <div>
-                    <span className="text-slate-400 block text-[9.5px]">SYSTEM COORDINATES:</span>
+                    <span className="text-slate-400 block text-[9.5px]">{t("SYSTEM COORDINATES:")}</span>
                     <span className="text-slate-400 font-bold text-xs">
-                      NOT VERIFIED
+                      {t("NOT VERIFIED")}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-slate-400 block text-[9.5px]">OBSERVATION:</span>
+                    <span className="text-slate-400 block text-[9.5px]">{t("OBSERVATION:")}</span>
                     <span className="text-slate-400 font-bold text-xs">
-                      NOT VERIFIED
+                      {t("NOT VERIFIED")}
                     </span>
                   </div>
 
                   <div className="col-span-2 pt-1 border-t border-slate-800/80 flex items-center justify-between text-[10px]">
                     <span className="text-slate-400">
-                      DRISHTI CHECKED: <strong className="text-cyan-300">{synopticData?.checkedAt || lastCheckedTime}</strong>
+                      {t("DRISHTI CHECKED:")} <strong className="text-cyan-300">{synopticData?.checkedAt || lastCheckedTime}</strong>
                     </span>
-                    <span className="text-slate-500">PROVENANCE: UNAVAILABLE</span>
+                    <span className="text-slate-500">{t("PROVENANCE: UNAVAILABLE")}</span>
                   </div>
                 </div>
 
                 {/* Sourcing Transparency Notice & Direct Link */}
                 <div className="p-2 bg-slate-950/60 rounded border border-slate-800/80 text-[10px] text-slate-400 flex flex-col gap-2">
-                  <span>Direct IMD bulletin web access is blocked by browser CORS. Official live system observation and coordinates cannot be verified client-side without an official proxy.</span>
+                  <span>{t("Direct IMD bulletin web access is blocked by browser CORS. Official live system observation and coordinates cannot be verified client-side without an official proxy.")}</span>
                   <div className="flex items-center justify-between pt-1 border-t border-slate-800">
                     <a
                       href={OFFICIAL_CYCLONE_PORTALS.PRIMARY_CYCLONE_INFO.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-slate-950 rounded font-bold text-[10.5px] flex items-center gap-1 transition-colors"
-                      title="Open official IMD Cyclone Information portal"
+                      title={t("Open official IMD Cyclone Information portal")}
                     >
-                      <span>OPEN OFFICIAL IMD BULLETIN</span>
+                      <span>{t("OPEN OFFICIAL IMD BULLETIN")}</span>
                       <ExternalLink size={10} />
                     </a>
                     <button
@@ -532,7 +533,7 @@ export default function SatellitePanel({
                       className="text-amber-400 hover:underline flex items-center gap-1 text-[10px] font-bold"
                     >
                       <RefreshCw size={9} className={synopticLoading ? "animate-spin" : ""} />
-                      <span>Re-check Feed</span>
+                      <span>{t("Re-check Feed")}</span>
                     </button>
                   </div>
                 </div>
@@ -545,7 +546,7 @@ export default function SatellitePanel({
             <div>
               <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2">
                 <span className="font-bold text-slate-200 text-[11.5px]">
-                  SATELLITE PRODUCT SPECS
+                  {t("SATELLITE PRODUCT SPECS")}
                 </span>
                 <span className="text-[10px] text-cyan-400 font-bold">
                   {selectedProduct.shortName}
@@ -554,23 +555,23 @@ export default function SatellitePanel({
 
               <div className="space-y-1.5 text-[10.5px]">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">PRODUCT:</span>
-                  <span className="font-bold text-slate-200">{selectedProduct.name}</span>
+                  <span className="text-slate-400">{t("PRODUCT:")}</span>
+                  <span className="font-bold text-slate-200">{t(selectedProduct.name)}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">SENSOR:</span>
+                  <span className="text-slate-400">{t("SENSOR:")}</span>
                   <span className="text-slate-300">{selectedProduct.sensor} ({selectedProduct.resolution})</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">WAVELENGTH:</span>
+                  <span className="text-slate-400">{t("WAVELENGTH:")}</span>
                   <span className="text-slate-300">{selectedProduct.wavelength}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">ACQUISITION:</span>
-                  <span className="text-cyan-300 font-semibold">{selectedProduct.acquisitionNote}</span>
+                  <span className="text-slate-400">{t("ACQUISITION:")}</span>
+                  <span className="text-cyan-300 font-semibold">{t(selectedProduct.acquisitionNote)}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">DRISHTI CHECKED:</span>
+                  <span className="text-slate-400">{t("DRISHTI CHECKED:")}</span>
                   <span className="text-slate-300">{lastCheckedTime}</span>
                 </div>
               </div>
@@ -580,7 +581,7 @@ export default function SatellitePanel({
             <div className="p-2 bg-slate-950/80 rounded border border-slate-800/80 text-[9.5px] text-slate-400 leading-relaxed flex items-start gap-1.5">
               <Info size={11} className="text-cyan-400 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-300">Geographic Spatial Bounds:</strong> IMD composite rasters lack published georeferencing matrices. In strict compliance with DRISHTI rules (NEVER GUESS IMAGE BOUNDS), exact coordinates are plotted on the Leaflet operational map.
+                <strong className="text-slate-300">{t("Geographic Spatial Bounds:")}</strong> {t("IMD composite rasters lack published georeferencing matrices. In strict compliance with DRISHTI rules (NEVER GUESS IMAGE BOUNDS), exact coordinates are plotted on the Leaflet operational map.")}
               </div>
             </div>
 
@@ -591,10 +592,10 @@ export default function SatellitePanel({
                   type="button"
                   onClick={handleManualImageRefresh}
                   className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 flex items-center gap-1 text-[10.5px] transition-colors"
-                  title="Re-check current satellite stream"
+                  title={t("Re-check current satellite stream")}
                 >
                   <RefreshCw size={10} className="text-cyan-400" />
-                  <span>Refresh Image</span>
+                  <span>{t("Refresh Image")}</span>
                 </button>
 
                 <button
@@ -605,9 +606,9 @@ export default function SatellitePanel({
                       ? "bg-cyan-950 text-cyan-300 border-cyan-800"
                       : "bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200"
                   }`}
-                  title="Toggle conservative 15-minute background refresh"
+                  title={t("Toggle conservative 15-minute background refresh")}
                 >
-                  {autoRefreshEnabled ? "Auto (15m): ON" : "Auto: OFF"}
+                  {autoRefreshEnabled ? t("Auto (15m): ON") : t("Auto: OFF")}
                 </button>
               </div>
 
@@ -617,9 +618,9 @@ export default function SatellitePanel({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-2 py-1 bg-cyan-700 hover:bg-cyan-600 text-white rounded text-[10.5px] font-bold flex items-center gap-1 transition-colors shadow-sm"
-                  title="Open full-resolution image in new tab"
+                  title={t("Open full-resolution image in new tab")}
                 >
-                  <span>FULL IMAGE</span>
+                  <span>{t("FULL IMAGE")}</span>
                   <ExternalLink size={10} />
                 </a>
 
@@ -628,9 +629,9 @@ export default function SatellitePanel({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10.5px] font-semibold border border-slate-700 flex items-center gap-1 transition-colors"
-                  title="Open official IMD portal page"
+                  title={t("Open official IMD portal page")}
                 >
-                  <span>IMD PORTAL</span>
+                  <span>{t("IMD PORTAL")}</span>
                   <ExternalLink size={10} />
                 </a>
 
@@ -640,7 +641,7 @@ export default function SatellitePanel({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded text-[10.5px] font-semibold border border-slate-700 flex items-center gap-1 transition-colors"
-                    title="Download Official IMD Bulletin PDF"
+                    title={t("Download Official IMD Bulletin PDF")}
                   >
                     <FileText size={10} />
                     <span>PDF</span>
@@ -653,7 +654,7 @@ export default function SatellitePanel({
 
         {/* Provenance Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-slate-800 text-[10px] font-mono text-slate-500">
-          <span>Satellite observation • IMD / INSAT-3DS</span>
+          <span>{t("Satellite observation • IMD / INSAT-3DS")}</span>
           <div className="flex items-center gap-3">
             <a
               href={OFFICIAL_SATELLITE_PORTALS.MOSDAC_INSAT3DS.url}

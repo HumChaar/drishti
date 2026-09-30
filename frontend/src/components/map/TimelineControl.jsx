@@ -9,8 +9,10 @@ import {
   AlertTriangle 
 } from "lucide-react";
 import { TIMELINE_STEPS } from "../../data/cycloneData.js";
+import { useLanguage } from "../../language";
 
 export default function TimelineControl({ activeStepId, onStepChange, timelineSteps = TIMELINE_STEPS }) {
+  const { t } = useLanguage();
   const [isPlaying, setIsPlaying] = useState(false);
 
   const steps = timelineSteps && timelineSteps.length > 0 ? timelineSteps : TIMELINE_STEPS;
@@ -46,17 +48,17 @@ export default function TimelineControl({ activeStepId, onStepChange, timelineSt
       <div className="timeline-header-row">
         <div className="timeline-title-wrap">
           <Clock size={15} className="text-orange-600" />
-          <span className="timeline-title">TEMPORAL HAZARD PROJECTION TIMELINE</span>
-          <span className="badge-provenance text-xs">SIMULATED STEP REPLAY</span>
+          <span className="timeline-title">{t("TEMPORAL HAZARD PROJECTION TIMELINE")}</span>
+          <span className="badge-provenance text-xs">{t("SIMULATED STEP REPLAY")}</span>
         </div>
 
         <div className="timeline-active-info font-mono">
-          <span className="text-slate-500">SELECTED TIMESTEP:</span>
+          <span className="text-slate-500">{t("SELECTED TIMESTEP:")}</span>
           <span className="text-orange-600 font-bold ml-1.5">{currentStep.label}</span>
           <span className="text-slate-300 mx-2">|</span>
           <span className="text-slate-800 font-semibold">{currentStep.dateDisplay}</span>
           <span className="text-slate-300 mx-2">|</span>
-          <span className="text-slate-500 text-xs">[{currentStep.stage}]</span>
+          <span className="text-slate-500 text-xs">[{t(currentStep.stage)}]</span>
         </div>
 
         {/* Playback Controls */}
@@ -65,7 +67,7 @@ export default function TimelineControl({ activeStepId, onStepChange, timelineSt
             className="ctrl-btn" 
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            title="Step Backward"
+            title={t("Step Backward")}
           >
             <ChevronLeft size={16} />
           </button>
@@ -73,17 +75,17 @@ export default function TimelineControl({ activeStepId, onStepChange, timelineSt
           <button 
             className={`ctrl-btn play-btn ${isPlaying ? "playing" : ""}`}
             onClick={() => setIsPlaying(!isPlaying)}
-            title={isPlaying ? "Pause Simulation Replay" : "Play Temporal Simulation Replay"}
+            title={isPlaying ? t("Pause Simulation Replay") : t("Play Temporal Simulation Replay")}
           >
             {isPlaying ? <Pause size={15} /> : <Play size={15} />}
-            <span>{isPlaying ? "PAUSE" : "AUTO-REPLAY"}</span>
+            <span>{isPlaying ? t("PAUSE") : t("AUTO-REPLAY")}</span>
           </button>
 
           <button 
             className="ctrl-btn" 
             onClick={handleNext}
             disabled={currentIndex === TIMELINE_STEPS.length - 1}
-            title="Step Forward"
+            title={t("Step Forward")}
           >
             <ChevronRight size={16} />
           </button>
@@ -91,10 +93,10 @@ export default function TimelineControl({ activeStepId, onStepChange, timelineSt
           <button 
             className="ctrl-btn reset-btn" 
             onClick={() => onStepChange("NOW")}
-            title="Jump to Current Time"
+            title={t("Jump to Current Time")}
           >
             <RotateCcw size={14} />
-            <span>NOW</span>
+            <span>{t("NOW")}</span>
           </button>
         </div>
       </div>
@@ -132,7 +134,7 @@ export default function TimelineControl({ activeStepId, onStepChange, timelineSt
                 </div>
                 <div className="node-label-wrap">
                   <span className="node-id font-mono">{step.label}</span>
-                  <span className="node-sub">{step.stage}</span>
+                  <span className="node-sub">{t(step.stage)}</span>
                 </div>
               </div>
             );

@@ -25,10 +25,12 @@ import cycloneApi from "./services/cycloneApi";
 import riskApi from "./services/riskApi";
 import weatherApi from "./services/weatherApi";
 import { getNormalizedMeteorology } from "./services/meteorologicalDataService";
+import { useLanguage } from "./language";
 
 import "./App.css";
 
 export default function App() {
+  const { t } = useLanguage();
   const [operatingMode, setOperatingMode] = useState("NORMAL");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [activeStepId, setActiveStepId] = useState("NOW");
@@ -285,21 +287,21 @@ export default function App() {
             <div className="posture-left">
               <span className="posture-indicator-badge normal">
                 <span className="status-dot-green"></span>
-                NORMAL OPERATIONS
+                {t("NORMAL OPERATIONS")}
               </span>
               <span className="posture-title">
                 {selectedState
-                  ? `${selectedState.name.toUpperCase()} SYNOPTIC SURVEILLANCE & READINESS`
-                  : "NATIONAL METEOROLOGICAL MONITORING • ALL 36 STATES & UTs"}
+                  ? `${selectedState.name.toUpperCase()} ${t("SYNOPTIC SURVEILLANCE & READINESS")}`
+                  : t("NATIONAL METEOROLOGICAL MONITORING • ALL 36 STATES & UTs")}
               </span>
               <span className="posture-divider-dot">•</span>
               <span className="posture-meta">
-                Routine Regional Surveillance • Open-Meteo Surface Vectors &amp; IMD Synoptic Bulletins
+                {t("Routine Regional Surveillance • Open-Meteo Surface Vectors & IMD Synoptic Bulletins")}
               </span>
             </div>
             <div className="posture-right">
               <span className="posture-tag font-mono">
-                MONITORING POSTURE: LEVEL 1 (ROUTINE SURVEILLANCE)
+                {t("MONITORING POSTURE: LEVEL 1 (ROUTINE SURVEILLANCE)")}
               </span>
             </div>
           </div>
@@ -310,19 +312,19 @@ export default function App() {
             <div className="posture-left">
               <span className="posture-indicator-badge disaster">
                 <span className="status-dot-amber"></span>
-                ⚠ ACTIVE DISASTER RESPONSE
+                {t("⚠ ACTIVE DISASTER RESPONSE")}
               </span>
               <span className="posture-title">
-                CYCLONE REMAL (BOB/01/2024) • BAY OF BENGAL ARC
+                {t("CYCLONE REMAL (BOB/01/2024) • BAY OF BENGAL ARC")}
               </span>
               <span className="posture-divider-dot">•</span>
               <span className="posture-meta">
-                Severe Cyclonic Storm (SCS) • Affected States: West Bengal &amp; Odisha
+                {t("Severe Cyclonic Storm (SCS) • Affected States: West Bengal & Odisha")}
               </span>
             </div>
             <div className="posture-right">
               <span className="posture-tag font-mono">
-                CALIBRATED HISTORICAL EXERCISE • NOT A LIVE WARNING
+                {t("CALIBRATED HISTORICAL EXERCISE • NOT A LIVE WARNING")}
               </span>
             </div>
           </div>
@@ -401,14 +403,14 @@ export default function App() {
             <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
               <div>
                 <h2 className="text-base font-bold font-mono text-slate-900">
-                  PAN-INDIA NUMERICAL MODEL TELEMETRY (36 STATES &amp; UTs)
+                  {t("PAN-INDIA NUMERICAL MODEL TELEMETRY (36 STATES & UTs)")}
                 </h2>
                 <div className="text-[11px] font-mono text-slate-500 mt-0.5">
-                  SOURCE: OPEN-METEO HIGH-RESOLUTION NWP • PROVENANCE: MODEL
+                  {t("SOURCE: OPEN-METEO HIGH-RESOLUTION NWP • PROVENANCE: MODEL")}
                 </div>
               </div>
               <span className="badge-provenance text-[9px] bg-blue-100 text-blue-900 border border-blue-300 px-2 py-0.5 rounded font-mono font-bold">
-                CURRENT MODEL DATA
+                {t("CURRENT MODEL DATA")}
               </span>
             </div>
 
@@ -420,25 +422,25 @@ export default function App() {
                       <div className="flex items-center justify-between pb-1 border-b border-slate-200 mb-1.5">
                         <strong className="text-slate-900 text-sm">{st.location || st.name}</strong>
                         <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${st.hasData ? "bg-blue-100 text-blue-900" : "bg-slate-200 text-slate-600"}`}>
-                          {st.hasData ? "MODEL" : "OFFLINE"}
+                          {t(st.hasData ? "MODEL" : "OFFLINE")}
                         </span>
                       </div>
                       <div className="space-y-1 text-[11px] text-slate-700">
                         <div className="text-teal-800">
-                          <strong>Wind:</strong> {st.windSpeedKmph != null ? `${st.windSpeedKmph} km/h ${st.windDirectionLabel || ""}` : (st.windSpeed != null ? `${st.windSpeed} km/h` : "N/A")}{st.windGustKmph ? ` (Gusts ${st.windGustKmph})` : ""}
+                          <strong>{t("Wind:")}</strong> {st.windSpeedKmph != null ? `${st.windSpeedKmph} km/h ${st.windDirectionLabel || ""}` : (st.windSpeed != null ? `${st.windSpeed} km/h` : "N/A")}{st.windGustKmph ? ` (Gusts ${st.windGustKmph})` : ""}
                         </div>
                         <div className="text-blue-800">
-                          <strong>Rainfall:</strong> {st.rainfallMm != null ? `${st.rainfallMm} mm` : (st.rain != null ? `${st.rain} mm` : "0.0 mm")}
+                          <strong>{t("Rainfall:")}</strong> {st.rainfallMm != null ? `${st.rainfallMm} mm` : (st.rain != null ? `${st.rain} mm` : "0.0 mm")}
                         </div>
                         <div className="text-slate-800">
-                          <strong>Surface Pressure:</strong> {st.pressureHpa != null ? `${st.pressureHpa} hPa` : "N/A"}
+                          <strong>{t("Surface Pressure:")}</strong> {st.pressureHpa != null ? `${st.pressureHpa} hPa` : "N/A"}
                         </div>
                         <div className="text-amber-900">
-                          <strong>Temperature:</strong> {st.temperatureC != null ? `${st.temperatureC}°C` : (st.temperature != null ? `${st.temperature}°C` : "N/A")}{st.humidityPct != null ? ` (${st.humidityPct}% RH)` : ""}
+                          <strong>{t("Temperature:")}</strong> {st.temperatureC != null ? `${st.temperatureC}°C` : (st.temperature != null ? `${st.temperature}°C` : "N/A")}{st.humidityPct != null ? ` (${st.humidityPct}% RH)` : ""}
                         </div>
                         {st.distanceToSystemKm != null && (
                           <div className="text-amber-800 font-bold border-t border-slate-200/80 pt-1 mt-1">
-                            Distance to System: {st.distanceToSystemKm} km <span className="text-[9px] font-normal text-amber-700">(DERIVED)</span>
+                            {t("Distance to System:")} {st.distanceToSystemKm} km <span className="text-[9px] font-normal text-amber-700">({t("DERIVED")})</span>
                           </div>
                         )}
                       </div>
@@ -451,7 +453,7 @@ export default function App() {
                 ))
               ) : (
                 <div className="p-4 text-slate-500 font-mono text-xs col-span-3">
-                  Loading surface meteorological observations...
+                  {t("Loading surface meteorological observations...")}
                 </div>
               )}
             </div>
@@ -526,24 +528,24 @@ export default function App() {
             {/* IMD Meteorological Bulletins */}
             <div className="risk-panel-container p-6">
               <div className="panel-header mb-4">
-                <h2 className="panel-title text-base">METEOROLOGICAL BULLETINS &amp; MARINE ADVISORIES</h2>
-                <span className="badge-provenance">IMD HISTORICAL ARCHIVE</span>
+                <h2 className="panel-title text-base">{t("METEOROLOGICAL BULLETINS & MARINE ADVISORIES")}</h2>
+                <span className="badge-provenance">{t("IMD HISTORICAL ARCHIVE")}</span>
               </div>
               {bulletin ? (
                 <div className="flex flex-col gap-3 font-mono text-xs text-slate-800">
                   <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
-                    <div className="text-slate-900 font-bold text-sm mb-1">BULLETIN ID: {bulletin.bulletinNo}</div>
-                    <div className="text-slate-500 mb-3 font-medium">ISSUED: {bulletin.issuedAt} ({bulletin.provenance})</div>
-                    <div className="text-orange-700 mb-2 font-bold text-sm">SEA CONDITION: {bulletin.seaCondition}</div>
-                    <div className="mb-2 text-slate-700 font-medium">SIGNIFICANT WAVE HEIGHT: {bulletin.significantWaveHeightMeters} meters ({bulletin.waveDirection})</div>
-                    <div className="mb-3 text-red-700 font-bold">SQUALL WARNING: {bulletin.squallWarning}</div>
+                    <div className="text-slate-900 font-bold text-sm mb-1">{t("BULLETIN ID:")} {bulletin.bulletinNo}</div>
+                    <div className="text-slate-500 mb-3 font-medium">{t("ISSUED:")} {bulletin.issuedAt} ({t(bulletin.provenance)})</div>
+                    <div className="text-orange-700 mb-2 font-bold text-sm">{t("SEA CONDITION:")} {t(bulletin.seaCondition)}</div>
+                    <div className="mb-2 text-slate-700 font-medium">{t("SIGNIFICANT WAVE HEIGHT:")} {bulletin.significantWaveHeightMeters} {t("meters")} ({t(bulletin.waveDirection)})</div>
+                    <div className="mb-3 text-red-700 font-bold">{t("SQUALL WARNING:")} {t(bulletin.squallWarning)}</div>
                     <div className="p-3 bg-red-50 border border-red-200 rounded text-red-800 font-medium">
-                      ADVISORY TO FISHERMEN: {bulletin.fishermenAdvisory}
+                      {t("ADVISORY TO FISHERMEN:")} {t(bulletin.fishermenAdvisory)}
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-slate-500 text-xs font-mono">Loading advisory data...</div>
+                <div className="text-slate-500 text-xs font-mono">{t("Loading advisory data...")}</div>
               )}
             </div>
 

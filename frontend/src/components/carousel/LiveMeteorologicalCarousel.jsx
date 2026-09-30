@@ -14,6 +14,7 @@ import {
   Play
 } from "lucide-react";
 import ProvenanceBadge from "../common/ProvenanceBadge";
+import { useLanguage } from "../../language";
 
 /**
  * LiveMeteorologicalCarousel
@@ -34,6 +35,7 @@ export default function LiveMeteorologicalCarousel({
   onOpenOverlay,
   onNavigateTab
 }) {
+  const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef(null);
@@ -202,10 +204,10 @@ export default function LiveMeteorologicalCarousel({
         <div className="carousel-title-group">
           <div className="carousel-pulse-dot" />
           <h2 className="carousel-section-title font-mono">
-            LIVE METEOROLOGICAL TELEMETRY &amp; HAZARD CAROUSEL
+            {t("LIVE METEOROLOGICAL TELEMETRY & HAZARD CAROUSEL")}
           </h2>
           <span className="carousel-provenance-tag font-mono">
-            STRICT PROVENANCE • AUTOMATIC ROTATION
+            {t("STRICT PROVENANCE • AUTOMATIC ROTATION")}
           </span>
         </div>
 
@@ -215,7 +217,7 @@ export default function LiveMeteorologicalCarousel({
             type="button"
             className="carousel-control-btn"
             onClick={() => setIsPaused(!isPaused)}
-            title={isPaused ? "Resume Autoplay" : "Pause Autoplay"}
+            title={isPaused ? t("Resume Autoplay") : t("Pause Autoplay")}
             aria-label={isPaused ? "Play" : "Pause"}
           >
             {isPaused ? <Play size={12} /> : <Pause size={12} />}
@@ -231,7 +233,7 @@ export default function LiveMeteorologicalCarousel({
                 aria-selected={idx === currentIndex}
                 className={`carousel-dot ${idx === currentIndex ? "active" : ""}`}
                 onClick={() => setCurrentIndex(idx)}
-                title={`Go to slide ${idx + 1}: ${card.pillar}`}
+                title={`Go to slide ${idx + 1}: ${t(card.pillar)}`}
               />
             ))}
           </div>
@@ -242,7 +244,7 @@ export default function LiveMeteorologicalCarousel({
               type="button"
               className="carousel-control-btn"
               onClick={handlePrev}
-              title="Previous Meteorological Card"
+              title={t("Previous Meteorological Card")}
               aria-label="Previous slide"
             >
               <ChevronLeft size={14} />
@@ -254,7 +256,7 @@ export default function LiveMeteorologicalCarousel({
               type="button"
               className="carousel-control-btn"
               onClick={handleNext}
-              title="Next Meteorological Card"
+              title={t("Next Meteorological Card")}
               aria-label="Next slide"
             >
               <ChevronRight size={14} />
@@ -280,7 +282,7 @@ export default function LiveMeteorologicalCarousel({
                   <div className="flex items-center gap-1.5 min-w-0">
                     <Icon size={13} className="text-blue-700 flex-shrink-0" />
                     <span className="card-source font-mono font-bold text-[10.5px] text-slate-900 tracking-wider truncate">
-                      {card.pillar}
+                      {t(card.pillar)}
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono">• {card.source}</span>
                   </div>
@@ -290,16 +292,16 @@ export default function LiveMeteorologicalCarousel({
                 {/* Card Body: TITLE, LOCATION, VALUE */}
                 <div className="card-body mt-2">
                   <div className="card-title font-mono font-bold text-[11px] text-slate-800 tracking-wide uppercase truncate">
-                    {card.title}
+                    {t(card.title)}
                   </div>
                   <div className="card-location text-[10.5px] text-slate-500 font-medium truncate mt-0.5">
-                    {card.location}
+                    {t(card.location)}
                   </div>
 
                   <div className="card-metric font-mono text-xs font-bold text-slate-900 mt-2 p-2 bg-slate-50 rounded border border-slate-200">
-                    <div className="text-[13px] text-blue-950 font-bold">{card.value}</div>
+                    <div className="text-[13px] text-blue-950 font-bold">{t(card.value)}</div>
                     <div className="text-[10px] text-slate-600 font-normal mt-0.5 truncate">
-                      {card.secondary}
+                      {t(card.secondary)}
                     </div>
                   </div>
                 </div>
@@ -307,8 +309,8 @@ export default function LiveMeteorologicalCarousel({
                 {/* Card Footer: DATA TIME vs CHECKED TIME */}
                 <div className="card-footer mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between font-mono text-[9.5px]">
                   <div className="flex flex-col text-slate-500 leading-tight">
-                    <span>DATA: <strong className="text-slate-700">{card.dataTime}</strong></span>
-                    <span>CHECKED: <strong className="text-slate-600">{card.checkedTime}</strong></span>
+                    <span>{t("DATA:")} <strong className="text-slate-700">{card.dataTime}</strong></span>
+                    <span>{t("CHECKED:")} <strong className="text-slate-600">{card.checkedTime}</strong></span>
                   </div>
 
                   <button
@@ -316,7 +318,7 @@ export default function LiveMeteorologicalCarousel({
                     className="card-action-btn font-mono"
                     onClick={card.action}
                   >
-                    <span>{card.actionLabel}</span>
+                    <span>{t(card.actionLabel)}</span>
                     <ExternalLink size={10} />
                   </button>
                 </div>

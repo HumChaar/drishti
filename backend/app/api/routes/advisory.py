@@ -78,4 +78,8 @@ async def get_supported_languages() -> Dict[str, str]:
     """
     Returns supported language codes and their full native labels.
     """
-    return SUPPORTED_LANGUAGES
+    return {
+        code: f"{meta.name} ({meta.native_name})" if meta.name != meta.native_name else meta.name
+        for code, meta in SUPPORTED_LANGUAGES.items()
+    }
+

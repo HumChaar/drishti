@@ -12,6 +12,7 @@ import {
   Info 
 } from "lucide-react";
 import { STATES_AND_UTS } from "../../data/indiaGeography";
+import { useLanguage } from "../../language";
 
 export default function DistrictIntelligenceExplorer({
   districtsData = [],
@@ -23,6 +24,8 @@ export default function DistrictIntelligenceExplorer({
   selectedState,
   onSelectState
 }) {
+  const { t } = useLanguage();
+
   // Available states in dropdown
   const [activeStateId, setActiveStateId] = useState(
     selectedState?.id || "odisha"
@@ -64,9 +67,9 @@ export default function DistrictIntelligenceExplorer({
         <div className="flex items-center gap-2">
           <Layers size={16} className="text-blue-700" />
           <div>
-            <h3 className="section-heading">DISTRICT INTELLIGENCE &amp; VULNERABILITY EXPLORER</h3>
+            <h3 className="section-heading">{t("DISTRICT INTELLIGENCE & VULNERABILITY EXPLORER")}</h3>
             <span className="text-[10px] text-slate-500 font-mono">
-              Deterministic Multi-Hazard Risk Breakdown • Population Exposure • Critical Asset Overlay
+              {t("Deterministic Multi-Hazard Risk Breakdown • Population Exposure • Critical Asset Overlay")}
             </span>
           </div>
         </div>
@@ -74,20 +77,20 @@ export default function DistrictIntelligenceExplorer({
         <div className="flex items-center gap-2">
           {/* State Selector Dropdown */}
           <div className="flex items-center gap-1.5 font-mono text-xs">
-            <span className="text-slate-500 font-bold">STATE:</span>
+            <span className="text-slate-500 font-bold">{t("STATE:")}</span>
             <select
               value={activeStateId}
               onChange={(e) => handleStateChange(e.target.value)}
               className="px-2 py-1 bg-white border border-slate-300 rounded text-slate-800 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-600"
             >
-              <optgroup label="BACKEND CONNECTED PILOT">
-                <option value="odisha">Odisha (5 Coastal Districts)</option>
-                <option value="west-bengal">West Bengal (3 Coastal Districts)</option>
+              <optgroup label={t("BACKEND CONNECTED PILOT")}>
+                <option value="odisha">{t("Odisha (5 Coastal Districts)")}</option>
+                <option value="west-bengal">{t("West Bengal (3 Coastal Districts)")}</option>
               </optgroup>
-              <optgroup label="PAN-INDIA (STAGE 2 INGESTION)">
+              <optgroup label={t("PAN-INDIA (STAGE 2 INGESTION)")}>
                 {STATES_AND_UTS.filter(s => !s.hasBackendData).slice(0, 15).map(s => (
                   <option key={s.id} value={s.id}>
-                    {s.name} [DATA N/A]
+                    {t(s.name)} [{t("DATA N/A")}]
                   </option>
                 ))}
               </optgroup>
@@ -97,7 +100,7 @@ export default function DistrictIntelligenceExplorer({
           {/* District Selector Dropdown (if state connected) */}
           {availableDistricts.length > 0 && (
             <div className="flex items-center gap-1.5 font-mono text-xs">
-              <span className="text-slate-500 font-bold">DISTRICT:</span>
+              <span className="text-slate-500 font-bold">{t("DISTRICT:")}</span>
               <select
                 value={activeDist?.id || ""}
                 onChange={(e) => {
@@ -108,7 +111,7 @@ export default function DistrictIntelligenceExplorer({
               >
                 {availableDistricts.map((d) => (
                   <option key={d.id} value={d.id}>
-                    {d.name} (Risk: {d.risk?.riskScore || 24}/100)
+                    {t(d.name)} ({t("Risk:")} {d.risk?.riskScore || 24}/100)
                   </option>
                 ))}
               </select>
@@ -116,7 +119,7 @@ export default function DistrictIntelligenceExplorer({
           )}
 
           <span className="badge-provenance text-[10px]">
-            {availableDistricts.length > 0 ? "LIVE BACKEND API" : "STAGE 2 INGESTION"}
+            {availableDistricts.length > 0 ? t("LIVE BACKEND API") : t("STAGE 2 INGESTION")}
           </span>
         </div>
       </div>
@@ -130,14 +133,14 @@ export default function DistrictIntelligenceExplorer({
               <Building2 size={28} />
             </div>
             <h4 className="text-base font-bold text-slate-900 mb-1">
-              {activeStateObj?.name || "Selected State"} — DATA NOT AVAILABLE
+              {activeStateObj?.name ? t(activeStateObj.name) : t("Selected State")} — {t("DATA NOT AVAILABLE")}
             </h4>
             <p className="text-xs text-slate-600 mb-4 leading-relaxed font-sans">
-              Real-time district telemetry, automated weather station feeds, and asset vulnerability mappings for {activeStateObj?.name} are scheduled for Stage 2 Pan-India ingestion.
+              {t("Real-time district telemetry, automated weather station feeds, and asset vulnerability mappings for {state} are scheduled for Stage 2 Pan-India ingestion.", { state: activeStateObj?.name ? t(activeStateObj.name) : t("this region") })}
             </p>
             <div className="inline-flex items-center gap-2 p-2 bg-amber-50 border border-amber-200 rounded text-amber-900 text-xs font-mono mb-4 text-left">
               <Info size={14} className="flex-shrink-0 text-amber-700" />
-              <span>Strict Data Integrity Rule: DRISHTI never displays fabricated risk scores or simulated district telemetry without verified authoritative sensors.</span>
+              <span>{t("Strict Data Integrity Rule: DRISHTI never displays fabricated risk scores or simulated district telemetry without verified authoritative sensors.")}</span>
             </div>
             <div>
               <button
@@ -145,7 +148,7 @@ export default function DistrictIntelligenceExplorer({
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gov-navy text-white text-xs font-bold rounded hover:bg-accent-blue transition-colors font-mono"
                 onClick={() => handleStateChange("odisha")}
               >
-                <span>EXPLORE CONNECTED PILOT REGION (ODISHA)</span>
+                <span>{t("EXPLORE CONNECTED PILOT REGION (ODISHA)")}</span>
                 <ArrowRight size={13} />
               </button>
             </div>
@@ -160,23 +163,23 @@ export default function DistrictIntelligenceExplorer({
               <div className="flex items-center gap-2">
                 <MapPin size={18} className="text-blue-700" />
                 <h3 className="text-lg font-bold text-slate-900">
-                  {activeDist.name} District
+                  {t(activeDist.name)} {t("District")}
                 </h3>
                 <span className="text-xs font-mono px-2 py-0.5 bg-slate-200 text-slate-700 rounded font-bold">
-                  {activeDist.state}
+                  {t(activeDist.state)}
                 </span>
                 <span className="text-xs font-mono text-slate-500">
-                  HQ: {activeDist.headquarters || activeDist.name}
+                  {t("HQ:")} {activeDist.headquarters ? t(activeDist.headquarters) : t(activeDist.name)}
                 </span>
               </div>
               <div className="text-xs text-slate-600 mt-1 font-mono">
-                Coastline: <strong>{activeDist.coastalLineKm || 65} km</strong> • Population: <strong>{activeDist.population ? (activeDist.population / 1000000).toFixed(2) + "M" : "1.85M"}</strong> • Shelters: <strong>{activeDist.totalShelters || 120} Units</strong>
+                {t("Coastline:")} <strong>{activeDist.coastalLineKm || 65} km</strong> • {t("Population:")} <strong>{activeDist.population ? (activeDist.population / 1000000).toFixed(2) + "M" : "1.85M"}</strong> • {t("Shelters:")} <strong>{activeDist.totalShelters || 120} {t("Units")}</strong>
               </div>
             </div>
 
             <div className="flex items-center gap-3 mt-3 md:mt-0">
               <div className="text-right">
-                <span className="text-[10px] font-mono text-slate-500 font-bold block">DETERMINISTIC RISK SCORE</span>
+                <span className="text-[10px] font-mono text-slate-500 font-bold block">{t("DETERMINISTIC RISK SCORE")}</span>
                 <div className="font-mono text-xl font-black text-slate-900 flex items-center justify-end gap-1">
                   <span style={{ color: rawRisk.color || "#0284c7" }}>
                     {rawRisk.riskScore || 24}
@@ -188,7 +191,7 @@ export default function DistrictIntelligenceExplorer({
                 className="px-2.5 py-1 text-xs font-mono font-bold rounded text-white"
                 style={{ backgroundColor: rawRisk.color || "#0284c7" }}
               >
-                {rawRisk.riskBand || "MODERATE"}
+                {t(rawRisk.riskBand || "MODERATE")}
               </span>
             </div>
           </div>
@@ -199,23 +202,23 @@ export default function DistrictIntelligenceExplorer({
             <div className="p-3 bg-slate-50 border border-slate-200 rounded">
               <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold text-slate-700 mb-2">
                 <Wind size={13} className="text-orange-600" />
-                <span>HAZARD EXPOSURE</span>
+                <span>{t("HAZARD EXPOSURE")}</span>
               </div>
               <div className="space-y-1.5 font-mono text-xs">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Max Wind Gust:</span>
+                  <span className="text-slate-500">{t("Max Wind Gust:")}</span>
                   <strong className="text-slate-800">{rawRisk.windSpeedKmh ? `${rawRisk.windSpeedKmh} km/h` : "45 km/h (Nominal)"}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">24h Rainfall:</span>
+                  <span className="text-slate-500">{t("24h Rainfall:")}</span>
                   <strong className="text-slate-800">{rawRisk.rainMm24h ? `${rawRisk.rainMm24h} mm` : "12 mm (Isolated)"}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Peak Storm Surge:</span>
+                  <span className="text-slate-500">{t("Peak Storm Surge:")}</span>
                   <strong className="text-slate-800">{rawRisk.surgeMeters ? `${rawRisk.surgeMeters} m` : "0.3 m (Tidal)"}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Inundation Threat:</span>
+                  <span className="text-slate-500">{t("Inundation Threat:")}</span>
                   <strong className={rawRisk.inundationProbPct >= 40 ? "text-red-700 font-bold" : "text-emerald-700 font-bold"}>
                     {rawRisk.inundationProbPct ? `${rawRisk.inundationProbPct}%` : "5%"}
                   </strong>
@@ -227,24 +230,24 @@ export default function DistrictIntelligenceExplorer({
             <div className="p-3 bg-slate-50 border border-slate-200 rounded">
               <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold text-slate-700 mb-2">
                 <Users size={13} className="text-blue-600" />
-                <span>POPULATION EXPOSURE</span>
+                <span>{t("POPULATION EXPOSURE")}</span>
               </div>
               <div className="space-y-1.5 font-mono text-xs">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Total Population:</span>
+                  <span className="text-slate-500">{t("Total Population:")}</span>
                   <strong className="text-slate-800">{activeDist.population ? (activeDist.population / 1000000).toFixed(2) + " Million" : "2.1M"}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Vulnerable Zone:</span>
+                  <span className="text-slate-500">{t("Vulnerable Zone:")}</span>
                   <strong className="text-amber-800">{activeDist.population ? Math.round(activeDist.population * 0.18).toLocaleString() : "380,000"}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Shelter Capacity:</span>
+                  <span className="text-slate-500">{t("Shelter Capacity:")}</span>
                   <strong className="text-emerald-700">{activeDist.shelterCapacityPersons ? activeDist.shelterCapacityPersons.toLocaleString() : "125,000"}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Shelter Coverage:</span>
-                  <strong className="text-slate-800">{activeDist.totalShelters || 120} Multipurpose Units</strong>
+                  <span className="text-slate-500">{t("Shelter Coverage:")}</span>
+                  <strong className="text-slate-800">{activeDist.totalShelters || 120} {t("Multipurpose Units")}</strong>
                 </div>
               </div>
             </div>
@@ -253,19 +256,19 @@ export default function DistrictIntelligenceExplorer({
             <div className="p-3 bg-slate-50 border border-slate-200 rounded">
               <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold text-slate-700 mb-2">
                 <AlertTriangle size={13} className="text-amber-600" />
-                <span>TOP VULNERABILITY DRIVERS</span>
+                <span>{t("TOP VULNERABILITY DRIVERS")}</span>
               </div>
               <div className="space-y-1 text-xs">
                 {(rawRisk.topDrivers && rawRisk.topDrivers.length > 0) ? (
                   rawRisk.topDrivers.map((driver, idx) => (
                     <div key={idx} className="flex items-start gap-1 text-slate-700">
                       <span className="text-amber-600 font-bold">•</span>
-                      <span className="font-medium text-[11.5px]">{driver}</span>
+                      <span className="font-medium text-[11.5px]">{t(driver)}</span>
                     </div>
                   ))
                 ) : (
                   <div className="text-slate-500 text-[11px] font-mono">
-                    Baseline routine surveillance • No critical elevation or surge breaches detected.
+                    {t("Baseline routine surveillance • No critical elevation or surge breaches detected.")}
                   </div>
                 )}
               </div>
@@ -276,10 +279,10 @@ export default function DistrictIntelligenceExplorer({
               <div>
                 <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold text-slate-700 mb-1.5">
                   <Sparkles size={13} className="text-orange-600" />
-                  <span>AI DECISION SUPPORT</span>
+                  <span>{t("AI DECISION SUPPORT")}</span>
                 </div>
                 <p className="text-[11px] text-slate-600 leading-snug">
-                  Grounded multi-hazard reasoning and multilingual advisories (Hindi, English, Odia, Bengali) available for this district.
+                  {t("Grounded multi-hazard reasoning and multilingual advisories (Hindi, English, Odia, Bengali) available for this district.")}
                 </p>
               </div>
 
@@ -290,14 +293,14 @@ export default function DistrictIntelligenceExplorer({
                   onClick={() => onNavigateTab && onNavigateTab("advisories")}
                 >
                   <Sparkles size={12} />
-                  <span>OPEN AI ADVISORY &amp; SOP</span>
+                  <span>{t("OPEN AI ADVISORY & SOP")}</span>
                 </button>
                 <button
                   type="button"
                   className="w-full inline-flex items-center justify-center gap-1 px-2.5 py-1 bg-slate-200 text-slate-700 text-[10.5px] font-bold rounded hover:bg-slate-300 transition-colors font-mono"
                   onClick={onLaunchDisasterMode}
                 >
-                  <span>LAUNCH DISASTER DRILL</span>
+                  <span>{t("LAUNCH DISASTER DRILL")}</span>
                 </button>
               </div>
             </div>
@@ -308,32 +311,32 @@ export default function DistrictIntelligenceExplorer({
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-800">
                 <Anchor size={13} className="text-blue-700" />
-                <span>CRITICAL INFRASTRUCTURE ASSETS LOCATED IN {activeDist.name.toUpperCase()} ({districtInfra.length})</span>
+                <span>{t("CRITICAL INFRASTRUCTURE ASSETS LOCATED IN {district} ({count})", { district: (t(activeDist.name) || "").toUpperCase(), count: districtInfra.length })}</span>
               </div>
               <span className="text-[10.5px] font-mono text-slate-500">
-                Verified Geo-Tagged Assets
+                {t("Verified Geo-Tagged Assets")}
               </span>
             </div>
 
             {districtInfra.length === 0 ? (
               <div className="p-3 bg-slate-50 rounded border border-slate-200 text-xs font-mono text-slate-500">
-                No high-tier major ports or power substations registered directly in district centroid; regional dependencies served by adjacent district grid.
+                {t("No high-tier major ports or power substations registered directly in district centroid; regional dependencies served by adjacent district grid.")}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {districtInfra.map((asset) => (
                   <div key={asset.id} className="p-2.5 bg-slate-50 border border-slate-200 rounded">
                     <div className="flex justify-between items-start">
-                      <strong className="text-xs font-bold text-slate-900">{asset.name}</strong>
+                      <strong className="text-xs font-bold text-slate-900">{t(asset.name)}</strong>
                       <span className="text-[9.5px] px-1.5 py-0.5 bg-emerald-100 text-emerald-800 font-mono font-bold rounded">
-                        {asset.status || "OPERATIONAL"}
+                        {t(asset.status || "OPERATIONAL")}
                       </span>
                     </div>
                     <div className="text-[10.5px] text-slate-500 font-mono mt-0.5">
-                      {asset.type} • {asset.category}
+                      {t(asset.type)} • {t(asset.category)}
                     </div>
                     <div className="text-[11px] text-slate-600 mt-1">
-                      {asset.details}
+                      {t(asset.details)}
                     </div>
                   </div>
                 ))}

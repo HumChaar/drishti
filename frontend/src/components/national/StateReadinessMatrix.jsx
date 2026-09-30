@@ -8,12 +8,14 @@ import {
   ArrowRight
 } from "lucide-react";
 import { INDIA_REGIONS, STATES_AND_UTS } from "../../data/indiaGeography";
+import { useLanguage } from "../../language";
 
 export default function StateReadinessMatrix({ 
   selectedState, 
   onSelectState, 
   onLaunchDisasterMode 
 }) {
+  const { t } = useLanguage();
   const [activeRegionFilter, setActiveRegionFilter] = useState("ALL INDIA");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -31,9 +33,9 @@ export default function StateReadinessMatrix({
         <div className="flex items-center gap-2">
           <Building2 size={16} className="text-blue-700" />
           <div>
-            <h3 className="section-heading">STATE &amp; UNION TERRITORY RESILIENCE &amp; READINESS MATRIX</h3>
+            <h3 className="section-heading">{t("STATE & UNION TERRITORY RESILIENCE & READINESS MATRIX")}</h3>
             <span className="text-[10px] text-slate-500 font-mono">
-              36 States &amp; UTs • National Emergency Operations Center (NEOC) Inter-Agency Telemetry
+              {t("36 States & UTs • National Emergency Operations Center (NEOC) Inter-Agency Telemetry")}
             </span>
           </div>
         </div>
@@ -43,13 +45,13 @@ export default function StateReadinessMatrix({
             <Search size={13} className="text-slate-400" />
             <input
               type="text"
-              placeholder="Search state, capital..."
+              placeholder={t("Search state, capital...")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="normal-search-input"
             />
           </div>
-          <span className="badge-provenance text-[10px]">PAN-INDIA REGISTRY</span>
+          <span className="badge-provenance text-[10px]">{t("PAN-INDIA REGISTRY")}</span>
         </div>
       </div>
 
@@ -62,7 +64,7 @@ export default function StateReadinessMatrix({
             className={`region-tab-chip font-mono ${activeRegionFilter === reg ? "active" : ""}`}
             onClick={() => setActiveRegionFilter(reg)}
           >
-            {reg}
+            {t(reg)}
           </button>
         ))}
       </div>
@@ -71,15 +73,15 @@ export default function StateReadinessMatrix({
         <table className="normal-data-table">
           <thead>
             <tr>
-              <th>REGION</th>
-              <th>STATE / UT</th>
-              <th>HAZARD STATUS</th>
-              <th>DISTRICTS</th>
-              <th>CRITICAL ASSETS</th>
-              <th>PREPAREDNESS PROTOCOL</th>
-              <th>DATA HEALTH</th>
-              <th>LAST UPDATE</th>
-              <th>ACTION</th>
+              <th>{t("REGION")}</th>
+              <th>{t("STATE / UT")}</th>
+              <th>{t("HAZARD STATUS")}</th>
+              <th>{t("DISTRICTS")}</th>
+              <th>{t("CRITICAL ASSETS")}</th>
+              <th>{t("PREPAREDNESS PROTOCOL")}</th>
+              <th>{t("DATA HEALTH")}</th>
+              <th>{t("LAST UPDATE")}</th>
+              <th>{t("ACTION")}</th>
             </tr>
           </thead>
           <tbody>
@@ -94,69 +96,69 @@ export default function StateReadinessMatrix({
                   onClick={() => onSelectState(s)}
                 >
                   <td className="font-mono text-[10px] text-slate-500 font-bold whitespace-nowrap">
-                    {s.region}
+                    {t(s.region)}
                   </td>
                   <td>
                     <div className="flex items-center gap-1.5">
                       <MapPin size={12} className={isConnected ? "text-blue-600" : "text-slate-400"} />
-                      <strong className="text-slate-900 text-xs">{s.name}</strong>
-                      <span className="text-[9px] px-1 bg-slate-100 text-slate-500 rounded font-mono">{s.type}</span>
+                      <strong className="text-slate-900 text-xs">{t(s.name)}</strong>
+                      <span className="text-[9px] px-1 bg-slate-100 text-slate-500 rounded font-mono">{t(s.type)}</span>
                     </div>
                     <span className="text-[9.5px] font-mono text-slate-500 block ml-4">
-                      Capital: {s.capital}
+                      {t("Capital:")} {t(s.capital)}
                     </span>
                   </td>
                   <td>
                     {isConnected ? (
                       <span className="status-pill-normal font-mono">
                         <span className="pill-dot-green"></span>
-                        ROUTINE (PILOT)
+                        {t("ROUTINE (PILOT)")}
                       </span>
                     ) : (
                       <span className="status-pill-pending font-mono">
                         <HelpCircle size={10} className="text-slate-400" />
-                        SURVEILLANCE
+                        {t("SURVEILLANCE")}
                       </span>
                     )}
                   </td>
                   <td className="font-mono text-xs">
                     {isConnected ? (
                       <span className="text-blue-700 font-bold">
-                        {s.monitoredDistrictsCount} Monitored / {s.totalDistrictsCount} Total
+                        {s.monitoredDistrictsCount} {t("Monitored")} / {s.totalDistrictsCount} {t("Total")}
                       </span>
                     ) : (
                       <span className="text-slate-400">
-                        N/A ({s.totalDistrictsCount} Total)
+                        N/A ({s.totalDistrictsCount} {t("Total")})
                       </span>
                     )}
                   </td>
                   <td className="font-mono text-xs">
                     {isConnected ? (
-                      <span className="text-slate-900 font-bold">11 Assets Connected</span>
+                      <span className="text-slate-900 font-bold">{t("11 Assets Connected")}</span>
                     ) : (
-                      <span className="text-slate-400">N/A (Pending)</span>
+                      <span className="text-slate-400">{t("N/A (Pending)")}</span>
                     )}
                   </td>
                   <td>
                     <span className={`text-[10.5px] font-mono font-medium ${isConnected ? "text-emerald-700" : "text-slate-600"}`}>
-                      {isConnected ? "LEVEL 1 READY (ODRAF/NDRF)" : "STATE EOC STANDBY"}
+                      {t(isConnected ? "LEVEL 1 READY (ODRAF/NDRF)" : "STATE EOC STANDBY")}
                     </span>
                   </td>
                   <td>
                     {isConnected ? (
                       <span className="text-[10px] font-mono text-emerald-700 font-bold flex items-center gap-1">
                         <CheckCircle2 size={11} />
-                        BACKEND ONLINE
+                        {t("BACKEND ONLINE")}
                       </span>
                     ) : (
                       <span className="text-[10px] font-mono text-slate-400 flex items-center gap-1">
                         <HelpCircle size={10} />
-                        STAGE 2 INGESTION
+                        {t("STAGE 2 INGESTION")}
                       </span>
                     )}
                   </td>
                   <td className="font-mono text-xs text-slate-600">
-                    {isConnected ? "06:00 IST Today" : "—"}
+                    {isConnected ? t("06:00 IST Today") : "—"}
                   </td>
                   <td>
                     {isConnected ? (
@@ -169,7 +171,7 @@ export default function StateReadinessMatrix({
                             onSelectState(s);
                           }}
                         >
-                          EXPLORE
+                          {t("EXPLORE")}
                         </button>
                         <button
                           type="button"
@@ -180,7 +182,7 @@ export default function StateReadinessMatrix({
                           }}
                           title="Launch Cyclone Remal Simulation for this region"
                         >
-                          <span>REMAL</span>
+                          <span>{t("REMAL")}</span>
                           <ArrowRight size={10} />
                         </button>
                       </div>

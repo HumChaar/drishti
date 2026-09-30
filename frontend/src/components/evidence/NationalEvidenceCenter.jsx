@@ -11,8 +11,11 @@ import {
   CheckCircle2, 
   Info 
 } from "lucide-react";
+import { useLanguage } from "../../language";
 
 export default function NationalEvidenceCenter() {
+  const { t } = useLanguage();
+
   const evidenceCategories = [
     {
       id: "meteorology",
@@ -101,75 +104,91 @@ export default function NationalEvidenceCenter() {
       icon: Waves,
       sources: [
         {
-          name: "CWC River Gauge Telemetry Network",
+          name: "CWC Riverine Gauging & Basin Telemetry Network",
           provenance: "OBSERVED",
-          coverage: "Subarnarekha, Baitarani, Brahmani, and Hooghly Basins",
-          latency: "Hourly",
-          telemetry: "River stage levels (meters above danger mark), discharge discharge rate (cumecs)",
-          status: "STAGE 2 PAN-INDIA EXPANSION"
+          coverage: "Subarnarekha, Baitarani, Brahmani River Basins",
+          latency: "1 Hour",
+          telemetry: "Water discharge level (meters above danger level), peak crest forecast",
+          status: "INTEGRATED IN INUNDATION"
         },
         {
-          name: "Derived Coastal Inundation Footprint",
-          provenance: "SIMULATED",
-          coverage: "8 Coastal Pilot Districts",
-          latency: "Static Step Replay",
-          telemetry: "Probabilistic coastal inundation envelope based on surge, elevation & dike buffer",
-          status: "CALIBRATED HISTORICAL SIMULATION"
+          name: "SeqFormer Spatio-Temporal Inundation Inference",
+          provenance: "DERIVED",
+          coverage: "Low-Lying Estuarine Flood Zones (8 Districts)",
+          latency: "On-Demand Model Inference",
+          telemetry: "Pixel-level water likelihood logits, rasterized water boundaries, depth envelope",
+          status: "PIPELINE CONNECTED"
         }
       ]
     },
     {
       id: "terrain",
-      name: "TERRAIN & ELEVATION",
-      leadAgency: "Survey of India (SOI) / NRSC Cartosat",
+      name: "ELEVATION & GEOMORPHOLOGY",
+      leadAgency: "Survey of India (SoI) / Cartosat-1 DEM",
       icon: Mountain,
       sources: [
         {
-          name: "SRTM 30m Digital Elevation Model (DEM) & Cartosat-1",
+          name: "ISRO CartoDEM (30-meter High Resolution Digital Elevation Model)",
           provenance: "OBSERVED",
-          coverage: "All India Coverage",
+          coverage: "Eastern Coastal Plain of India",
           latency: "Static Baseline",
-          telemetry: "Mean sea level elevation (MSL), micro-topographical slope, low-lying depression grids",
-          status: "ACTIVE IN RISK ENGINE"
+          telemetry: "True ground surface elevation above mean sea level (MSL), micro-relief gradients",
+          status: "LOCAL STATIC CACHE"
+        },
+        {
+          name: "Coastal Slope & Tidal Ingress Attenuation Index",
+          provenance: "DERIVED",
+          coverage: "10 km Intertidal Coastal Buffer",
+          latency: "Precomputed Matrix",
+          telemetry: "Topographic slope angle, natural storm surge dissipation coefficient",
+          status: "ACTIVE IN RISK FORMULA"
         }
       ]
     },
     {
       id: "landcover",
-      name: "LAND COVER & BIO-SHIELD BUFFER",
-      leadAgency: "Forest Survey of India (FSI) & NRSC",
+      name: "LAND USE & NATURE-BASED DEFENSES",
+      leadAgency: "Forest Survey of India (FSI) & NRSC LULC",
       icon: Trees,
       sources: [
         {
-          name: "National LULC 1:50,000 Classification & Mangrove Mapping",
+          name: "Bhuvan 1:50,000 Land Use / Land Cover Vector Maps",
+          provenance: "OBSERVED",
+          coverage: "Odisha & West Bengal Coastal Districts",
+          latency: "Annual Revision",
+          telemetry: "Dense mangrove cover, coastal casuarina shelterbelts, agricultural vs settlement parcels",
+          status: "LOCAL SPATIAL DATABASE"
+        },
+        {
+          name: "Mangrove Surge Attenuation Dampening Factor",
           provenance: "DERIVED",
-          coverage: "Bhitarkanika & Sundarbans Biosphere Reserves",
-          latency: "Annual Review",
-          telemetry: "Dense mangrove density index, coastal bio-shield attenuation factor (reduces wave energy by 25-40%)",
+          coverage: "Sundarbans Biosphere & Bhitarkanika National Park",
+          latency: "Static Geospatial Layer",
+          telemetry: "Wave attenuation reduction percentage (30-50% surge energy dissipation)",
           status: "INTEGRATED IN RISK WEIGHTS"
         }
       ]
     },
     {
-      id: "infrastructure",
-      name: "CRITICAL INFRASTRUCTURE ASSETS",
-      leadAgency: "OSDMA, WB-DMD, MoRTH, CEA, MoHFW",
+      id: "infra",
+      name: "CRITICAL INFRASTRUCTURE REPOSITORY",
+      leadAgency: "NDMA / SDMA (OSDMA & WBSDMA)",
       icon: Anchor,
       sources: [
         {
-          name: "State Disaster Management Authority Asset GIS Registers",
+          name: "State Disaster Management GIS Asset Database",
           provenance: "OBSERVED",
-          coverage: "11 High-Value Assets in Pilot Arc (Ports, Hospitals, Power, Shelters)",
-          latency: "Operational Audit",
-          telemetry: "Asset geo-coordinates, elevation, structural resilience rating, backup genset capacity",
-          status: "LIVE BACKEND API"
+          coverage: "Major Ports, 400kV Power Substations, District Hospitals, Multi-Purpose Cyclone Shelters",
+          latency: "Weekly Operational Sync",
+          telemetry: "Verified latitude/longitude, structural surge clearance, backup diesel generator hours",
+          status: "API CONNECTED"
         }
       ]
     },
     {
-      id: "population",
-      name: "POPULATION & HUMAN EXPOSURE",
-      leadAgency: "Office of the Registrar General & Census Commissioner / WorldPop",
+      id: "socioeconomic",
+      name: "SOCIO-ECONOMIC VULNERABILITY & DEMOGRAPHY",
+      leadAgency: "Office of the Registrar General & Census Commissioner",
       icon: Users,
       sources: [
         {
@@ -191,16 +210,16 @@ export default function NationalEvidenceCenter() {
         <div className="flex items-center gap-2">
           <Database size={16} className="text-blue-700" />
           <div>
-            <h3 className="section-heading">NATIONAL EVIDENCE &amp; MULTI-MODAL DATA SOURCES</h3>
+            <h3 className="section-heading">{t("NATIONAL EVIDENCE & MULTI-MODAL DATA SOURCES")}</h3>
             <span className="text-[10px] text-slate-500 font-mono">
-              Strict Provenance Classification: OBSERVED (Sensors) • DERIVED (Analytical Models) • SIMULATED (Scenario Step)
+              {t("Strict Provenance Classification: OBSERVED (Sensors) • DERIVED (Analytical Models) • SIMULATED (Scenario Step)")}
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="badge-provenance text-[10px]">
-            DATA INTEGRITY ASSURED
+            {t("DATA INTEGRITY ASSURED")}
           </span>
         </div>
       </div>
@@ -209,7 +228,7 @@ export default function NationalEvidenceCenter() {
       <div className="p-3 bg-blue-50/50 border-b border-blue-100 flex items-center gap-2 text-xs font-mono text-slate-700">
         <Info size={14} className="text-blue-700 flex-shrink-0" />
         <span>
-          <strong>Government-Grade Provenance Standard:</strong> DRISHTI never blurs the boundary between empirical observations and simulation models. AI reasoning engines consume these verified evidence chains to synthesize advisories without altering deterministic numerical risk scores.
+          <strong>{t("Government-Grade Provenance Standard:")}</strong> {t("DRISHTI never blurs the boundary between empirical observations and simulation models. AI reasoning engines consume these verified evidence chains to synthesize advisories without altering deterministic numerical risk scores.")}
         </span>
       </div>
 
@@ -225,13 +244,13 @@ export default function NationalEvidenceCenter() {
                   <span className="p-1 bg-white border border-slate-200 rounded text-blue-700">
                     <Icon size={14} />
                   </span>
-                  <strong className="text-xs font-bold text-slate-900">{cat.name}</strong>
+                  <strong className="text-xs font-bold text-slate-900">{t(cat.name)}</strong>
                   <span className="text-[10px] text-slate-500 font-mono">
-                    • Lead Authority: {cat.leadAgency}
+                    • {t("Lead Authority:")} {t(cat.leadAgency)}
                   </span>
                 </div>
                 <span className="text-[10.5px] font-mono font-bold text-slate-600">
-                  {cat.sources.length} Data Feeds
+                  {cat.sources.length} {t("Data Feeds")}
                 </span>
               </div>
 
@@ -248,30 +267,30 @@ export default function NationalEvidenceCenter() {
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-1 mb-1">
                         <div className="flex items-center gap-2">
                           <CheckCircle2 size={13} className="text-blue-600 flex-shrink-0" />
-                          <span className="text-xs font-bold text-slate-900">{src.name}</span>
+                          <span className="text-xs font-bold text-slate-900">{t(src.name)}</span>
                         </div>
                         <div className="flex items-center gap-1.5 font-mono text-[10px]">
                           <span className={`px-2 py-0.5 rounded border font-bold ${provBadgeClass}`}>
-                            {src.provenance}
+                            {t(src.provenance)}
                           </span>
                           <span className="px-1.5 py-0.5 bg-slate-100 text-slate-700 border border-slate-200 rounded font-semibold">
-                            {src.status}
+                            {t(src.status)}
                           </span>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] font-mono text-slate-600 mt-2 pt-1 border-t border-slate-100">
                         <div>
-                          <span className="text-slate-400 block text-[9.5px]">GEOGRAPHIC COVERAGE</span>
-                          <span>{src.coverage}</span>
+                          <span className="text-slate-400 block text-[9.5px]">{t("GEOGRAPHIC COVERAGE")}</span>
+                          <span>{t(src.coverage)}</span>
                         </div>
                         <div>
-                          <span className="text-slate-400 block text-[9.5px]">INGESTION LATENCY</span>
-                          <span>{src.latency}</span>
+                          <span className="text-slate-400 block text-[9.5px]">{t("INGESTION LATENCY")}</span>
+                          <span>{t(src.latency)}</span>
                         </div>
                         <div>
-                          <span className="text-slate-400 block text-[9.5px]">TELEMETRY PAYLOAD</span>
-                          <span className="text-slate-800 font-sans text-xs">{src.telemetry}</span>
+                          <span className="text-slate-400 block text-[9.5px]">{t("TELEMETRY PAYLOAD")}</span>
+                          <span className="text-slate-800 font-sans text-xs">{t(src.telemetry)}</span>
                         </div>
                       </div>
                     </div>

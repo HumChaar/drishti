@@ -18,6 +18,9 @@ import {
 } from "lucide-react";
 import StateSelector from "../national/StateSelector";
 import NotificationCenter from "./NotificationCenter";
+import { useLanguage } from "../../language";
+import LanguageSelector from "../../language/LanguageSelector";
+
 
 export default function Header({
   activeTab,
@@ -31,12 +34,14 @@ export default function Header({
   onOpenDrawer,
   unreadNotificationsCount = 0
 }) {
+  const { t } = useLanguage();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
 
   const formatISTDate = (date) => {
     const day = date.toLocaleDateString("en-GB", {
@@ -104,23 +109,23 @@ export default function Header({
       {/* 2. Top Government Authority & Dynamic IST Clock Strip */}
       <div className="gov-top-bar">
         <div className="gov-title-wrap">
-          <span className="gov-national-tag">GOVERNMENT OF INDIA</span>
+          <span className="gov-national-tag">{t("GOVERNMENT OF INDIA")}</span>
           <span className="gov-separator">|</span>
-          <span className="gov-subtag">MINISTRY OF EARTH SCIENCES (MoES)</span>
+          <span className="gov-subtag">{t("MINISTRY OF EARTH SCIENCES (MoES)")}</span>
           <span className="gov-separator">|</span>
-          <span className="gov-portal-tag">INDIA METEOROLOGICAL DEPARTMENT (IMD)</span>
+          <span className="gov-portal-tag">{t("INDIA METEOROLOGICAL DEPARTMENT (IMD)")}</span>
         </div>
 
         <div className="gov-meta-wrap">
           {operatingMode === "DISASTER" ? (
             <div className="badge-provenance">
               <Radio size={11} className="text-amber-600 animate-pulse" />
-              <span>ACTIVE EVENT: CYCLONE REMAL 2024 (HISTORICAL SIMULATION • BAY OF BENGAL ARC)</span>
+              <span>{t("ACTIVE EVENT: CYCLONE REMAL 2024 (HISTORICAL SIMULATION • BAY OF BENGAL ARC)")}</span>
             </div>
           ) : (
             <div className="badge-normal-status">
               <span className="normal-pulse-dot" />
-              <span>NATIONAL MONITORING • ALL INDIA • ROUTINE SURVEILLANCE</span>
+              <span>{t("NATIONAL MONITORING • ALL INDIA • ROUTINE SURVEILLANCE")}</span>
             </div>
           )}
           <div className="eoc-clock">
@@ -143,7 +148,7 @@ export default function Header({
             />
             <div className="entity-text">
               <span className="entity-hindi">भारत सरकार</span>
-              <span className="entity-en-primary">Government of India</span>
+              <span className="entity-en-primary">{t("Government of India")}</span>
             </div>
           </div>
 
@@ -158,8 +163,8 @@ export default function Header({
             />
             <div className="entity-text">
               <span className="entity-hindi">भारत मौसम विज्ञान विभाग</span>
-              <span className="entity-en-primary font-bold">INDIA METEOROLOGICAL DEPARTMENT</span>
-              <span className="entity-en-sub">Ministry of Earth Sciences</span>
+              <span className="entity-en-primary font-bold">{t("INDIA METEOROLOGICAL DEPARTMENT (IMD)")}</span>
+              <span className="entity-en-sub">{t("Ministry of Earth Sciences")}</span>
             </div>
           </div>
         </div>
@@ -170,14 +175,14 @@ export default function Header({
             <div className="brand-header-line">
               <h1 className="brand-acronym">DRISHTI</h1>
               <span className="badge-prototype">
-                RESEARCH / DECISION-SUPPORT PROTOTYPE
+                {t("RESEARCH / DECISION-SUPPORT PROTOTYPE")}
               </span>
             </div>
             <div className="brand-fullname">
-              Disaster Risk Intelligence &amp; Spatial Threat Insights
+              {t("Disaster Risk Intelligence & Spatial Threat Insights")}
             </div>
             <div className="brand-caption font-mono">
-              National Multi-Hazard Decision Support System • MoES &amp; IMD Standards
+              {t("National Multi-Hazard Decision Support System • MoES & IMD Standards")}
             </div>
           </div>
         </div>
@@ -194,7 +199,7 @@ export default function Header({
             <div className="entity-text">
               <span className="entity-hindi">राष्ट्रीय आपदा प्रबंधन प्राधिकरण</span>
               <span className="entity-en-primary font-bold">NDMA</span>
-              <span className="entity-en-sub">Govt. of India</span>
+              <span className="entity-en-sub">{t("Govt. of India")}</span>
             </div>
           </div>
 
@@ -212,7 +217,7 @@ export default function Header({
           <div className="system-status-indicator" title={backendStatus === "ONLINE" ? "FastAPI Backend Connected" : "Local Simulation Fallback Active"}>
             <span className={`status-beacon ${backendStatus === "ONLINE" ? "online" : "fallback"}`} />
             <span className="status-beacon-text font-mono">
-              {backendStatus === "ONLINE" ? "API ONLINE" : "DEMO"}
+              {backendStatus === "ONLINE" ? t("API ONLINE") : t("DEMO")}
             </span>
           </div>
         </div>
@@ -233,13 +238,16 @@ export default function Header({
                 title={`${item.label} Operational Workspace`}
               >
                 <Icon size={13} />
-                <span>{item.label}</span>
+                <span>{t(item.label)}</span>
               </button>
             );
           })}
         </div>
 
         <div className="nav-secondary">
+          {/* Multi-Hazard Emergency Language Selector */}
+          <LanguageSelector />
+
           {/* Pan-India State / UT Selector */}
           <StateSelector
             selectedState={selectedState}
@@ -257,7 +265,7 @@ export default function Header({
                 title="Normal Operations: Routine National Hazard Monitoring & Preparedness"
               >
                 <span className="mode-dot normal-dot" />
-                <span>NORMAL OPERATIONS</span>
+                <span>{t("NORMAL OPERATIONS")}</span>
               </button>
               <button
                 type="button"
@@ -267,12 +275,13 @@ export default function Header({
                 title="Cyclone / Disaster Response: Active Emergency Early Warning & Decision Support"
               >
                 <span className="mode-dot disaster-dot" />
-                <span>⚠ CYCLONE / DISASTER RESPONSE</span>
+                <span>{t("⚠ CYCLONE / DISASTER RESPONSE")}</span>
               </button>
             </div>
           </div>
         </div>
       </nav>
+
     </header>
   );
 }

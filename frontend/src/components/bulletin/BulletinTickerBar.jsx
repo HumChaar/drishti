@@ -6,6 +6,7 @@ import {
   Database
 } from "lucide-react";
 import { ACTIVE_BULLETINS } from "../../services/imdAlertService";
+import { useLanguage } from "../../language";
 
 /**
  * IMD Operational Meteorological Bulletin Ticker & Command Action Bar
@@ -16,7 +17,9 @@ export default function BulletinTickerBar({
   nextRefreshMinutes = 10,
   activeDepression: _activeDepression
 }) {
+  const { t } = useLanguage();
   const [tickerIndex, setTickerIndex] = useState(0);
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,7 +41,7 @@ export default function BulletinTickerBar({
         >
           <span className="ticker-pulse-beacon" />
           <Radio size={13} className="text-blue-600 animate-pulse" />
-          <span className="font-mono font-bold text-xs text-blue-950">IMD BULLETIN</span>
+          <span className="font-mono font-bold text-xs text-blue-950">{t("IMD BULLETIN")}</span>
         </button>
 
         <div 
@@ -50,10 +53,10 @@ export default function BulletinTickerBar({
             [{currentBulletin.bulletinNo}]
           </span>
           <span className="bulletin-headline text-xs font-semibold text-slate-900 truncate">
-            {currentBulletin.headline}
+            {t(currentBulletin.headline)}
           </span>
           <span className="bulletin-region-tag font-mono text-[10.5px] text-slate-500 hidden lg:inline">
-            • {currentBulletin.region}
+            • {t(currentBulletin.region)}
           </span>
         </div>
       </div>
@@ -68,7 +71,7 @@ export default function BulletinTickerBar({
             title="Open IMD Bulletins Archive"
           >
             <Radio size={12} className="text-blue-600" />
-            <span>BULLETINS</span>
+            <span>{t("BULLETINS")}</span>
           </button>
 
           <button
@@ -78,7 +81,7 @@ export default function BulletinTickerBar({
             title="Open INSAT-3DS Satellite Viewer"
           >
             <Satellite size={12} className="text-cyan-600" />
-            <span>SATELLITE</span>
+            <span>{t("SATELLITE")}</span>
           </button>
 
           <button
@@ -88,7 +91,7 @@ export default function BulletinTickerBar({
             title="Open IMD Weather Warnings"
           >
             <AlertTriangle size={12} className="text-amber-600" />
-            <span>WARNINGS</span>
+            <span>{t("WARNINGS")}</span>
           </button>
 
           <button
@@ -98,15 +101,15 @@ export default function BulletinTickerBar({
             title="Open Data Provenance & Authoritative Sources"
           >
             <Database size={12} className="text-slate-600" />
-            <span>SOURCES</span>
+            <span>{t("SOURCES")}</span>
           </button>
         </div>
 
         {/* Telemetry Refresh Status */}
         <div className="telemetry-refresh-block font-mono text-[10px] text-slate-500">
-          <span className="text-slate-700 font-semibold">UPDATED: {lastUpdatedFormatted}</span>
+          <span className="text-slate-700 font-semibold">{t("UPDATED:")} {lastUpdatedFormatted}</span>
           <span className="text-slate-300">•</span>
-          <span>NEXT: {nextRefreshMinutes}m</span>
+          <span>{t("NEXT:")} {nextRefreshMinutes}m</span>
         </div>
       </div>
     </footer>

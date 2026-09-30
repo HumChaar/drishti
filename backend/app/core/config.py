@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     # Stage 6: Gemini Reasoning Configuration (Key retrieved via environment variable only)
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest")
 
     # CORS origins: configurable via comma-separated string or list in env
     ALLOWED_ORIGINS: Union[List[str], str] = [

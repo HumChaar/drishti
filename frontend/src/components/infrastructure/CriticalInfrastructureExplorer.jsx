@@ -13,8 +13,10 @@ import {
   Truck,
   Info
 } from "lucide-react";
+import { useLanguage } from "../../language";
 
 export default function CriticalInfrastructureExplorer({ infraData = [] }) {
+  const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -73,9 +75,9 @@ export default function CriticalInfrastructureExplorer({ infraData = [] }) {
         <div className="flex items-center gap-2">
           <Anchor size={16} className="text-blue-700" />
           <div>
-            <h3 className="section-heading">NATIONAL CRITICAL INFRASTRUCTURE REPOSITORY</h3>
+            <h3 className="section-heading">{t("NATIONAL CRITICAL INFRASTRUCTURE REPOSITORY")}</h3>
             <span className="text-[10px] text-slate-500 font-mono">
-              Geo-Spatial Asset Vulnerability, Backup Power Redundancy &amp; Continuous Telemetry
+              {t("Geo-Spatial Asset Vulnerability, Backup Power Redundancy & Continuous Telemetry")}
             </span>
           </div>
         </div>
@@ -85,14 +87,14 @@ export default function CriticalInfrastructureExplorer({ infraData = [] }) {
             <Search size={13} className="text-slate-400" />
             <input
               type="text"
-              placeholder="Search asset, district, port..."
+              placeholder={t("Search asset, district, port...")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="normal-search-input"
             />
           </div>
           <span className="badge-provenance text-[10px]">
-            PILOT NETWORK: {infraData.length} VERIFIED ASSETS
+            {t("PILOT NETWORK: {count} VERIFIED ASSETS", { count: infraData.length })}
           </span>
         </div>
       </div>
@@ -106,7 +108,7 @@ export default function CriticalInfrastructureExplorer({ infraData = [] }) {
             className={`filter-chip font-mono text-xs ${activeFilter === f.id ? "active" : ""}`}
             onClick={() => setActiveFilter(f.id)}
           >
-            {f.label}
+            {t(f.label)}
           </button>
         ))}
       </div>
@@ -115,7 +117,7 @@ export default function CriticalInfrastructureExplorer({ infraData = [] }) {
       <div className="p-3 bg-blue-50/50 border-b border-blue-100 flex items-center gap-2 text-xs font-mono text-slate-700">
         <Info size={14} className="text-blue-700 flex-shrink-0" />
         <span>
-          <strong>Source of Truth:</strong> Displaying {filteredAssets.length} verified critical infrastructure assets ingested from OSDMA, WB-SEB, Paradip Port Trust &amp; MoHFW for the Odisha-WB coastal sector. Pan-India national asset telemetry (Airports, Railways, Dams, Telecom) is scheduled for Stage 2 integration without fabricated counts.
+          <strong>{t("Source of Truth:")}</strong> {t("Displaying {count} verified critical infrastructure assets ingested from OSDMA, WB-SEB, Paradip Port Trust & MoHFW for the Odisha-WB coastal sector. Pan-India national asset telemetry (Airports, Railways, Dams, Telecom) is scheduled for Stage 2 integration without fabricated counts.", { count: filteredAssets.length })}
         </span>
       </div>
 
@@ -123,9 +125,9 @@ export default function CriticalInfrastructureExplorer({ infraData = [] }) {
       <div className="p-4 bg-white border border-slate-200 rounded-b">
         {filteredAssets.length === 0 ? (
           <div className="p-8 text-center text-slate-500 font-mono text-xs">
-            No infrastructure assets found matching &quot;{activeFilter}&quot; in the active pilot corridor.
+            {t("No infrastructure assets found matching \"{filter}\" in the active pilot corridor.", { filter: t(activeFilter) })}
             <div className="text-slate-400 mt-1">
-              National telemetry for this category is scheduled for Stage 2 Pan-India ingestion.
+              {t("National telemetry for this category is scheduled for Stage 2 Pan-India ingestion.")}
             </div>
           </div>
         ) : (
@@ -148,36 +150,36 @@ export default function CriticalInfrastructureExplorer({ infraData = [] }) {
                       </span>
                       <div>
                         <h4 className="text-xs font-bold text-slate-900 leading-tight">
-                          {asset.name}
+                          {t(asset.name)}
                         </h4>
                         <span className="text-[10px] text-slate-500 font-mono">
-                          {asset.type} • {asset.districtId}
+                          {t(asset.type)} • {asset.districtId}
                         </span>
                       </div>
                     </div>
                     <span className="text-[9.5px] px-1.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-bold rounded">
-                      {asset.status || "OPERATIONAL"}
+                      {t(asset.status || "OPERATIONAL")}
                     </span>
                   </div>
 
                   <p className="text-[11px] text-slate-600 mb-2 leading-relaxed font-sans">
-                    {asset.details}
+                    {t(asset.details)}
                   </p>
 
                   <div className="pt-2 border-t border-slate-100 grid grid-cols-2 gap-1 text-[10px] font-mono">
                     <div>
-                      <span className="text-slate-400 block">CAPACITY / METRIC</span>
-                      <strong className="text-slate-700">{asset.capacityMetric || "Capacity nominal"}</strong>
+                      <span className="text-slate-400 block">{t("CAPACITY / METRIC")}</span>
+                      <strong className="text-slate-700">{asset.capacityMetric ? t(asset.capacityMetric) : t("Capacity nominal")}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-400 block">BACKUP POWER</span>
-                      <strong className="text-emerald-700">100% FUEL DIESEL GENSET</strong>
+                      <span className="text-slate-400 block">{t("BACKUP POWER")}</span>
+                      <strong className="text-emerald-700">{t("100% FUEL DIESEL GENSET")}</strong>
                     </div>
                   </div>
 
                   <div className="mt-2 flex items-center justify-between text-[9.5px] font-mono text-slate-400 pt-1 border-t border-slate-100">
-                    <span>COORDS: {asset.lat.toFixed(2)}°N, {asset.lon.toFixed(2)}°E</span>
-                    <span className="text-blue-700 font-bold">VERIFIED ASSET</span>
+                    <span>{t("COORDS:")} {asset.lat.toFixed(2)}°N, {asset.lon.toFixed(2)}°E</span>
+                    <span className="text-blue-700 font-bold">{t("VERIFIED ASSET")}</span>
                   </div>
                 </div>
               );

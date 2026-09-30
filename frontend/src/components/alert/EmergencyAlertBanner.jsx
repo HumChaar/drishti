@@ -9,6 +9,7 @@ import {
   Info
 } from "lucide-react";
 import { ACTIVE_EMERGENCY_ALERTS } from "../../services/imdAlertService";
+import { useLanguage } from "../../language";
 
 export default function EmergencyAlertBanner({
   alerts = ACTIVE_EMERGENCY_ALERTS,
@@ -16,7 +17,9 @@ export default function EmergencyAlertBanner({
   onLaunchDisasterMode,
   onFocusSituation
 }) {
+  const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const [isDismissed, setIsDismissed] = useState(false);
 
   const activeAlerts = alerts && alerts.length > 0 ? alerts : ACTIVE_EMERGENCY_ALERTS;
@@ -85,10 +88,10 @@ export default function EmergencyAlertBanner({
         <div className="alert-left-group">
           <span className="alert-icon-wrap">{style.icon}</span>
           <span className={`alert-severity-pill ${style.badgeClass}`}>
-            {alert.severity}
+            {t(alert.severity)}
           </span>
           <span className="alert-title font-bold text-slate-900">
-            {alert.title}
+            {t(alert.title)}
           </span>
           <span className="alert-divider-dot text-slate-300">•</span>
           <span className="alert-region font-mono text-xs text-slate-700 font-semibold truncate">
@@ -130,9 +133,10 @@ export default function EmergencyAlertBanner({
             className="alert-action-btn font-mono"
             onClick={handleAction}
           >
-            <span>{alert.action || "VIEW SITUATION"}</span>
+            <span>{t(alert.action || "VIEW SITUATION")}</span>
             <ExternalLink size={11} />
           </button>
+
 
           {/* Dismiss button */}
           <button

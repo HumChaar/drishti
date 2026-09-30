@@ -11,6 +11,7 @@ import {
   Info,
   CheckCircle2
 } from "lucide-react";
+import { useLanguage } from "../../language";
 
 /**
  * DRISHTI Command Activity Log Component
@@ -25,6 +26,7 @@ export default function ActivityLog({
   entries = [],
   className = ""
 }) {
+  const { t } = useLanguage();
   const [filter, setFilter] = useState("ALL");
   const [expandedId, setExpandedId] = useState(null);
 
@@ -106,10 +108,10 @@ export default function ActivityLog({
       <div className="activity-panel-header">
         <div className="flex items-center gap-2">
           <Clock size={15} className="text-slate-700" />
-          <h3 className="activity-panel-title">NATIONAL OPERATIONS LOG</h3>
+          <h3 className="activity-panel-title">{t("NATIONAL OPERATIONS LOG")}</h3>
         </div>
         <span className="badge-activity-simulation">
-          INTER-AGENCY INCIDENT AUDIT
+          {t("INTER-AGENCY INCIDENT AUDIT")}
         </span>
       </div>
 
@@ -118,8 +120,8 @@ export default function ActivityLog({
         <div className="flex items-start gap-2">
           <Info size={14} className="text-slate-500 shrink-0 mt-0.5" />
           <div className="text-[11px] leading-tight text-slate-600">
-            <strong className="text-slate-800 uppercase font-mono">National Operations Log:</strong>
-            {" "}Chronological log of verified multi-hazard alerts, AI reasoning advisories, and authorized commander directives recorded during the current operational session.
+            <strong className="text-slate-800 uppercase font-mono">{t("National Operations Log:")}</strong>
+            {" "}{t("Chronological log of verified multi-hazard alerts, AI reasoning advisories, and authorized commander directives recorded during the current operational session.")}
           </div>
         </div>
       </div>
@@ -127,19 +129,19 @@ export default function ActivityLog({
       {/* Command Center Summary */}
       <div className="command-status-kpi-grid">
         <div className="status-kpi-item">
-          <span className="status-kpi-label">ADVISORIES GEN</span>
+          <span className="status-kpi-label">{t("ADVISORIES GEN")}</span>
           <span className="status-kpi-val font-mono text-orange-700">{sessionStats.generated}</span>
         </div>
         <div className="status-kpi-item">
-          <span className="status-kpi-label">UNDER REVIEW</span>
+          <span className="status-kpi-label">{t("UNDER REVIEW")}</span>
           <span className="status-kpi-val font-mono text-amber-700">{sessionStats.underReview}</span>
         </div>
         <div className="status-kpi-item">
-          <span className="status-kpi-label">APPROVED</span>
+          <span className="status-kpi-label">{t("APPROVED")}</span>
           <span className="status-kpi-val font-mono text-emerald-700">{sessionStats.approved}</span>
         </div>
         <div className="status-kpi-item">
-          <span className="status-kpi-label">DISPATCHED</span>
+          <span className="status-kpi-label">{t("DISPATCHED")}</span>
           <span className="status-kpi-val font-mono text-blue-700">{sessionStats.dispatched}</span>
         </div>
       </div>
@@ -148,14 +150,14 @@ export default function ActivityLog({
       <div className="activity-filter-toolbar">
         <div className="flex items-center gap-1 text-[11px] font-mono text-slate-500 mr-1">
           <Filter size={12} />
-          <span>FILTER:</span>
+          <span>{t("FILTER:")}</span>
         </div>
         <div className="flex items-center gap-1 flex-wrap">
           {[
-            { id: "ALL", label: `ALL (${entries.length})` },
-            { id: "AI", label: `AI (${entries.filter(e => e.category === "AI" || (e.event && e.event.startsWith("AI"))).length})` },
-            { id: "COMMAND", label: `COMMAND (${entries.filter(e => e.category === "COMMAND" || (e.event && (e.event.includes("COMMAND") || e.event.includes("DIRECTIVE") || e.event.includes("APPROVED") || e.event.includes("EDITED")))).length})` },
-            { id: "DISPATCH", label: `DISPATCH (${entries.filter(e => e.category === "DISPATCH" || (e.event && e.event.includes("DISPATCH"))).length})` }
+            { id: "ALL", label: t("ALL ({count})", { count: entries.length }) },
+            { id: "AI", label: t("AI ({count})", { count: entries.filter(e => e.category === "AI" || (e.event && e.event.startsWith("AI"))).length }) },
+            { id: "COMMAND", label: t("COMMAND ({count})", { count: entries.filter(e => e.category === "COMMAND" || (e.event && (e.event.includes("COMMAND") || e.event.includes("DIRECTIVE") || e.event.includes("APPROVED") || e.event.includes("EDITED")))).length }) },
+            { id: "DISPATCH", label: t("DISPATCH ({count})", { count: entries.filter(e => e.category === "DISPATCH" || (e.event && e.event.includes("DISPATCH"))).length }) }
           ].map((f) => (
             <button
               key={f.id}
@@ -174,8 +176,8 @@ export default function ActivityLog({
         {filteredEntries.length === 0 ? (
           <div className="activity-log-empty">
             {entries.length === 0
-              ? "No command activity recorded in this session."
-              : "No matching events for the selected filter."}
+              ? t("No command activity recorded in this session.")
+              : t("No matching events for the selected filter.")}
           </div>
         ) : (
           filteredEntries.map((entry) => {
@@ -203,7 +205,7 @@ export default function ActivityLog({
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className={`log-status-pill ${getStatusClass(entry.status)}`}>
-                      {entry.status}
+                      {t(entry.status)}
                     </span>
                     <button
                       type="button"
@@ -218,20 +220,20 @@ export default function ActivityLog({
                 {/* Event Name & Geography / Operator */}
                 <div className="activity-log-main-row flex items-center justify-between flex-wrap gap-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="log-event font-bold text-slate-900">{entry.event}</span>
+                    <span className="log-event font-bold text-slate-900">{t(entry.event)}</span>
                     <span className="px-1.5 py-0.2 bg-slate-100 text-slate-700 font-mono text-[10.5px] rounded border border-slate-200">
-                      REGION: {entry.region || entry.district || "ALL INDIA"}
+                      {t("REGION:")} {t(entry.region || entry.district || "ALL INDIA")}
                     </span>
                   </div>
                   <span className="font-mono text-[10px] text-slate-500 font-bold">
-                    OPERATOR: {entry.operator || (entry.category === "AI" ? "GEMINI REASONING AGENT" : "INCIDENT COMMANDER")}
+                    {t("OPERATOR:")} {t(entry.operator || (entry.category === "AI" ? "GEMINI REASONING AGENT" : "INCIDENT COMMANDER"))}
                   </span>
                 </div>
 
                 {/* Action / Operational Snippet */}
                 {entry.details && !isExpanded && (
                   <div className="log-details text-slate-600 text-[11px] truncate font-sans">
-                    <strong className="text-slate-700 font-mono">ACTION:</strong> {entry.details}
+                    <strong className="text-slate-700 font-mono">{t("ACTION:")}</strong> {t(entry.details)}
                   </div>
                 )}
 
@@ -240,55 +242,55 @@ export default function ActivityLog({
                   <div className="activity-details-drawer" onClick={(e) => e.stopPropagation()}>
                     <div className="activity-details-grid">
                       <div className="activity-field">
-                        <span className="activity-field-label">TIMESTAMP</span>
+                        <span className="activity-field-label">{t("TIMESTAMP")}</span>
                         <span className="activity-field-val font-mono">{entry.timestamp}</span>
                       </div>
                       <div className="activity-field">
-                        <span className="activity-field-label">EVENT TYPE</span>
-                        <span className="activity-field-val font-mono">{entry.event}</span>
+                        <span className="activity-field-label">{t("EVENT TYPE")}</span>
+                        <span className="activity-field-val font-mono">{t(entry.event)}</span>
                       </div>
                       {entry.district && (
                         <div className="activity-field">
-                          <span className="activity-field-label">DISTRICT</span>
-                          <span className="activity-field-val font-bold">{entry.district}</span>
+                          <span className="activity-field-label">{t("DISTRICT")}</span>
+                          <span className="activity-field-val font-bold">{t(entry.district)}</span>
                         </div>
                       )}
                       {entry.status && (
                         <div className="activity-field">
-                          <span className="activity-field-label">STATUS</span>
-                          <span className="activity-field-val font-mono">{entry.status}</span>
+                          <span className="activity-field-label">{t("STATUS")}</span>
+                          <span className="activity-field-val font-mono">{t(entry.status)}</span>
                         </div>
                       )}
                       {entry.audience && (
                         <div className="activity-field">
-                          <span className="activity-field-label">AUDIENCE</span>
-                          <span className="activity-field-val">{entry.audience}</span>
+                          <span className="activity-field-label">{t("AUDIENCE")}</span>
+                          <span className="activity-field-val">{t(entry.audience)}</span>
                         </div>
                       )}
                       {entry.language && (
                         <div className="activity-field">
-                          <span className="activity-field-label">LANGUAGE</span>
+                          <span className="activity-field-label">{t("LANGUAGE")}</span>
                           <span className="activity-field-val font-mono">{entry.language}</span>
                         </div>
                       )}
                       {entry.timestep && (
                         <div className="activity-field">
-                          <span className="activity-field-label">TIMESTEP</span>
+                          <span className="activity-field-label">{t("TIMESTEP")}</span>
                           <span className="activity-field-val font-mono">[{entry.timestep}]</span>
                         </div>
                       )}
                       {entry.generationType && (
                         <div className="activity-field">
-                          <span className="activity-field-label">GENERATION</span>
-                          <span className="activity-field-val font-mono">{entry.generationType}</span>
+                          <span className="activity-field-label">{t("GENERATION")}</span>
+                          <span className="activity-field-val font-mono">{t(entry.generationType)}</span>
                         </div>
                       )}
                     </div>
                     {entry.details && (
                       <div className="activity-field-full mt-2 pt-2 border-t border-slate-200">
-                        <span className="activity-field-label block mb-0.5">OPERATIONAL DETAILS</span>
+                        <span className="activity-field-label block mb-0.5">{t("OPERATIONAL DETAILS")}</span>
                         <div className="text-xs text-slate-700 bg-white p-2 rounded border border-slate-200 leading-relaxed font-sans">
-                          {entry.details}
+                          {t(entry.details)}
                         </div>
                       </div>
                     )}

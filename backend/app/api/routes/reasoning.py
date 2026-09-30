@@ -30,7 +30,8 @@ async def get_reasoning_status():
 )
 async def get_district_reasoning_advisory(
     district_id: str = Path(..., description="Unique district ID, e.g. 'od_balasore', 'od_kendrapara'"),
-    step_id: Optional[str] = Query("NOW", description="Timeline step identifier, e.g. 'NOW', '+12h'")
+    step_id: Optional[str] = Query("NOW", description="Timeline step identifier, e.g. 'NOW', '+12h'"),
+    language: Optional[str] = Query("en", description="Target language code: en, or, bn, hi, te")
 ):
     """
     Retrieves verified evidence and decision recommendations for the district,
@@ -38,7 +39,11 @@ async def get_district_reasoning_advisory(
     Risk scores and decision IDs are strictly preserved.
     """
     try:
-        advisory = gemini_service.get_advisory_for_district(district_id, step_id=step_id or "NOW")
+        advisory = gemini_service.get_advisory_for_district(
+            district_id,
+            step_id=step_id or "NOW",
+            language=language or "en"
+        )
         return advisory
     except ValueError as ve:
         raise HTTPException(status_code=404, detail=str(ve))
@@ -55,7 +60,8 @@ async def get_district_reasoning_advisory(
     summary="Generate Grounded Gemini Advisory from Structured Request"
 )
 async def generate_reasoning_advisory(
-    request: GeminiReasoningRequest = Body(..., description="Structured reasoning request payload")
+    request: GeminiReasoningRequest = Body(..., description="Structured reasoning request payload"),
+    language: Optional[str] = Query("en", description="Target language code: en, or, bn, hi, te")
 ):
     """
     Generates a grounded Gemini advisory from a pre-compiled GeminiReasoningRequest.
@@ -63,9 +69,12 @@ async def generate_reasoning_advisory(
     """
     try:
         advisory = gemini_service.generate_advisory(request)
+        if language and language.lower().strip() != "en":
+            advisory = gemini_service.translate_advisory(advisory, language)
         return advisory
     except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=f"Gemini reasoning generation failed: {str(e)}"
         )
+
