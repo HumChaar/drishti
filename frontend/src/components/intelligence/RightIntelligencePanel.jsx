@@ -336,6 +336,7 @@ export default function RightIntelligencePanel({
                     </a>
                   </div>
                 </div>
+              )}
 
               {/* State Territorial Sector Meteorological Card (Section 8 & 9) */}
               <div className="state-influence-card bg-white border border-slate-200 rounded p-3 shadow-sm">
@@ -402,6 +403,7 @@ export default function RightIntelligencePanel({
                     </div>
                     <ProvenanceBadge provenance="MODEL" size="tiny" />
                   </div>
+                )}
 
                 {/* Sourcing and Timestamps */}
                 <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[9.5px] font-mono text-slate-500">
@@ -469,9 +471,10 @@ export default function RightIntelligencePanel({
                   <div><strong>{t("PRIMARY IMPACT ARC:")}</strong> {t("South 24 Parganas, North 24 Parganas, Balasore")}</div>
                 </div>
               </div>
-            )}
-            </>
+            </div>
           )}
+        </div>
+      )}
 
           {/* Tab 2: WEATHER (Strict Dossier Format) */}
           {activeTab === "WEATHER" && (
@@ -601,80 +604,85 @@ export default function RightIntelligencePanel({
                     </h4>
                   </div>
                   <div className="text-right">
-                    <span className="text-[9.5px] font-mono text-slate-500 block">{t("RISK SCORE")}</span>
-                    <span className={`text-base font-bold font-mono ${{ activeRisk?.riskScore != null ? `${activeRisk.riskScore}/100` : "22/100"}
-                  </span>
+                    <span className={`text-base font-bold font-mono ${
+                      activeRisk?.riskScore >= 70 ? "text-red-700" :
+                      activeRisk?.riskScore >= 40 ? "text-amber-700" : "text-emerald-700"
+                    }`}>
+                      {activeRisk?.riskScore != null ? `${activeRisk.riskScore}/100` : "22/100"}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="mt-3">
-                <span className="text-[10px] font-mono text-slate-500 font-bold block mb-1">
-                  {t("TOP DRIVERS (DETERMINISTIC ENGINE):")}
-                </span>
-                <div className="flex flex-col gap-1 text-[10.5px]">
-                  {(activeRisk?.topDrivers || [
-                    { name: "Wind Hazard Exposure", impact: "High" },
-                    { name: "Coastal Surge Proximity", impact: "Moderate" },
-                    { name: "Socio-Economic Vulnerability", impact: "Baseline" }
-                  ]).map((driver, idx) => (
-                    <div key={idx} className="p-1.5 bg-slate-50 rounded border border-slate-200 flex items-center justify-between">
-                      <span className="text-slate-800">{t(driver.name || driver)}</span>
-                      <span className="text-slate-500 text-[10px] font-bold">{t(driver.impact || "Evaluated")}</span>
-                    </div>
-                  ))}
+                <div className="mt-3">
+                  <span className="text-[10px] font-mono text-slate-500 font-bold block mb-1">
+                    {t("TOP DRIVERS (DETERMINISTIC ENGINE):")}
+                  </span>
+                  <div className="flex flex-col gap-1 text-[10.5px]">
+                    {(activeRisk?.topDrivers || [
+                      { name: "Wind Hazard Exposure", impact: "High" },
+                      { name: "Coastal Surge Proximity", impact: "Moderate" },
+                      { name: "Socio-Economic Vulnerability", impact: "Baseline" }
+                    ]).map((driver, idx) => (
+                      <div key={idx} className="p-1.5 bg-slate-50 rounded border border-slate-200 flex items-center justify-between">
+                        <span className="text-slate-800">{t(driver.name || driver)}</span>
+                        <span className="text-slate-500 text-[10px] font-bold">{t(driver.impact || "Evaluated")}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* AI Verification & Uncertainty Layer Card */}
-              <div className="mt-3 p-2.5 bg-slate-900 border border-sky-500/30 rounded font-mono text-[11px] flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-sky-400 flex items-center gap-1.5">
-                    <ShieldCheck size={14} className="text-sky-400" />
-                    AI VERIFICATION LAYER
-                  </span>
-                  <span className="text-[9px] bg-sky-950 text-sky-300 border border-sky-600/40 px-1.5 py-0.5 rounded font-bold">
-                    [AI VERIFICATION]
-                  </span>
+                {/* AI Verification & Uncertainty Layer Card */}
+                <div className="mt-3 p-2.5 bg-slate-900 border border-sky-500/30 rounded font-mono text-[11px] flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-sky-400 flex items-center gap-1.5">
+                      <ShieldCheck size={14} className="text-sky-400" />
+                      AI VERIFICATION LAYER
+                    </span>
+                    <span className="text-[9px] bg-sky-950 text-sky-300 border border-sky-600/40 px-1.5 py-0.5 rounded font-bold">
+                      [AI VERIFICATION]
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-sans leading-tight m-0">
+                    Multimodal second opinion (Sentinel-2 optical, cloud gating &amp; permanent water check). Does not modify central risk score.
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <button
+                      type="button"
+                      onClick={() => _onOpenDrawer && _onOpenDrawer("verification")}
+                      className="flex-1 py-1.5 px-2 bg-sky-600 hover:bg-sky-500 text-white rounded text-[10px] font-bold tracking-wide transition-colors cursor-pointer border border-sky-400/30"
+                    >
+                      AI VERIFY
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => _onOpenDrawer && _onOpenDrawer("review_queue")}
+                      className="flex-1 py-1.5 px-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-[10px] font-bold tracking-wide transition-colors cursor-pointer border border-amber-400/30"
+                    >
+                      HUMAN QUEUE
+                    </button>
+                  </div>
                 </div>
-                <p className="text-[10px] text-slate-400 font-sans leading-tight m-0">
-                  Multimodal second opinion (Sentinel-2 optical, cloud gating &amp; permanent water check). Does not modify central risk score.
-                </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <button
-                    type="button"
-                    onClick={() => _onOpenDrawer && _onOpenDrawer("verification")}
-                    className="flex-1 py-1.5 px-2 bg-sky-600 hover:bg-sky-500 text-white rounded text-[10px] font-bold tracking-wide transition-colors cursor-pointer border border-sky-400/30"
-                  >
-                    🛡 AI VERIFY
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => _onOpenDrawer && _onOpenDrawer("review_queue")}
-                    className="flex-1 py-1.5 px-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-[10px] font-bold tracking-wide transition-colors cursor-pointer border border-amber-400/30"
-                  >
-                    ⚠ HUMAN QUEUE
-                  </button>
-                </div>
-              </div>
 
               </div>
             </div>
-          </div>
-        )}
+          )}
 
       {/* Tab 4: INFRA */}
       {activeTab === "INFRA" && (
         <div className="dossier-content-scroll">
           <div className="flex flex-col gap-2">
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase px-1">
-              {t("CRITICAL INFRASTRUCTURE ASSET EXPOSURE ({count} ASSETS)", { count: infraData.length })}
+              {t("CRITICAL INFRASTRUCTURE ASSET EXPOSURE")}
             </span>
             {infraData.slice(0, 6).map((asset) => (
               <div key={asset.id} className="p-2.5 bg-white rounded border border-slate-200 shadow-sm text-xs">
                 <div className="flex items-center justify-between font-bold text-slate-800">
                   <span>{t(asset.name)}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded ${
-                  </span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                    asset.status === "CRITICAL" ? "bg-red-100 text-red-800 border border-red-200" :
+                    asset.status === "AT_RISK" ? "bg-amber-100 text-amber-800 border border-amber-200" :
+                    "bg-slate-100 text-slate-600 border border-slate-200"
+                  }`}>{t(asset.status || "MONITORING")}</span>
                 </div>
                 <div className="text-[10.5px] text-slate-500 mt-1 flex items-center justify-between">
                   <span>{t("Category:")} {t(asset.category)}</span>
@@ -682,76 +690,72 @@ export default function RightIntelligencePanel({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 5: EVIDENCE */}
+      {activeTab === "EVIDENCE" && (
+        <div className="dossier-content-scroll">
+          <div className="flex flex-col gap-2.5 text-xs font-mono text-slate-700">
+            <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+              <strong className="text-slate-900 block mb-0.5">{t("SYNOPTIC METEOROLOGY (DEMO SCENARIOS)")}</strong>
+              <div className="text-[11px] text-slate-600">{t("IMD Synoptic Weather Bulletins, CAP Advisories, and Tropical Cyclone Outlooks.")}</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">{t("DEMO / SIMULATED METEOROLOGICAL DATA")}</span>
             </div>
-          )}
+            <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+              <strong className="text-slate-900 block mb-0.5">{t("SATELLITE REMOTE SENSING")}</strong>
+              <div className="text-[11px] text-slate-600">{t("ISRO / MOSDAC INSAT-3DS Imager products (IR1, VIS, WV, CTT).")}</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">{t("OBSERVED / SATELLITE PRODUCT")}</span>
+            </div>
+            <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+              <strong className="text-slate-900 block mb-0.5">{t("SURFACE NUMERICAL WEATHER PREDICTION")}</strong>
+              <div className="text-[11px] text-slate-600">{t("Open-Meteo Current Weather and Wind Vector model data.")}</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">{t("LIVE WEATHER - CURRENT MODEL DATA")}</span>
+            </div>
+            <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+              <strong className="text-slate-900 block mb-0.5">{t("DEPRESSION INFLUENCE %")}</strong>
+              <div className="text-[11px] text-slate-600">{t("Calculated transparently from synoptic centroid proximity, wind, and precipitation.")}</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">{t("DRISHTI DERIVED")}</span>
+            </div>
+          </div>
+        </div>
+      )}
 
-          {/* Tab 5: EVIDENCE */}
-          {activeTab === "EVIDENCE" && (
-            <div className="dossier-content-scroll">
-              <div className="flex flex-col gap-2.5 text-xs font-mono text-slate-700">
-                <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
-                  <strong className="text-slate-900 block mb-0.5">{t("SYNOPTIC METEOROLOGY (DEMO SCENARIOS)")}</strong>
-                  <div className="text-[11px] text-slate-600">{t("IMD Synoptic Weather Bulletins, CAP Advisories, & Tropical Cyclone Outlooks.")}</div>
-                  <span className="badge-provenance mt-1 inline-block text-[9px]">{t("DEMO / SIMULATED METEOROLOGICAL DATA")}</span>
+      {/* Tab 6: ADVISORY */}
+      {activeTab === "ADVISORY" && (
+        <div className="dossier-content-scroll">
+          <div className="flex flex-col gap-3 font-mono text-xs text-slate-800">
+            <div className="p-3 bg-orange-50/70 border border-orange-200 rounded">
+              <div className="flex items-center gap-1.5 text-orange-950 font-bold mb-1">
+                <Sparkles size={14} className="text-orange-600" />
+                <span>{t("AI EXPLANATION AND DECISION DIRECTIVE")}</span>
+              </div>
+              <p className="text-[11px] text-slate-700 font-sans leading-relaxed mb-3">
+                {t("Spatial risk analysis suggests elevated flood inundation potential across low-lying riverine sectors in Northeast Madhya Pradesh and adjoining areas. Human authorization is mandatory prior to EOC directive dispatch.")}
+              </p>
+              <div className="flex flex-col gap-2 text-[10px]">
+                <div className="p-2 bg-white rounded border border-orange-200">
+                  <div className="text-slate-500 text-[9px] uppercase font-bold">{t("1. AI Explanation:")}</div>
+                  <div className="text-slate-800 mt-0.5">{t("Multi-source synthesis of Open-Meteo wind field, IMD bulletin trajectory, and catchment runoff parameters.")}</div>
                 </div>
-
-                <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
-                  <strong className="text-slate-900 block mb-0.5">{t("SATELLITE REMOTE SENSING")}</strong>
-                  <div className="text-[11px] text-slate-600">{t("ISRO / MOSDAC INSAT-3DS Imager products (IR1, VIS, WV, CTT).")}</div>
-                  <span className="badge-provenance mt-1 inline-block text-[9px]">{t("OBSERVED / SATELLITE PRODUCT")}</span>
+                <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
+                  <span className="text-slate-500 text-[9px] uppercase font-bold">{t("2. Human Review:")}</span>
+                  <span className="text-emerald-700 font-bold">{t("COMPLETED (VERIFIED BY NEOC METEOROLOGIST)")}</span>
                 </div>
-
-                <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
-                  <strong className="text-slate-900 block mb-0.5">{t("SURFACE NUMERICAL WEATHER PREDICTION")}</strong>
-                  <div className="text-[11px] text-slate-600">{t("Open-Meteo Current Weather & Wind Vector model data.")}</div>
-                  <span className="badge-provenance mt-1 inline-block text-[9px]">{t("LIVE WEATHER — CURRENT MODEL DATA")}</span>
+                <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
+                  <span className="text-slate-500 text-[9px] uppercase font-bold">{t("3. Approval Status:")}</span>
+                  <span className="text-blue-700 font-bold">{t("AUTHORIZED FOR OPERATIONAL ACTION")}</span>
                 </div>
-
-                <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
-                  <strong className="text-slate-900 block mb-0.5">{t("DEPRESSION INFLUENCE %")}</strong>
-                  <div className="text-[11px] text-slate-600">{t("Calculated transparently from synoptic centroid proximity, wind, and precipitation.")}</div>
-                  <span className="badge-provenance mt-1 inline-block text-[9px]">{t("DRISHTI DERIVED")}</span>
+                <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
+                  <span className="text-slate-500 text-[9px] uppercase font-bold">{t("4. Dispatch Status:")}</span>
+                  <span className="text-slate-800 font-bold">{t("TRANSMITTED TO STATE EOCs")}</span>
                 </div>
               </div>
-        )}
-
-              {/* Tab 6: ADVISORY */}
-              {activeTab === "ADVISORY" && (
-                <div className="flex flex-col gap-3 font-mono text-xs text-slate-800">
-                  <div className="p-3 bg-orange-50/70 border border-orange-200 rounded">
-                    <div className="flex items-center gap-1.5 text-orange-950 font-bold mb-1">
-                      <Sparkles size={14} className="text-orange-600" />
-                      <span>{t("AI EXPLANATION & DECISION DIRECTIVE")}</span>
-                    </div>
-                    <p className="text-[11px] text-slate-700 font-sans leading-relaxed mb-3">
-                      {t("Spatial risk analysis suggests elevated flood inundation potential across low-lying riverine sectors in Northeast Madhya Pradesh and adjoining areas. Human authorization is mandatory prior to EOC directive dispatch.")}
-                    </p>
-
-                    <div className="flex flex-col gap-2 text-[10px]">
-                      <div className="p-2 bg-white rounded border border-orange-200">
-                        <div className="text-slate-500 text-[9px] uppercase font-bold">{t("1. AI Explanation:")}</div>
-                        <div className="text-slate-800 mt-0.5">{t("Multi-source synthesis of Open-Meteo wind field, IMD bulletin trajectory, and catchment runoff parameters.")}</div>
-                      </div>
-
-                      <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
-                        <span className="text-slate-500 text-[9px] uppercase font-bold">{t("2. Human Review:")}</span>
-                        <span className="text-emerald-700 font-bold">{t("COMPLETED (VERIFIED BY NEOC METEOROLOGIST)")}</span>
-                      </div>
-
-                      <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
-                        <span className="text-slate-500 text-[9px] uppercase font-bold">{t("3. Approval Status:")}</span>
-                        <span className="text-blue-700 font-bold">{t("AUTHORIZED FOR OPERATIONAL ACTION")}</span>
-                      </div>
-
-                      <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
-                        <span className="text-slate-500 text-[9px] uppercase font-bold">{t("4. Dispatch Status:")}</span>
-                        <span className="text-slate-800 font-bold">{t("TRANSMITTED TO STATE EOCs")}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
+          </div>
+        </div>
+      )}
     </aside>
-      );
+  );
 }

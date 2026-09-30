@@ -82,21 +82,28 @@ export default function App() {
     };
   }, []);
 
-  const handleReviewDecisionSubmitted = useCallback(async (itemId, action, reason, user = "watch_officer_01") => {
-    try {
-      await submitReviewDecision(itemId, action, reason, user);
-      const updatedItems = await getReviewQueue();
-      setReviewQueue(updatedItems);
-      logSessionActivity({
-        event: `HUMAN REVIEW: ${action}`,
-        category: "VERIFICATION",
-        region: "WATCH OFFICER",
-        details: `Item ${itemId} ${action.toLowerCase()}ed: ${reason}`
-      });
-    } catch (err) {
-      console.error("Error submitting review decision:", err);
-    }
-  }, [logSessionActivity]);
+  // Truthful non-persistent session activity log
+  const [sessionActivity, setSessionActivity] = useState([]);
+
+  const logSessionActivity = useCallback((entry) => {
+    const timestamp = new Date().toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    }) + " IST";
+
+    const newEntry = {
+      id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      timestamp,
+      region: entry.region || "ALL INDIA",
+      ...entry
+    };
+    setSessionActivity((prev) => [newEntry, ...prev.slice(0, 49)]);
+  }, []);
+
+  // handleReviewDecisionSubmitted is defined after logSessionActivity (see below)
 
   const handleTriggerVerification = useCallback(async (district) => {
     const target = district || selectedDistrict || (districtsData && districtsData[0]);
@@ -150,26 +157,23 @@ export default function App() {
     setLayerStates((prev) => ({ ...prev, [layerKey]: !prev[layerKey] }));
   };
 
-  // Truthful non-persistent session activity log
-  const [sessionActivity, setSessionActivity] = useState([]);
 
-  const logSessionActivity = useCallback((entry) => {
-    const timestamp = new Date().toLocaleTimeString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    }) + " IST";
 
-    const newEntry = {
-      id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      timestamp,
-      region: entry.region || (selectedState ? selectedState.name : "ALL INDIA"),
-      ...entry
-    };
-    setSessionActivity((prev) => [newEntry, ...prev.slice(0, 49)]);
-  }, [selectedState]);
+  const handleReviewDecisionSubmitted = useCallback(async (itemId, action, reason, user = "watch_officer_01") => {
+    try {
+      await submitReviewDecision(itemId, action, reason, user);
+      const updatedItems = await getReviewQueue();
+      setReviewQueue(updatedItems);
+      logSessionActivity({
+        event: `HUMAN REVIEW: ${action}`,
+        category: "VERIFICATION",
+        region: "WATCH OFFICER",
+        details: `Item ${itemId} ${action.toLowerCase()}ed: ${reason}`
+      });
+    } catch (err) {
+      console.error("Error submitting review decision:", err);
+    }
+  }, [logSessionActivity]);
 
   // Load and periodically refresh normalized meteorological data layer
   useEffect(() => {
