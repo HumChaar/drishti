@@ -16,8 +16,10 @@ import {
   HelpCircle
 } from "lucide-react";
 import { NATIONAL_HAZARD_REGISTRY } from "../../data/indiaGeography";
+import { useLanguage } from "../../language";
 
 export default function NationalHazardMatrix({ operatingMode = "NORMAL", onLaunchSimulation }) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const isDisaster = operatingMode === "DISASTER";
 
@@ -49,9 +51,9 @@ export default function NationalHazardMatrix({ operatingMode = "NORMAL", onLaunc
         <div className="flex items-center gap-2">
           <AlertTriangle size={16} className={isDisaster ? "text-amber-600" : "text-blue-700"} />
           <div>
-            <h3 className="section-heading">NATIONAL MULTI-HAZARD SURVEILLANCE MATRIX</h3>
+            <h3 className="section-heading">{t("NATIONAL MULTI-HAZARD SURVEILLANCE MATRIX")}</h3>
             <span className="text-[10px] text-slate-500 font-mono">
-              12 Primary Natural Hazard Categories Monitored Across India • Real-Time MoES &amp; IMD Standards
+              {t("12 Primary Natural Hazard Categories Monitored Across India • Real-Time MoES & IMD Standards")}
             </span>
           </div>
         </div>
@@ -61,14 +63,14 @@ export default function NationalHazardMatrix({ operatingMode = "NORMAL", onLaunc
             <Search size={13} className="text-slate-400" />
             <input
               type="text"
-              placeholder="Search hazard or agency..."
+              placeholder={t("Search hazard or agency...")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="normal-search-input"
             />
           </div>
           <span className="badge-provenance text-[10px]">
-            {isDisaster ? "EVENT SURGE PROTOCOL" : "ROUTINE SYNOPSIS"}
+            {t(isDisaster ? "EVENT SURGE PROTOCOL" : "ROUTINE SYNOPSIS")}
           </span>
         </div>
       </div>
@@ -77,13 +79,13 @@ export default function NationalHazardMatrix({ operatingMode = "NORMAL", onLaunc
         <table className="normal-data-table">
           <thead>
             <tr>
-              <th>HAZARD CATEGORY</th>
-              <th>OPERATIONAL STATUS</th>
-              <th>AFFECTED GEOGRAPHY</th>
-              <th>SEVERITY LEVEL</th>
-              <th>OFFICIAL SOURCE / NETWORK</th>
-              <th>DATA PROVENANCE</th>
-              <th>ACTION</th>
+              <th>{t("HAZARD CATEGORY")}</th>
+              <th>{t("OPERATIONAL STATUS")}</th>
+              <th>{t("AFFECTED GEOGRAPHY")}</th>
+              <th>{t("SEVERITY LEVEL")}</th>
+              <th>{t("OFFICIAL SOURCE / NETWORK")}</th>
+              <th>{t("DATA PROVENANCE")}</th>
+              <th>{t("ACTION")}</th>
             </tr>
           </thead>
           <tbody>
@@ -102,7 +104,7 @@ export default function NationalHazardMatrix({ operatingMode = "NORMAL", onLaunc
                         {getHazardIcon(h.id)}
                       </span>
                       <div>
-                        <strong className="text-slate-900 block text-xs">{h.name}</strong>
+                        <strong className="text-slate-900 block text-xs">{t(h.name)}</strong>
                         <span className="text-[9.5px] font-mono text-slate-500">ID: HAZ-{h.id.toUpperCase()}</span>
                       </div>
                     </div>
@@ -114,15 +116,15 @@ export default function NationalHazardMatrix({ operatingMode = "NORMAL", onLaunc
                       ) : (
                         <CheckCircle2 size={10} />
                       )}
-                      <span>{statusText}</span>
+                      <span>{t(statusText)}</span>
                     </span>
                   </td>
                   <td className="font-mono text-xs text-slate-700">
-                    {regionText}
+                    {t(regionText)}
                   </td>
                   <td>
                     <span className={`font-mono text-xs font-bold ${isSevere ? "text-red-700" : (isNotConnected ? "text-slate-400" : "text-emerald-700")}`}>
-                      {severityText}
+                      {t(severityText)}
                     </span>
                   </td>
                   <td>
@@ -131,7 +133,7 @@ export default function NationalHazardMatrix({ operatingMode = "NORMAL", onLaunc
                   </td>
                   <td>
                     <span className={`badge-provenance text-[9px] ${h.provenance.includes("OBSERVED") ? "prov-obs" : (h.provenance.includes("DERIVED") ? "prov-der" : "prov-sim")}`}>
-                      {h.provenance}
+                      {t(h.provenance)}
                     </span>
                   </td>
                   <td>
@@ -142,14 +144,14 @@ export default function NationalHazardMatrix({ operatingMode = "NORMAL", onLaunc
                         className="audit-view-btn font-mono text-[9.5px]"
                         title="Launch Cyclone Remal Demonstration Simulation"
                       >
-                        REMAL SIMULATION
+                        {t("REMAL SIMULATION")}
                       </button>
                     )}
                     {h.id !== "cyclone" && h.connected && (
-                      <span className="text-[10px] font-mono text-emerald-700 font-bold">LIVE TELEMETRY</span>
+                      <span className="text-[10px] font-mono text-emerald-700 font-bold">{t("LIVE TELEMETRY")}</span>
                     )}
                     {!h.connected && (
-                      <span className="text-[10px] font-mono text-slate-400">STAGE 2 INGESTION</span>
+                      <span className="text-[10px] font-mono text-slate-400">{t("STAGE 2 INGESTION")}</span>
                     )}
                   </td>
                 </tr>

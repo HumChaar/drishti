@@ -1,8 +1,11 @@
 import React from "react";
 import { Globe, MapPin } from "lucide-react";
 import { INDIA_REGIONS, STATES_AND_UTS } from "../../data/indiaGeography";
+import { useLanguage } from "../../language";
 
 export default function StateSelector({ selectedState, onSelectState }) {
+  const { t } = useLanguage();
+
   const handleChange = (e) => {
     const val = e.target.value;
     if (val === "ALL") {
@@ -17,7 +20,7 @@ export default function StateSelector({ selectedState, onSelectState }) {
     <div className="state-selector-wrapper" title="Pan-India Geographic Scope Selector">
       <span className="selector-prefix-label font-mono flex items-center gap-1">
         <Globe size={11} className="text-blue-600" />
-        <span>REGION:</span>
+        <span>{t("REGION:")}</span>
       </span>
 
       <select
@@ -26,7 +29,7 @@ export default function StateSelector({ selectedState, onSelectState }) {
         className="state-dropdown-select font-mono"
         aria-label="Select State or Union Territory"
       >
-        <option value="ALL">ALL INDIA (36 States &amp; UTs)</option>
+        <option value="ALL">{t("ALL INDIA (36 States & UTs)")}</option>
 
         {INDIA_REGIONS.filter((r) => r !== "ALL INDIA").map((region) => {
           const statesInRegion = STATES_AND_UTS.filter((s) => s.region === region);
@@ -48,7 +51,7 @@ export default function StateSelector({ selectedState, onSelectState }) {
           title={selectedState.hasBackendData ? "Connected to Live/Simulation Backend" : "Telemetry Ingestion Pipeline Pending"}
         >
           <MapPin size={9} />
-          {selectedState.hasBackendData ? "CONNECTED" : "DATA N/A"}
+          {selectedState.hasBackendData ? t("CONNECTED") : t("DATA N/A")}
         </span>
       )}
     </div>

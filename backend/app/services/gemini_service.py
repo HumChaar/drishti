@@ -28,6 +28,8 @@ from app.models.schemas import (
 )
 from app.services.risk_service import risk_service
 from app.services.decision_service import decision_service
+from app.language.service import translation_service
+
 
 
 GEMINI_SYSTEM_INSTRUCTION = """You are a disaster-risk advisory reasoning assistant for the DRISHTI Coastal Surveillance System.
@@ -109,7 +111,7 @@ class GeminiReasoningService:
             fallback.uncertainty_notes += f" [Note: Live Gemini API call failed ({type(e).__name__}); fallen back to deterministic reasoning]."
             return fallback
 
-    def get_advisory_for_district(self, district_id: str, step_id: str = "NOW") -> GeminiAdvisory:
+    def get_advisory_for_district(self, district_id: str, step_id: str = "NOW", language: str = "en") -> GeminiAdvisory:
         """
         End-to-end integration: retrieves verified outputs from Risk Engine & Decision Intelligence
         and feeds them into the Gemini Reasoning layer.
@@ -172,7 +174,57 @@ class GeminiReasoningService:
             step_id=normalized_step
         )
 
-        return self.generate_advisory(reasoning_req)
+        advisory = self.generate_advisory(reasoning_req)
+        if language and language.lower().strip() != "en":
+            return self.translate_advisory(advisory, language)
+        return advisory
+
+    def translate_advisory(self, advisory: GeminiAdvisory, target_language: str) -> GeminiAdvisory:
+        """Translates a GeminiAdvisory into the target language using the centralized translation service."""
+        if not target_language or target_language.lower().strip() == "en":
+            return advisory
+
+        items = [
+            {"id": "headline", "text": advisory.headline},
+            {"id": "situation_summary", "text": advisory.situation_summary},
+            {"id": "exposure_summary", "text": advisory.exposure_summary},
+            {"id": "uncertainty_notes", "text": advisory.uncertainty_notes},
+        ]
+        for i, driver in enumerate(advisory.key_risk_drivers):
+            items.append({"id": f"driver_{i}", "text": driver})
+        for i, action in enumerate(advisory.recommended_actions):
+            items.append({"id": f"action_{i}", "text": action})
+
+        translated = translation_service.translate_batch(
+            items=items,
+            target_language=target_language,
+            context=f"Disaster risk reasoning advisory for {advisory.district_id}"
+        )
+        t_map = {t["id"]: t["text"] for t in translated}
+
+        translated_drivers = [t_map.get(f"driver_{i}", d) for i, d in enumerate(advisory.key_risk_drivers)]
+        translated_actions = [t_map.get(f"action_{i}", a) for i, a in enumerate(advisory.recommended_actions)]
+
+        return GeminiAdvisory(
+            district_id=advisory.district_id,
+            headline=t_map.get("headline", advisory.headline),
+            situation_summary=t_map.get("situation_summary", advisory.situation_summary),
+            key_risk_drivers=translated_drivers,
+            exposure_summary=t_map.get("exposure_summary", advisory.exposure_summary),
+            recommended_actions=translated_actions,
+            uncertainty_notes=t_map.get("uncertainty_notes", advisory.uncertainty_notes),
+            evidence_references=advisory.evidence_references,
+            risk_score=advisory.risk_score,
+            risk_band=advisory.risk_band,
+            decision_ids=advisory.decision_ids,
+            requires_human_approval=advisory.requires_human_approval,
+            provenance=f"{advisory.provenance} [{target_language.upper()}]",
+            generated_at=advisory.generated_at,
+            model=advisory.model,
+            is_mock=advisory.is_mock,
+            provenance_chain=advisory.provenance_chain
+        )
+
 
     def _call_live_gemini(self, request: GeminiReasoningRequest, api_key: str) -> GeminiAdvisory:
         """Executes live HTTP REST call to Google Gemini API with strict prompt governance."""

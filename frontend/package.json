@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:language": "node scripts/test_language_smoke.js",
+    "scan:i18n": "node scripts/scan_hardcoded_strings.js"
+
   },
   "dependencies": {
     "leaflet": "^1.9.4",

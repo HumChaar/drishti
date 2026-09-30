@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import {
-  Sparkles,
+import { 
+  Sparkles, 
   ArrowUpRight,
   ExternalLink,
   Wind,
   CloudRain,
   Gauge,
   Thermometer,
-  Compass,
-  Radio
+  Radio,
+  Navigation,
+  Crosshair,
+  AlertTriangle,
+  RefreshCw,
+  Route
 } from "lucide-react";
 import ProvenanceBadge from "../common/ProvenanceBadge";
-import { fetchNearbyFacilities } from "../../services/nearbyServicesService.js";
-import { calculateRoute } from "../../services/routingService.js";
+import { useLanguage } from "../../language";
 
 export default function RightIntelligencePanel({
   operatingMode = "NORMAL",
@@ -26,8 +29,14 @@ export default function RightIntelligencePanel({
   currentScenario = null,
   activeStepId = "NOW",
   onLaunchDisasterMode = null,
-  onOpenDrawer: _onOpenDrawer = null
+  onOpenDrawer: _onOpenDrawer = null,
+  activeRoute = null,
+  onSelectRoute = null,
+  onClearRoute = null,
+  userLocation = null,
+  onSetUserLocation = null
 }) {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("SITUATION");
 
   // Nearby response services state
@@ -43,8 +52,8 @@ export default function RightIntelligencePanel({
   // Active state weather record (only if selected, otherwise national overview)
   const stateRecord = selectedState && weatherData?.states
     ? (Array.isArray(weatherData.states)
-      ? weatherData.states.find(s => s.stateId === selectedState.id || s.id === selectedState.id)
-      : weatherData.states[selectedState.id])
+        ? weatherData.states.find(s => s.stateId === selectedState.id || s.id === selectedState.id)
+        : weatherData.states[selectedState.id])
     : null;
 
   const activeSystem = weatherData?.activeSystem || null;
@@ -59,16 +68,16 @@ export default function RightIntelligencePanel({
   const windValue = hasWind
     ? `${stateRecord.windSpeedKmph} km/h`
     : (stateRecord?.windSpeed != null && !isNaN(stateRecord.windSpeed)
-      ? `${stateRecord.windSpeed} km/h`
-      : "DATA UNAVAILABLE");
+        ? `${stateRecord.windSpeed} km/h`
+        : "DATA UNAVAILABLE");
 
   // Rainfall: Only display numeric measurement if actual value is present in model response
   const hasRain = stateRecord?.rainfallMm != null && !isNaN(stateRecord.rainfallMm);
   const rainValue = hasRain
     ? `${stateRecord.rainfallMm} mm`
     : (stateRecord?.rain != null && !isNaN(stateRecord.rain)
-      ? `${stateRecord.rain} mm`
-      : "DATA UNAVAILABLE");
+        ? `${stateRecord.rain} mm`
+        : "DATA UNAVAILABLE");
 
   const hasPressure = stateRecord?.pressureHpa != null && !isNaN(stateRecord.pressureHpa);
   const pressureValue = hasPressure ? `${stateRecord.pressureHpa} hPa` : "DATA UNAVAILABLE";
@@ -77,8 +86,8 @@ export default function RightIntelligencePanel({
   const tempValue = hasTemp
     ? `${stateRecord.temperatureC} °C`
     : (stateRecord?.temperature != null && !isNaN(stateRecord.temperature)
-      ? `${stateRecord.temperature} °C`
-      : "DATA UNAVAILABLE");
+        ? `${stateRecord.temperature} °C`
+        : "DATA UNAVAILABLE");
 
   // Explicit user-triggered location request (Strict: NO automatic geolocation request)
   const handleRequestLocation = (overrideCoords = null) => {
@@ -184,7 +193,7 @@ export default function RightIntelligencePanel({
       <div className="intelligence-header">
         <div className="dossier-top-meta">
           <span className="dossier-category font-mono">
-            {isNormal ? "NATIONAL SYNOPTIC DOSSIER" : "TACTICAL RESPONSE DOSSIER"}
+            {t(isNormal ? "NATIONAL SYNOPTIC DOSSIER" : "TACTICAL RESPONSE DOSSIER")}
           </span>
           <ProvenanceBadge
             provenance={isNormal ? "MODEL" : "SIMULATED"}
@@ -202,12 +211,95 @@ export default function RightIntelligencePanel({
               className={`dossier-tab-btn ${activeTab === tab ? "active" : ""}`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab}
+              {t(tab)}
             </button>
           ))}
         </div>
       </div>
 
+<<<<<<< HEAD
+      {/* Tab 1: SITUATION */}
+      {activeTab === "SITUATION" && (
+        <div className="dossier-content-scroll">
+          {isNormal ? (
+            /* NORMAL MODE: Current Active Synoptic System & Selected Sector */
+            <div className="flex flex-col gap-3">
+              {/* Dynamic Active Synoptic System Card */}
+              {activeSystem?.hasActiveSystem && activeSystem.liveStatus === "LIVE" && activeSystem.latitude != null ? (
+                <div className="synoptic-system-card bg-amber-50/70 border border-amber-300 rounded p-3 text-slate-800">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-amber-200">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-600 animate-ping" />
+                      <span className="font-mono text-xs font-bold text-amber-950 uppercase">
+                        {t("ACTIVE SYNOPTIC SYSTEM")}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold font-mono ${activeSystem.liveStatus === "LIVE" ? "bg-emerald-100 text-emerald-900 border border-emerald-300" : "bg-amber-100 text-amber-900 border border-amber-300"}`}>
+                        {t(activeSystem.liveStatus === "LIVE" ? "LIVE / IMD" : "DEMO / SIMULATED")}
+                      </span>
+                      <ProvenanceBadge provenance={activeSystem.liveStatus === "LIVE" ? "OBSERVED" : (activeSystem.provenance || "DEMO / SIMULATED METEOROLOGICAL DATA")} size="tiny" />
+                    </div>
+                  </div>
+
+                  <div className="mt-2">
+                    <h4 className="text-sm font-bold text-slate-900 leading-tight">
+                      {activeSystem.name}
+                    </h4>
+                    <div className="text-[11px] text-slate-600 font-medium mt-0.5">
+                      {t("Classification:")} <strong className="text-amber-800">[{activeSystem.classification}]</strong> • {t("Observation:")} {activeSystem.observationTime}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 mt-3 font-mono text-[11px]">
+                    <div className="p-2 bg-white/90 rounded border border-amber-200">
+                      <span className="text-[9.5px] text-slate-500 block">{t("COORDINATES")}</span>
+                      <strong className="text-slate-900">
+                        {activeSystem.coordinatesFormatted || `${activeSystem.latitude}°N, ${activeSystem.longitude}°E`}
+                      </strong>
+                    </div>
+                    <div className="p-2 bg-white/90 rounded border border-amber-200">
+                      <span className="text-[9.5px] text-slate-500 block">{t("CENTRAL PRESSURE")}</span>
+                      <strong className="text-slate-900">
+                        {activeSystem.centralPressureHpa ? `${activeSystem.centralPressureHpa} hPa` : t("DATA UNAVAILABLE")}
+                      </strong>
+                    </div>
+                    <div className="p-2 bg-white/90 rounded border border-amber-200">
+                      <span className="text-[9.5px] text-slate-500 block">{t("MAX SUSTAINED WIND")}</span>
+                      <strong className="text-amber-700">
+                        {activeSystem.maxWindKmph ? `${activeSystem.maxWindKmph} km/h` : "N/A"}{activeSystem.gustKmph ? ` (Gusts ${activeSystem.gustKmph})` : ""}
+                      </strong>
+                    </div>
+                    <div className="p-2 bg-white/90 rounded border border-amber-200">
+                      <span className="text-[9.5px] text-slate-500 block">{t("MOVEMENT")}</span>
+                      <strong className="text-slate-900 truncate block" title={activeSystem.movementDescription}>
+                        {activeSystem.movementDescription || t("Monitoring")}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="mt-2.5 pt-2 border-t border-amber-200/60 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                    <span>{t("SOURCE:")} {activeSystem.source}</span>
+                    <a
+                      href="https://mausam.imd.gov.in/responsive/cycloneinformation.php"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-amber-800 font-bold hover:underline flex items-center gap-0.5"
+                    >
+                      <span>{t("OPEN IMD BULLETIN")}</span>
+                      <ExternalLink size={9} />
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <div className="synoptic-system-card bg-slate-50 border border-slate-300 rounded p-3 text-slate-800">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
+                    <div className="flex items-center gap-1.5">
+                      <Radio size={12} className="text-slate-600" />
+                      <span className="font-mono text-xs font-bold text-slate-900 uppercase">
+                        {t("IMD SYSTEM FEED: SOURCE UNAVAILABLE")}
+                      </span>
+=======
       {/* Scrollable Content Container (Internally scrollable, fixed height) */}
       <div className="dossier-content-scroll">
         {/* Tab 1: SITUATION (COMPACT OPERATIONAL COMMAND CARDS) */}
@@ -221,10 +313,30 @@ export default function RightIntelligencePanel({
                     <div className="dossier-card-title">
                       <Radio size={12} className="text-slate-600" />
                       <span>SYSTEM STATUS</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                     </div>
                     <ProvenanceBadge provenance="UNAVAILABLE" size="tiny" />
                   </div>
 
+<<<<<<< HEAD
+                  <div className="grid grid-cols-2 gap-2 mt-2 font-mono text-[10.5px]">
+                    <div className="p-2 bg-white rounded border border-slate-200">
+                      <span className="text-[9px] text-slate-500 block font-bold">{t("COORDINATES")}</span>
+                      <strong className="text-slate-700">{t("NOT VERIFIED")}</strong>
+                    </div>
+                    <div className="p-2 bg-white rounded border border-slate-200">
+                      <span className="text-[9px] text-slate-500 block font-bold">{t("OBSERVATION")}</span>
+                      <strong className="text-slate-700">{t("NOT VERIFIED")}</strong>
+                    </div>
+                  </div>
+
+                  <div className="mt-2 text-[10.5px] font-mono text-slate-600">
+                    {t("Direct browser connection to IMD National Synoptic Bulletin is restricted by CORS. Live system observation and coordinates cannot be verified client-side without an authoritative proxy.")}
+                  </div>
+
+                  <div className="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                    <span>{t("DRISHTI CHECKED:")} <strong className="text-slate-700">{activeSystem?.checkedAt || weatherData?.checkedAt || "IST"}</strong></span>
+=======
                   <div className="system-status-banner">
                     <span className="system-status-feed-name">IMD SYSTEM FEED</span>
                     <span className="system-status-badge-pill">SOURCE UNAVAILABLE</span>
@@ -248,6 +360,7 @@ export default function RightIntelligencePanel({
                         {checkedTimestamp}
                       </span>
                     </div>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                     <a
                       href="https://mausam.imd.gov.in/responsive/cycloneinformation.php"
                       target="_blank"
@@ -255,12 +368,76 @@ export default function RightIntelligencePanel({
                       className="btn-open-bulletin"
                       title="Open Official IMD Cyclone Portal"
                     >
-                      <span>OPEN IMD BULLETIN</span>
+                      <span>{t("OPEN IMD BULLETIN")}</span>
                       <ExternalLink size={9} />
                     </a>
                   </div>
                 </div>
 
+<<<<<<< HEAD
+              {/* State Territorial Sector Meteorological Card (Section 8 & 9) */}
+              <div className="state-influence-card bg-white border border-slate-200 rounded p-3 shadow-sm">
+                <div className="flex items-start justify-between pb-2 border-b border-slate-100">
+                  <div>
+                    <span className="text-[9.5px] font-mono text-slate-500 font-bold uppercase tracking-wider block">
+                      {t("TERRITORIAL SECTOR")}
+                    </span>
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1 mt-0.5">
+                      <MapPin size={14} className="text-blue-700" />
+                      {stateRecord ? stateRecord.location : (selectedState ? selectedState.name : t("PAN-INDIA OVERVIEW (36 STATES & UTs)"))}
+                    </h3>
+                    <span className="text-[10px] font-mono text-slate-500 block mt-0.5">
+                      {stateRecord ? `${t("Capital:")} ${stateRecord.capital} • ${t("Region:")} ${stateRecord.region}` : t("Click any state or UT on the map to inspect regional meteorology")}
+                    </span>
+                  </div>
+
+                  <ProvenanceBadge provenance="MODEL" size="xs" />
+                </div>
+
+                {/* State Meteorological Telemetry Grid */}
+                <div className="mt-2.5 grid grid-cols-2 gap-2 font-mono text-[10.5px]">
+                  <div className="p-2 bg-slate-50 rounded border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-bold">{t("SURFACE WIND")}</span>
+                    <strong className="text-slate-900 text-xs">
+                      {stateRecord?.windSpeedKmph != null ? `${stateRecord.windSpeedKmph} km/h ${stateRecord.windDirectionLabel || ""}` : (stateRecord?.windSpeed != null ? `${stateRecord.windSpeed} km/h` : "18 km/h (Nat. Mean)")}
+                    </strong>
+                    <span className="text-[8.5px] text-slate-400 block mt-0.5">{t("10m Model Vectors")}</span>
+                  </div>
+
+                  <div className="p-2 bg-slate-50 rounded border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-bold">{t("PRECIPITATION")}</span>
+                    <strong className="text-slate-900 text-xs">
+                      {stateRecord?.rainfallMm != null ? `${stateRecord.rainfallMm} mm` : (stateRecord?.rain != null ? `${stateRecord.rain} mm` : "0.0 mm")}
+                    </strong>
+                    <span className="text-[8.5px] text-slate-400 block mt-0.5">{t("24h Accumulated NWP")}</span>
+                  </div>
+
+                  <div className="p-2 bg-slate-50 rounded border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-bold">{t("SURFACE PRESSURE")}</span>
+                    <strong className="text-slate-900 text-xs">
+                      {stateRecord?.pressureHpa != null ? `${stateRecord.pressureHpa} hPa` : t("DATA UNAVAILABLE")}
+                    </strong>
+                    <span className="text-[8.5px] text-slate-400 block mt-0.5">{t("Surface Barometric")}</span>
+                  </div>
+
+                  <div className="p-2 bg-slate-50 rounded border border-slate-200">
+                    <span className="text-[9px] text-slate-500 block font-bold">{t("AIR TEMPERATURE")}</span>
+                    <strong className="text-slate-900 text-xs">
+                      {stateRecord?.temperatureC != null ? `${stateRecord.temperatureC} °C` : (stateRecord?.temperature != null ? `${stateRecord.temperature} °C` : t("DATA UNAVAILABLE"))}
+                    </strong>
+                    <span className="text-[8.5px] text-slate-400 block mt-0.5">
+                      {stateRecord?.humidityPct != null ? `${stateRecord.humidityPct}% RH` : "RH: N/A"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Distance to System (DERIVED - Section 11) */}
+                {stateRecord?.distanceToSystemKm != null && (
+                  <div className="mt-2 p-2 bg-amber-50/80 rounded border border-amber-200 flex items-center justify-between font-mono text-[10px]">
+                    <div className="flex items-center gap-1.5 text-amber-900">
+                      <Compass size={12} className="text-amber-700" />
+                      <span>{t("Distance to System Center:")} <strong>{stateRecord.distanceToSystemKm} km</strong></span>
+=======
                 {/* CARD 2: PAN-INDIA METEOROLOGY */}
                 <div className="dossier-op-card">
                   <div className="dossier-card-header">
@@ -271,10 +448,24 @@ export default function RightIntelligencePanel({
                       <div className="dossier-card-subtitle">
                         {selectedState ? `Regional Station (${stateRecord?.region || "India"})` : "36 STATES & UTs"}
                       </div>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                     </div>
                     <ProvenanceBadge provenance="MODEL" size="tiny" />
                   </div>
 
+<<<<<<< HEAD
+                {/* Sourcing and Timestamps */}
+                <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[9.5px] font-mono text-slate-500">
+                  <span>{t("SOURCE: OPEN-METEO (MODEL)")}</span>
+                  <span>{t("CHECKED:")} {stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
+                </div>
+
+                {/* Switch to Disaster Mode Button */}
+                <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-[10px] text-slate-500 font-mono">
+                    {t("CALIBRATED BENCHMARK")}
+                  </span>
+=======
                   {/* 4-Box Telemetry Grid */}
                   <div className="telemetry-2x2-grid">
                     {/* WIND */}
@@ -576,12 +767,62 @@ export default function RightIntelligencePanel({
                 {/* Benchmark Switch to Cyclone Simulation */}
                 <div className="p-2 bg-slate-50 rounded border border-slate-200 flex items-center justify-between text-[10px] font-mono">
                   <span className="text-slate-500 font-bold">CALIBRATED BENCHMARK:</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                   {onLaunchDisasterMode && (
                     <button
                       type="button"
                       className="px-2 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded text-[10.5px] font-bold flex items-center gap-1 shadow-sm transition-colors"
                       onClick={onLaunchDisasterMode}
                     >
+<<<<<<< HEAD
+                      <span>{t("VIEW CYCLONE SIMULATION")}</span>
+                      <ArrowUpRight size={12} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* DISASTER MODE: Cyclone Remal Situation Dossier */
+            <div className="flex flex-col gap-3">
+              <div className="bg-red-50/80 border border-red-300 rounded p-3 text-slate-800">
+                <div className="flex items-center justify-between pb-1.5 border-b border-red-200">
+                  <span className="font-mono text-xs font-bold text-red-950 uppercase flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
+                    {t("CYCLONE REMAL (BOB/01/2024)")}
+                  </span>
+                  <ProvenanceBadge provenance="SIMULATED" size="tiny" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mt-3 font-mono text-[11px]">
+                  <div className="p-2 bg-white rounded border border-red-200">
+                    <span className="text-[9.5px] text-slate-500 block">{t("SYSTEM STATUS")}</span>
+                    <strong className="text-red-700 font-bold">
+                      {currentScenario?.category ? t(currentScenario.category) : t("SEVERE CYCLONIC STORM")}
+                    </strong>
+                  </div>
+                  <div className="p-2 bg-white rounded border border-red-200">
+                    <span className="text-[9.5px] text-slate-500 block">{t("CURRENT TIMESTEP")}</span>
+                    <strong className="text-slate-900">{activeStepId}</strong>
+                  </div>
+                  <div className="p-2 bg-white rounded border border-red-200">
+                    <span className="text-[9.5px] text-slate-500 block">{t("MAX SUSTAINED WIND")}</span>
+                    <strong className="text-red-700 font-bold">
+                      {currentScenario?.windSpeedKnots ? `${Math.round(currentScenario.windSpeedKnots * 1.852)} km/h` : "110 km/h"}
+                    </strong>
+                  </div>
+                  <div className="p-2 bg-white rounded border border-red-200">
+                    <span className="text-[9.5px] text-slate-500 block">{t("CENTRAL PRESSURE")}</span>
+                    <strong className="text-slate-900">
+                      {currentScenario?.pressureHpa ? `${currentScenario.pressureHpa} hPa` : "978 hPa"}
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="mt-2 text-[10.5px] font-mono text-slate-700 bg-white/70 p-2 rounded border border-red-200">
+                  <div><strong>{t("LANDFALL ZONE:")}</strong> {t("Coastal West Bengal & Bangladesh Coast")}</div>
+                  <div><strong>{t("PRIMARY IMPACT ARC:")}</strong> {t("South 24 Parganas, North 24 Parganas, Balasore")}</div>
+=======
                       <span>VIEW CYCLONE SIMULATION</span>
                       <ArrowUpRight size={11} />
                     </button>
@@ -629,6 +870,7 @@ export default function RightIntelligencePanel({
                     <div><strong>LANDFALL ZONE:</strong> Coastal West Bengal &amp; Bangladesh Coast</div>
                     <div><strong>PRIMARY IMPACT ARC:</strong> South 24 Parganas, North 24 Parganas, Balasore</div>
                   </div>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </div>
               </div>
             )}
@@ -640,11 +882,19 @@ export default function RightIntelligencePanel({
           <div className="weather-telemetry-dossier flex flex-col gap-2.5">
             <div className="p-2.5 bg-blue-50/70 border border-blue-200 rounded flex items-center justify-between font-mono">
               <div>
+<<<<<<< HEAD
+                <span className="text-[9.5px] font-mono font-bold text-blue-900 uppercase block">
+                  {t("TELEMETRY DOSSIER")} • {stateRecord ? stateRecord.location : t("PAN-INDIA (36 NODES)")}
+                </span>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {t("SOURCE: OPEN-METEO CURRENT WEATHER NWP")}
+=======
                 <span className="text-[9.5px] font-bold text-blue-900 uppercase block">
                   TELEMETRY DOSSIER • {stateRecord ? stateRecord.location : "PAN-INDIA (36 STATES)"}
                 </span>
                 <span className="text-[10px] text-slate-500">
                   SOURCE: OPEN-METEO CURRENT WEATHER NWP
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </span>
               </div>
               <ProvenanceBadge provenance="MODEL" size="xs" />
@@ -652,6 +902,19 @@ export default function RightIntelligencePanel({
 
             <div className="grid grid-cols-2 gap-2 text-xs font-mono">
               {/* 1. SURFACE WIND */}
+<<<<<<< HEAD
+              <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>{t("SURFACE WIND")}</span>
+                  <Wind size={12} className="text-blue-600" />
+                </div>
+                <div className="text-base font-bold text-slate-900 my-1">
+                  {stateRecord?.windSpeedKmph != null ? `${stateRecord.windSpeedKmph} km/h` : (stateRecord?.windSpeed != null ? `${stateRecord.windSpeed} km/h` : (selectedState ? t("DATA UNAVAILABLE") : "18 km/h"))}
+                </div>
+                <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
+                  <span>{stateRecord?.windDirectionLabel ? `${stateRecord.windDirectionLabel} ${stateRecord.windDirectionDeg || ""}°` : t("MODEL")}</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
+=======
               <div className="p-2 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div className="text-[9px] text-slate-500 font-bold uppercase flex items-center justify-between">
                   <span>SURFACE WIND</span>
@@ -663,10 +926,24 @@ export default function RightIntelligencePanel({
                 <div className="text-[8.5px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
                   <span>{stateRecord?.windDirectionLabel || "MODEL"}</span>
                   <span>{checkedTimestamp}</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </div>
               </div>
 
               {/* 2. PRECIPITATION */}
+<<<<<<< HEAD
+              <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>{t("PRECIPITATION")}</span>
+                  <CloudRain size={12} className="text-blue-600" />
+                </div>
+                <div className="text-base font-bold text-slate-900 my-1">
+                  {stateRecord?.rainfallMm != null ? `${stateRecord.rainfallMm} mm` : (stateRecord?.rain != null ? `${stateRecord.rain} mm` : (selectedState ? t("DATA UNAVAILABLE") : "0.0 mm"))}
+                </div>
+                <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
+                  <span>{t("MODEL • 24h NWP")}</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
+=======
               <div className="p-2 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div className="text-[9px] text-slate-500 font-bold uppercase flex items-center justify-between">
                   <span>PRECIPITATION</span>
@@ -678,10 +955,24 @@ export default function RightIntelligencePanel({
                 <div className="text-[8.5px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
                   <span>MODEL • 24h NWP</span>
                   <span>{checkedTimestamp}</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </div>
               </div>
 
               {/* 3. SURFACE PRESSURE */}
+<<<<<<< HEAD
+              <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>{t("SURFACE PRESSURE")}</span>
+                  <Gauge size={12} className="text-blue-600" />
+                </div>
+                <div className="text-base font-bold text-slate-900 my-1">
+                  {stateRecord?.pressureHpa != null ? `${stateRecord.pressureHpa} hPa` : t("DATA UNAVAILABLE")}
+                </div>
+                <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
+                  <span>{t("Surface Barometric")}</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
+=======
               <div className="p-2 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div className="text-[9px] text-slate-500 font-bold uppercase flex items-center justify-between">
                   <span>SURFACE PRESSURE</span>
@@ -693,10 +984,55 @@ export default function RightIntelligencePanel({
                 <div className="text-[8.5px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
                   <span>BAROMETRIC NWP</span>
                   <span>{checkedTimestamp}</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </div>
               </div>
 
               {/* 4. 2M TEMPERATURE */}
+<<<<<<< HEAD
+              <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>{t("AIR TEMPERATURE")}</span>
+                  <Thermometer size={12} className="text-blue-600" />
+                </div>
+                <div className="text-base font-bold text-slate-900 my-1">
+                  {stateRecord?.temperatureC != null ? `${stateRecord.temperatureC} °C` : (stateRecord?.temperature != null ? `${stateRecord.temperature} °C` : t("DATA UNAVAILABLE"))}
+                </div>
+                <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
+                  <span>{t("MODEL • OPEN-METEO")}</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
+                </div>
+              </div>
+
+              {/* 5. RELATIVE HUMIDITY */}
+              <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase">
+                  {t("RELATIVE HUMIDITY")}
+                </div>
+                <div className="text-base font-bold text-slate-900 my-1">
+                  {stateRecord?.humidityPct != null ? `${stateRecord.humidityPct} %` : (stateRecord?.humidity != null ? `${stateRecord.humidity} %` : (selectedState ? t("DATA UNAVAILABLE") : "72 %"))}
+                </div>
+                <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
+                  <span>{t("MODEL • OPEN-METEO")}</span>
+                  <span>{stateRecord?.checkedAt || weatherData?.checkedAt || "IST"}</span>
+                </div>
+              </div>
+
+              {/* 6. DISTANCE TO ACTIVE SYSTEM (DERIVED) */}
+              <div className="p-2.5 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div className="text-[9.5px] text-slate-500 font-bold uppercase flex items-center justify-between">
+                  <span>{t("SYSTEM PROXIMITY")}</span>
+                  <Compass size={12} className="text-amber-600" />
+                </div>
+                <div className="text-base font-bold text-slate-900 my-1">
+                  {stateRecord?.distanceToSystemKm != null
+                    ? `${stateRecord.distanceToSystemKm} km`
+                    : (activeSystem?.hasActiveSystem ? (selectedState ? t("DATA UNAVAILABLE") : t("Select State")) : t("None Active"))}
+                </div>
+                <div className="text-[9px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
+                  <span className="text-amber-700 font-semibold">{t("DERIVED CALC")}</span>
+                  <span>{weatherData?.checkedAt || "IST"}</span>
+=======
               <div className="p-2 bg-white rounded border border-slate-200 shadow-sm flex flex-col justify-between">
                 <div className="text-[9px] text-slate-500 font-bold uppercase flex items-center justify-between">
                   <span>2M TEMPERATURE</span>
@@ -708,12 +1044,18 @@ export default function RightIntelligencePanel({
                 <div className="text-[8.5px] text-slate-500 border-t border-slate-100 pt-1 flex items-center justify-between">
                   <span>OPEN-METEO</span>
                   <span>{checkedTimestamp}</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </div>
               </div>
             </div>
 
+<<<<<<< HEAD
+            <div className="p-2 bg-slate-50 rounded border border-slate-200 text-[10px] font-mono text-slate-500 leading-relaxed">
+              <strong className="text-slate-700">{t("Provenance Rule:")}</strong> {t("Surface variables are provided by Open-Meteo High-Resolution Numerical Weather Prediction (MODEL). Distances to synoptic centers are calculated directly by DRISHTI (DERIVED).")}
+=======
             <div className="p-2 bg-slate-50 rounded border border-slate-200 text-[9.5px] font-mono text-slate-500 leading-relaxed">
               <strong className="text-slate-700">Provenance Rule:</strong> Surface meteorology is provided by Open-Meteo High-Resolution Numerical Weather Prediction (MODEL). Distances and exposure metrics are calculated directly by DRISHTI (DERIVED).
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
             </div>
           </div>
         )}
@@ -724,26 +1066,42 @@ export default function RightIntelligencePanel({
             <div className="p-3 bg-white border border-slate-200 rounded shadow-sm">
               <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                 <div>
+<<<<<<< HEAD
+                  <span className="text-[9.5px] font-mono text-slate-500 font-bold uppercase">
+                    {t("TARGET DISTRICT")}
+=======
                   <span className="text-[9px] text-slate-500 font-bold uppercase">
                     TARGET DISTRICT
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                   </span>
                   <h4 className="text-sm font-bold text-slate-900">
                     {activeDist?.name || "Balasore"} ({activeDist?.state || "Odisha"})
                   </h4>
                 </div>
                 <div className="text-right">
+<<<<<<< HEAD
+                  <span className="text-[9.5px] font-mono text-slate-500 block">{t("RISK SCORE")}</span>
+                  <span className={`text-base font-bold font-mono ${
+=======
                   <span className="text-[9px] text-slate-500 block">RISK SCORE</span>
-                  <span className={`text-base font-bold ${activeRisk?.riskScore >= 70 ? "text-red-700" :
-                      activeRisk?.riskScore >= 40 ? "text-amber-700" : "text-emerald-700"
-                    }`}>
+                  <span className={`text-base font-bold ${
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
+                    activeRisk?.riskScore >= 70 ? "text-red-700" :
+                    activeRisk?.riskScore >= 40 ? "text-amber-700" : "text-emerald-700"
+                  }`}>
                     {activeRisk?.riskScore != null ? `${activeRisk.riskScore}/100` : "22/100"}
                   </span>
                 </div>
               </div>
 
               <div className="mt-3">
+<<<<<<< HEAD
+                <span className="text-[10px] font-mono text-slate-500 font-bold block mb-1">
+                  {t("TOP DRIVERS (DETERMINISTIC ENGINE):")}
+=======
                 <span className="text-[9.5px] text-slate-500 font-bold block mb-1">
                   TOP DRIVERS (DETERMINISTIC ENGINE):
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </span>
                 <div className="flex flex-col gap-1 text-[10.5px]">
                   {(activeRisk?.topDrivers || [
@@ -752,79 +1110,107 @@ export default function RightIntelligencePanel({
                     { name: "Socio-Economic Vulnerability", impact: "Baseline" }
                   ]).map((driver, idx) => (
                     <div key={idx} className="p-1.5 bg-slate-50 rounded border border-slate-200 flex items-center justify-between">
+<<<<<<< HEAD
+                      <span className="text-slate-800">{t(driver.name || driver)}</span>
+                      <span className="text-slate-500 text-[10px] font-bold">{t(driver.impact || "Evaluated")}</span>
+=======
                       <span className="text-slate-800">{driver.name || driver}</span>
                       <span className="text-slate-500 text-[9.5px] font-bold">{driver.impact || "Evaluated"}</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* AI Verification & Uncertainty Layer Card */}
-              <div className="mt-3 p-2.5 bg-slate-900 border border-sky-500/30 rounded font-mono text-[11px] flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-sky-400 flex items-center gap-1.5">
-                    <ShieldCheck size={14} className="text-sky-400" />
-                    AI VERIFICATION LAYER
-                  </span>
-                  <span className="text-[9px] bg-sky-950 text-sky-300 border border-sky-600/40 px-1.5 py-0.5 rounded font-bold">
-                    [AI VERIFICATION]
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-400 font-sans leading-tight m-0">
-                  Multimodal second opinion (Sentinel-2 optical, cloud gating &amp; permanent water check). Does not modify central risk score.
-                </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <button
-                    type="button"
-                    onClick={() => onOpenDrawer && onOpenDrawer("verification")}
-                    className="flex-1 py-1.5 px-2 bg-sky-600 hover:bg-sky-500 text-white rounded text-[10px] font-bold tracking-wide transition-colors cursor-pointer border border-sky-400/30"
-                  >
-                    🛡 AI VERIFY
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onOpenDrawer && onOpenDrawer("review_queue")}
-                    className="flex-1 py-1.5 px-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-[10px] font-bold tracking-wide transition-colors cursor-pointer border border-amber-400/30"
-                  >
-                    ⚠ HUMAN QUEUE
-                  </button>
-                </div>
-              </div>
-
+<<<<<<< HEAD
+              <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                <span>{t("PRESERVED DETERMINISTIC RISK ENGINE")}</span>
+                <span className="badge-provenance">{t("BACKEND DETERMINISTIC")}</span>
+=======
               <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[9.5px] text-slate-500">
                 <span>PRESERVED DETERMINISTIC RISK ENGINE</span>
                 <span className="badge-provenance">BACKEND DETERMINISTIC</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
               </div>
             </div>
           </div>
         )}
 
+<<<<<<< HEAD
+      {/* Tab 4: INFRA */}
+      {activeTab === "INFRA" && (
+        <div className="dossier-content-scroll">
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase px-1">
+              {t("CRITICAL INFRASTRUCTURE ASSET EXPOSURE ({count} ASSETS)", { count: infraData.length })}
+=======
         {/* Tab 4: INFRA */}
         {activeTab === "INFRA" && (
           <div className="flex flex-col gap-2 font-mono">
             <span className="text-[9.5px] font-bold text-slate-500 uppercase px-1">
               CRITICAL INFRASTRUCTURE ASSET EXPOSURE ({infraData.length} ASSETS)
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
             </span>
             {infraData.slice(0, 6).map((asset) => (
               <div key={asset.id} className="p-2.5 bg-white rounded border border-slate-200 shadow-sm text-xs">
                 <div className="flex items-center justify-between font-bold text-slate-800">
+<<<<<<< HEAD
+                  <span>{t(asset.name)}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded ${
+=======
                   <span>{asset.name}</span>
-                  <span className={`text-[9.5px] px-1.5 py-0.2 rounded ${asset.exposureLevel === "HIGH" ? "bg-red-100 text-red-800" :
-                      asset.exposureLevel === "MEDIUM" ? "bg-amber-100 text-amber-800" :
-                        "bg-emerald-100 text-emerald-800"
-                    }`}>
-                    {asset.exposureLevel || "SECURE"}
+                  <span className={`text-[9.5px] px-1.5 py-0.2 rounded ${
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
+                    asset.exposureLevel === "HIGH" ? "bg-red-100 text-red-800" :
+                    asset.exposureLevel === "MEDIUM" ? "bg-amber-100 text-amber-800" :
+                    "bg-emerald-100 text-emerald-800"
+                  }`}>
+                    {t(asset.exposureLevel || "SECURE")}
                   </span>
                 </div>
+<<<<<<< HEAD
+                <div className="text-[10.5px] text-slate-500 mt-1 flex items-center justify-between">
+                  <span>{t("Category:")} {t(asset.category)}</span>
+                  <span>{t("District:")} {asset.district || t("Coastal Sector")}</span>
+=======
                 <div className="text-[10px] text-slate-500 mt-1 flex items-center justify-between">
                   <span>Category: {asset.category}</span>
                   <span>District: {asset.district || "Coastal Sector"}</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </div>
               </div>
             ))}
           </div>
         )}
 
+<<<<<<< HEAD
+      {/* Tab 5: EVIDENCE */}
+      {activeTab === "EVIDENCE" && (
+        <div className="dossier-content-scroll">
+          <div className="flex flex-col gap-2.5 text-xs font-mono text-slate-700">
+            <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+              <strong className="text-slate-900 block mb-0.5">{t("SYNOPTIC METEOROLOGY (DEMO SCENARIOS)")}</strong>
+              <div className="text-[11px] text-slate-600">{t("IMD Synoptic Weather Bulletins, CAP Advisories, & Tropical Cyclone Outlooks.")}</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">{t("DEMO / SIMULATED METEOROLOGICAL DATA")}</span>
+            </div>
+
+            <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+              <strong className="text-slate-900 block mb-0.5">{t("SATELLITE REMOTE SENSING")}</strong>
+              <div className="text-[11px] text-slate-600">{t("ISRO / MOSDAC INSAT-3DS Imager products (IR1, VIS, WV, CTT).")}</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">{t("OBSERVED / SATELLITE PRODUCT")}</span>
+            </div>
+
+            <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+              <strong className="text-slate-900 block mb-0.5">{t("SURFACE NUMERICAL WEATHER PREDICTION")}</strong>
+              <div className="text-[11px] text-slate-600">{t("Open-Meteo Current Weather & Wind Vector model data.")}</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">{t("LIVE WEATHER — CURRENT MODEL DATA")}</span>
+            </div>
+
+            <div className="p-2.5 bg-slate-50 rounded border border-slate-200">
+              <strong className="text-slate-900 block mb-0.5">{t("DEPRESSION INFLUENCE %")}</strong>
+              <div className="text-[11px] text-slate-600">{t("Calculated transparently from synoptic centroid proximity, wind, and precipitation.")}</div>
+              <span className="badge-provenance mt-1 inline-block text-[9px]">{t("DRISHTI DERIVED")}</span>
+=======
         {/* Tab 5: EVIDENCE (FULL PROVENANCE HIERARCHY) */}
         {activeTab === "EVIDENCE" && (
           <div className="flex flex-col gap-2 text-xs font-mono text-slate-700">
@@ -934,6 +1320,7 @@ export default function RightIntelligencePanel({
                 Severe Cyclonic Storm REMAL (BOB/01/2024) calibrated scenario. Segregated strictly from live mode.
               </div>
               <span className="badge-provenance mt-1 inline-block text-[8.5px]">HISTORICAL SIMULATION</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
             </div>
           </div>
         )}
@@ -944,14 +1331,33 @@ export default function RightIntelligencePanel({
             <div className="p-3 bg-orange-50/70 border border-orange-200 rounded">
               <div className="flex items-center gap-1.5 text-orange-950 font-bold mb-1">
                 <Sparkles size={14} className="text-orange-600" />
-                <span>AI EXPLANATION &amp; DECISION DIRECTIVE</span>
+                <span>{t("AI EXPLANATION & DECISION DIRECTIVE")}</span>
               </div>
               <p className="text-[11px] text-slate-700 font-sans leading-relaxed mb-3">
-                Spatial risk analysis suggests elevated flood inundation potential across low-lying riverine sectors in Northeast Madhya Pradesh and adjoining areas. Human authorization is mandatory prior to EOC directive dispatch.
+                {t("Spatial risk analysis suggests elevated flood inundation potential across low-lying riverine sectors in Northeast Madhya Pradesh and adjoining areas. Human authorization is mandatory prior to EOC directive dispatch.")}
               </p>
 
               <div className="flex flex-col gap-2 text-[10px]">
                 <div className="p-2 bg-white rounded border border-orange-200">
+<<<<<<< HEAD
+                  <div className="text-slate-500 text-[9px] uppercase font-bold">{t("1. AI Explanation:")}</div>
+                  <div className="text-slate-800 mt-0.5">{t("Multi-source synthesis of Open-Meteo wind field, IMD bulletin trajectory, and catchment runoff parameters.")}</div>
+                </div>
+
+                <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
+                  <span className="text-slate-500 text-[9px] uppercase font-bold">{t("2. Human Review:")}</span>
+                  <span className="text-emerald-700 font-bold">{t("COMPLETED (VERIFIED BY NEOC METEOROLOGIST)")}</span>
+                </div>
+
+                <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
+                  <span className="text-slate-500 text-[9px] uppercase font-bold">{t("3. Approval Status:")}</span>
+                  <span className="text-blue-700 font-bold">{t("AUTHORIZED FOR OPERATIONAL ACTION")}</span>
+                </div>
+
+                <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
+                  <span className="text-slate-500 text-[9px] uppercase font-bold">{t("4. Dispatch Status:")}</span>
+                  <span className="text-slate-800 font-bold">{t("TRANSMITTED TO STATE EOCs")}</span>
+=======
                   <div className="text-slate-500 text-[8.5px] uppercase font-bold">1. AI Explanation:</div>
                   <div className="text-slate-800 mt-0.5">Multi-source synthesis of Open-Meteo wind field, IMD bulletin trajectory, and catchment runoff parameters.</div>
                 </div>
@@ -969,6 +1375,7 @@ export default function RightIntelligencePanel({
                 <div className="p-2 bg-white rounded border border-orange-200 flex items-center justify-between">
                   <span className="text-slate-500 text-[8.5px] uppercase font-bold">4. Dispatch Status:</span>
                   <span className="text-slate-800 font-bold">TRANSMITTED TO STATE EOCs</span>
+>>>>>>> 08d56deef385775d82d8bcd23b029314cd5c47e9
                 </div>
               </div>
             </div>
