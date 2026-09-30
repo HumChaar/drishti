@@ -111,6 +111,35 @@ const createInfraIcon = (type, color) => {
   });
 };
 
+const createUserLocationIcon = () => {
+  return L.divIcon({
+    className: "user-loc-icon",
+    html: `
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+        <div style="position:absolute;width:24px;height:24px;border-radius:50%;background:rgba(37,99,235,0.4);animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite;"></div>
+        <div style="width:14px;height:14px;border-radius:50%;background:#2563eb;border:2.5px solid #ffffff;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>
+      </div>
+    `,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12]
+  });
+};
+
+const createRouteDestinationIcon = (category = "HOSPITAL") => {
+  const iconChar = category === "HOSPITAL" ? "✚" : category === "FIRE" ? "🚒" : category === "POLICE" ? "👮" : "🛟";
+  const bg = category === "HOSPITAL" ? "#dc2626" : category === "FIRE" ? "#ea580c" : category === "POLICE" ? "#2563eb" : "#0d9488";
+  return L.divIcon({
+    className: "route-dest-icon",
+    html: `
+      <div style="width:28px;height:28px;border-radius:50%;background:${bg};border:2px solid #ffffff;box-shadow:0 3px 8px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;color:#ffffff;font-size:12px;font-weight:bold;">
+        ${iconChar}
+      </div>
+    `,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14]
+  });
+};
+
 export default function MapContainer({
   currentScenario,
   districtsData = [],
@@ -122,7 +151,10 @@ export default function MapContainer({
   onSelectState,
   weatherData = null,
   focusedSystem = null,
-  onResetFocus = null
+  onResetFocus = null,
+  activeRoute = null,
+  userLocation = null,
+  onClearRoute = null
 }) {
   const isNormal = operatingMode === "NORMAL";
 
@@ -163,7 +195,11 @@ export default function MapContainer({
   // Prompt requirement: Initial screen must show India, Arabian Sea, Bay of Bengal, Sri Lanka
   let mapCenter = [20.5937, 78.9629];
   let mapZoom = 5;
-  if (focusedSystem && focusedSystem.latitude && focusedSystem.longitude) {
+  if (activeRoute && userLocation && activeRoute.coordinates?.length > 0) {
+    const dest = activeRoute.coordinates[activeRoute.coordinates.length - 1];
+    mapCenter = [(userLocation.lat + dest[0]) / 2, (userLocation.lon + dest[1]) / 2];
+    mapZoom = 13;
+  } else if (focusedSystem && focusedSystem.latitude && focusedSystem.longitude) {
     mapCenter = [focusedSystem.latitude, focusedSystem.longitude];
     mapZoom = 7;
   } else if (isNormal) {
@@ -689,7 +725,114 @@ export default function MapContainer({
               </Marker>
             );
           })}
+
+          {/* Active OSRM Road Route Layer */}
+          {activeRoute && activeRoute.coordinates && activeRoute.coordinates.length > 0 && (
+            <>
+              <Polyline
+                positions={activeRoute.coordinates}
+                pathOptions={{
+                  color: "#2563eb",
+                  weight: 5,
+                  opacity: 0.9,
+                  lineCap: "round",
+                  lineJoin: "round",
+                  dashArray: activeRoute.isFallback ? "8 8" : undefined
+                }}
+              />
+              {userLocation && (
+                <Marker
+                  position={[userLocation.lat, userLocation.lon]}
+                  icon={createUserLocationIcon()}
+                >
+                  <Tooltip permanent direction="top" offset={[0, -10]}>
+                    <div className="font-mono text-[10px] font-bold">MY LOCATION</div>
+                  </Tooltip>
+                </Marker>
+              )}
+              {activeRoute.destinationCoords && (
+                <Marker
+                  position={[activeRoute.destinationCoords.lat, activeRoute.destinationCoords.lon]}
+                  icon={createRouteDestinationIcon(activeRoute.destinationCategory)}
+                >
+                  <Popup autoPan={false}>
+                    <div className="map-popup-card font-mono" style={{ minWidth: "180px" }}>
+                      <strong className="text-slate-900 block text-xs">{activeRoute.destinationName}</strong>
+                      <div className="text-[11px] text-blue-700 font-bold mt-1">
+                        {activeRoute.distanceFormatted} • ETA {activeRoute.durationFormatted}
+                      </div>
+                      <div className="text-[9.5px] text-slate-500 mt-1 border-t border-slate-200 pt-1">
+                        {activeRoute.provenance}
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
+              )}
+            </>
+          )}
         </LeafletMap>
+
+        {/* Active Route Floating HUD Banner */}
+        {activeRoute && (
+          <div
+            className="active-route-hud"
+            style={{
+              position: "absolute",
+              bottom: "24px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 450,
+              background: "rgba(15, 23, 42, 0.95)",
+              border: "1px solid #3b82f6",
+              borderRadius: "6px",
+              padding: "8px 14px",
+              color: "#f8fafc",
+              fontFamily: "monospace",
+              display: "flex",
+              alignItems: "center",
+              gap: "14px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.5)"
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#3b82f6", display: "inline-block", boxShadow: "0 0 6px #3b82f6" }} />
+                <span style={{ fontSize: "9px", color: "#93c5fd", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                  ROUTE
+                </span>
+              </div>
+              <div style={{ fontSize: "12px", fontWeight: 700, color: "#ffffff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {activeRoute.destinationName}
+              </div>
+              <div style={{ fontSize: "10.5px", color: "#60a5fa", fontWeight: 700 }}>
+                {activeRoute.distanceFormatted} • {activeRoute.durationFormatted}
+              </div>
+            </div>
+
+            {onClearRoute && (
+              <button
+                type="button"
+                onClick={onClearRoute}
+                style={{
+                  background: "#dc2626",
+                  border: "none",
+                  color: "#ffffff",
+                  borderRadius: "3px",
+                  padding: "4px 9px",
+                  cursor: "pointer",
+                  fontWeight: 700,
+                  fontSize: "9.5px",
+                  fontFamily: "monospace",
+                  letterSpacing: "0.03em",
+                  whiteSpace: "nowrap"
+                }}
+                title="Clear route from map"
+              >
+                CLEAR ROUTE
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Focused Synoptic System Floating Indicator & Reset Control */}
         {focusedSystem && (
