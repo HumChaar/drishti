@@ -58,6 +58,27 @@ export default function App() {
   // Single Overlay Manager System (Only ONE overlay open at any time)
   const [activeOverlay, setActiveOverlay] = useState(null);
 
+  // Truthful non-persistent session activity log
+  const [sessionActivity, setSessionActivity] = useState([]);
+
+  const logSessionActivity = useCallback((entry) => {
+    const timestamp = new Date().toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    }) + " IST";
+
+    const newEntry = {
+      id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      timestamp,
+      region: entry.region || (selectedState ? selectedState.name : "ALL INDIA"),
+      ...entry
+    };
+    setSessionActivity((prev) => [newEntry, ...prev.slice(0, 49)]);
+  }, [selectedState]);
+
   // Poll human review queue periodically (every 30 seconds)
   useEffect(() => {
     let isMounted = true;
@@ -149,27 +170,6 @@ export default function App() {
   const handleToggleLayer = (layerKey) => {
     setLayerStates((prev) => ({ ...prev, [layerKey]: !prev[layerKey] }));
   };
-
-  // Truthful non-persistent session activity log
-  const [sessionActivity, setSessionActivity] = useState([]);
-
-  const logSessionActivity = useCallback((entry) => {
-    const timestamp = new Date().toLocaleTimeString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    }) + " IST";
-
-    const newEntry = {
-      id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      timestamp,
-      region: entry.region || (selectedState ? selectedState.name : "ALL INDIA"),
-      ...entry
-    };
-    setSessionActivity((prev) => [newEntry, ...prev.slice(0, 49)]);
-  }, [selectedState]);
 
   // Load and periodically refresh normalized meteorological data layer
   useEffect(() => {

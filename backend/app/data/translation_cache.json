@@ -3169,5 +3169,607 @@
     "context": "Screen Translation",
     "translated": "27.2 °C",
     "created_at": "2026-09-30T04:43:41.466815+00:00"
+  },
+  "720a69d14c838fe6d4968a8f8b360836aeaf99ed4b453fed2380b4b5e6bee009": {
+    "source": "COMMAND CENTRE",
+    "target_language": "or",
+    "context": "Emergency Alert",
+    "translated": "କମାଣ୍ଡ୍ ସେଣ୍ଟର୍",
+    "created_at": "2026-09-30T09:32:17.050373+00:00"
+  },
+  "777709d97100db31f60c787ee346071c2d3c8d0177df3c794ad752945a2eb97c": {
+    "source": "{district} is at {risk_band} risk with storm surge {surge_meters}m",
+    "target_language": "or",
+    "context": "Emergency Alert",
+    "translated": "{district} ରେ {risk_band} ବିପ୍ସଜ୍ ରହିଛି ଏବଂ ବାତ୍ୟା ଜୁଆଁର {surge_meters}m ଅଟେ",
+    "created_at": "2026-09-30T09:32:17.050373+00:00"
+  },
+  "e8203c9d6368f37c2bd1bc41adcee020cd807a5cbb57b0376b11b9953cc77fac": {
+    "source": "COMMAND CENTRE",
+    "target_language": "bn",
+    "context": "Emergency Alert",
+    "translated": "কমান্ড সেন্টার",
+    "created_at": "2026-09-30T09:32:18.886823+00:00"
+  },
+  "2b4933cf2d5eec524369e5d6ae76792836f1ac3387a1f8527bc79b83a8d6a48d": {
+    "source": "{district} is at {risk_band} risk with storm surge {surge_meters}m",
+    "target_language": "bn",
+    "context": "Emergency Alert",
+    "translated": "{district} জেলাটি {risk_band} ঝুঁকিতে রয়েছে এবং ঝড়ের জলোচ্ছ্বাস {surge_meters}m হতে পারে",
+    "created_at": "2026-09-30T09:32:18.886823+00:00"
+  },
+  "1d7395696a02a6f07bb7d338456cea172400c1128983e5c77e8fff1a5af3e008": {
+    "source": "COMMAND CENTRE",
+    "target_language": "hi",
+    "context": "Emergency Alert",
+    "translated": "कमांड सेंटर",
+    "created_at": "2026-09-30T09:32:20.590725+00:00"
+  },
+  "41b6806ff5e239af808e42b678937b623f5118c4b3bd88032c21c2351e441280": {
+    "source": "{district} is at {risk_band} risk with storm surge {surge_meters}m",
+    "target_language": "hi",
+    "context": "Emergency Alert",
+    "translated": "{district} {risk_band} जोखिम में है, और तूफान की लहर (storm surge) {surge_meters}m है",
+    "created_at": "2026-09-30T09:32:20.590725+00:00"
+  },
+  "8b0e87b92562340f0934fa757352edf7a4c762a575ad48996bb26b177964c000": {
+    "source": "COMMAND CENTRE",
+    "target_language": "te",
+    "context": "Emergency Alert",
+    "translated": "కమాండ్ సెంటర్",
+    "created_at": "2026-09-30T09:32:22.666269+00:00"
+  },
+  "8e3522a390d35df6062dfd560b4230658ba5eba296cdc0d4107af3a53e5a3dff": {
+    "source": "{district} is at {risk_band} risk with storm surge {surge_meters}m",
+    "target_language": "te",
+    "context": "Emergency Alert",
+    "translated": "{district} {risk_band} ప్రమాద స్థితిలో ఉంది, తుఫాను అలల ఎత్తు {surge_meters}m",
+    "created_at": "2026-09-30T09:32:22.666269+00:00"
+  },
+  "9e85bb8075dffa6cd0bed566c42a4b195174ee2c783b93de52c7a18b26303aff": {
+    "source": "AI VERIFY",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "AI ଯାଞ୍ଚ",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "3e99d837dc35c4b4ac02895d0866817e3081bada4c9fd174b3a70c4264f7dcd4": {
+    "source": "HUMAN QUEUE",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ମାନବଧାଡ଼ି",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "0d0611b7c34e0ca15bdfd9ebd09b910ec181630e9f63988db4bccc12f09172b5": {
+    "source": "SYSTEM STATUS",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସିଷ୍ଟମ ସ୍ଥିତି",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "f9a99857d1a7215cc9d8f096b1fa3a85a38eb141e5f77844dd536c2635a3133d": {
+    "source": "PAN-INDIA METEOROLOGY",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ସର୍ବଭାରତୀୟ ପାଣିପାଗ",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "d74c1a0d50842ce21b9ce8c80946e95b182b38b84a07bbad8d70f436083be5ec": {
+    "source": "36 STATES & UTs",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "୩୬ଟି ରାଜ୍ୟ ଏବଂ କେନ୍ଦ୍ରଶାସିତ ଅଞ୍ଚଳ",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "8dcbd2f06d9d6cc383f3c1da443967beef3821736241c63c8de6f8bff45217d5": {
+    "source": "SOURCE: OPEN-METEO",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଉତ୍ସ: ଓପନ୍-ମେଟିଓ",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "c01c44bb547bfa9a6ba95a88c5ab336ef4ebd052c2ba1b2f4549f37c3adc6400": {
+    "source": "NEARBY RESPONSE SERVICES",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ନିକଟସ୍ଥ ପ୍ରତିକ୍ରିୟା ସେବା",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "c73194fe2f96ef530004b870c6856eecdf02b0436f7cef7678e4cf809423f0ac": {
+    "source": "Real mapped facilities • Location required",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପ୍ରକୃତ ମ୍ୟାପ୍ କରାଯାଇଥିବା ସୁବିଧା • ଅବସ୍ଥାନ ଆବଶ୍ୟକ",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "33c8a859d94f57e8721c1759bd747d8e06d6292034c9145738caa1ff0fc5e2d6": {
+    "source": "LOCATION REQUIRED",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଅବସ୍ଥାନ ଆବଶ୍ୟକ",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "27e57febfcd75c2252466f44762a53154d00f7f045926929d218edce89b662f8": {
+    "source": "USE MY LOCATION",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ମୋର ଅବସ୍ଥାନ ବ୍ୟବହାର କରନ୍ତୁ",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "d69cbf0206cc0ff464e31180d5a7a9573f4d08b25fd75745f837586062e28209": {
+    "source": "Test Sector:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ପରୀକ୍ଷଣ ସେକ୍ଟର:",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "d658926d814fba2c938fa433d9d4c78fe17f1ca84fd08378e07931da61720db7": {
+    "source": "CALIBRATED BENCHMARK:",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "କାଲିବ୍ରେଟେଡ୍ ବେଞ୍ଚମାର୍କ:",
+    "created_at": "2026-09-30T09:34:21.535696+00:00"
+  },
+  "df4e98b8ef77b150d9af60a00c9f665011895d7ec6d01cbaa9c50685f6339f31": {
+    "source": "Haryana (Peak Sector)",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ହରିୟାଣା (ଶିଖର ସେକ୍ଟର)",
+    "created_at": "2026-09-30T09:34:24.403594+00:00"
+  },
+  "e52b96715e03b9898400ab0d60b491e034ec2ec5ccfba21ea6462402714e0712": {
+    "source": "14 km/h",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "14 km/h",
+    "created_at": "2026-09-30T09:34:24.403594+00:00"
+  },
+  "d95498cc0b0389ff56ffe66c1fbb7e2d4c3b7eb9272ad92c42f5985213d2b3a5": {
+    "source": "NW 304° • Gusts 29 km/h",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ଉତ୍ତର-ପଶ୍ଚିମ 304° • ଝଟକା ପବନ 29 km/h",
+    "created_at": "2026-09-30T09:34:24.403594+00:00"
+  },
+  "63a03f3ae8522fb4a1661f3f5b60461d52c0e822f69e476fd5fdfe19f3f2f829": {
+    "source": "Tripura (Max 24h)",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "ତ୍ରିପୁରା (ସର୍ବାଧିକ 24ଘଣ୍ଟା)",
+    "created_at": "2026-09-30T09:34:24.403594+00:00"
+  },
+  "1925a9ce6b1132ee687b3a265b83fe9e1a9cf24c99bdeed7ac1c78cee44bd123": {
+    "source": "0.7 mm",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "0.7 mm",
+    "created_at": "2026-09-30T09:34:24.403594+00:00"
+  },
+  "bacadf7d801a72884556cffba7cf70aee9fa414e85d07b39e07cba33d78f8671": {
+    "source": "12 Active Rain Sectors",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "12ଟି ସକ୍ରିୟ ବର୍ଷା ସେକ୍ଟର",
+    "created_at": "2026-09-30T09:34:24.403594+00:00"
+  },
+  "d768e7fa4bc0e719913d62d5f96e1322f132b8c9182bbea5cc1e463ef5ad2f04": {
+    "source": "942 hPa",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "942 hPa",
+    "created_at": "2026-09-30T09:34:24.403594+00:00"
+  },
+  "6f2affd1758696b03b711c203eeac85ee6d36f59780c83a1a0267e456abd5074": {
+    "source": "28.2 °C",
+    "target_language": "or",
+    "context": "Screen Translation",
+    "translated": "28.2 °C",
+    "created_at": "2026-09-30T09:34:24.403594+00:00"
+  },
+  "4ee4674e37d5b9fb6810287403e29743f282dd060ad3cac882d65d179916a613": {
+    "source": "AI VERIFY",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "এআই যাচাই (AI VERIFY)",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "6289587f9216105ee13d88c09e961083bd6d8258b57de5420ee137dd7f2816c3": {
+    "source": "HUMAN QUEUE",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "মানব সারি",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "743ba4b48419fc963482786a4722c0edf8b5287711837660bbaa14f56dde084a": {
+    "source": "SYSTEM STATUS",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সিস্টেমের অবস্থা",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "36f69ebda4e1cc56ccad3f6dca683e86b208479f0c25ff3cca8840ca1e1e7890": {
+    "source": "IMD SYSTEM FEED",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "IMD সিস্টেম ফিড",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "148946afa38852aaeaee5cc198c8e58797e44b76c8b7a525fac5df4371109dd3": {
+    "source": "SOURCE UNAVAILABLE",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "উৎস উপলব্ধ নেই",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "7fcc6c78ce6f2a51d521a734d63b3cb544d8c55e68831442651906ba84ba7b68": {
+    "source": "PAN-INDIA METEOROLOGY",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সর্বভারতীয় আবহাওয়া বিজ্ঞান",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "6ae69ff9a67fb023bfb293789d6b952e12c61411a09b50ceb676a05fe99df5ab": {
+    "source": "36 STATES & UTs",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "৩৬টি রাজ্য ও কেন্দ্রশাসিত অঞ্চল",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "9a865ab14d09126baf51b88d84ebe6ff9908d7a426728a3376534c76214f7575": {
+    "source": "PRESSURE",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "বায়ুচাপ",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "46e5101a3096a783be05eb4bf3480eee5e051414675daed713e25569a1c1a449": {
+    "source": "TEMPERATURE",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "তাপমাত্রা",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "f2acd96b941ceb41d706c2eddc1141bb44cc503a918a65c80f634278406c958b": {
+    "source": "SOURCE: OPEN-METEO",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "উৎস: ওপেন-মিটিও (OPEN-METEO)",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "1c308b2f25050af3160e622d856d612aecf9f11b8bf4fefc9061b0b5b3bec19c": {
+    "source": "NEARBY RESPONSE SERVICES",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "কাছাকাছি প্রতিক্রিয়ামূলক পরিষেবা",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "d45a5b30aa3e136bbfc1fea4c06d62cdd6f1cfbef142b638682fab35fc87073b": {
+    "source": "Real mapped facilities • Location required",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "প্রকৃত ম্যাপ করা সুবিধা • অবস্থান প্রয়োজন",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "04131aa22114d1a6a62b8b6da3fc06c104882f4bd16d1bea50f76761792795cf": {
+    "source": "LOCATION REQUIRED",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "অবস্থান প্রয়োজন",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "75ea79a1eb2907c3d95a33e3fcb006f12b023e342626857a71c8de2710e8c6e3": {
+    "source": "USE MY LOCATION",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "আমার অবস্থান ব্যবহার করুন",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "9fd3584f2f14b1b5fa6098fd8495da8c490fc382f326cb1ea897d1f92c1cb724": {
+    "source": "Test Sector:",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "পরীক্ষামূলক সেক্টর:",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "3c2dd3b892e9fef451de79f4cdc1c17bab0a9d6c9140f749690abc969d7b1d53": {
+    "source": "CALIBRATED BENCHMARK:",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "ক্যালিব্রেট করা বেঞ্চমার্ক:",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "6ffad8c9e0dcdfbd502207f7e47572c3b2631b81540c576dc1d3b22afa64efb6": {
+    "source": "LIVE METEOROLOGICAL TELEMETRY & HAZARD CAROUSEL",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "লাইভ আবহাওয়া সংক্রান্ত টেলিমেট্রি এবং বিপদ সংক্রান্ত ক্যারোসেল",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "7f71ad332b8301a38067954fa365d7e6477c1b81fde16e49be3054bbe11ff4a0": {
+    "source": "STRICT PROVENANCE • AUTOMATIC ROTATION",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "কঠোর উৎস নির্ধারণ • স্বয়ংক্রিয় ঘূর্ণন",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "fe67f1b56c48c5dc54b9cb07ebd8d177b1bd61e45c62dca31e988e60fa773ad9": {
+    "source": "Pause Autoplay",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "স্বয়ংক্রিয় প্লেব্যাক বিরতি দিন",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "8e0773e998758a4e0a53b9d03406fbda6872b555853fa61b0dafb5c3c31010f4": {
+    "source": "RAIN",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "বৃষ্টিপাত",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "1eb1dd389ac5454843504f1dc30911e57e83387442c92045ced21e06bf75c95d": {
+    "source": "SYSTEM",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সিস্টেম",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "278f5e16e86804a4586239c794138e5c0586191a5bca6682400f3f3ac4a971e2": {
+    "source": "Previous Meteorological Card",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "পূর্ববর্তী আবহাওয়া সংক্রান্ত কার্ড",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "10196bc70a83808748568e5ea8ceae4a3abe89ace61c7829cc29a53fc0fd963e": {
+    "source": "Next Meteorological Card",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "পরবর্তী আবহাওয়া সংক্রান্ত কার্ড",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "d90dca4be1543972ca39a1a148347ca0b2bda745a0d2dafb57412a9439b3776b": {
+    "source": "SURFACE WIND VECTORS",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "পৃষ্ঠের বাতাসের ভেক্টর",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "df72c2362c4cd48a57902c2b632e6e2412627fcc71cb2d9ae3a3b5bc8e8e54c7": {
+    "source": "Haryana (Peak Sector)",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "হরিয়ানা (সর্বোচ্চ সেক্টর)",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "2acfd725747c9658fd336741d7d67475bbcad655f6e910eb229400f59534799f": {
+    "source": "14 km/h",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "14 km/h",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "e72d527bc1cabca3b8ac0d27af669aa0147b4ee8eb055524e59ca1facb4e4f75": {
+    "source": "NW 304° • Gusts 29 km/h",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "NW 304° • দমকা হাওয়া 29 km/h",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "6f6eaf027cb5e56ca6f9dddd4d8d2621bda4f19b9c4fe1fe8210adf49f1bd2bd": {
+    "source": "DATA:",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "ডেটা:",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "b5ae01845c7e825428f759e7f83cc8b38ac7267b88e50f89b44bc1e4316289fb": {
+    "source": "SURFACE MAP",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সারফেস ম্যাপ",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "802eb33b2d6b947c16d06e7f979e50b5ae5273f642cfeb76138bb9e7d3058f03": {
+    "source": "MODEL PRECIPITATION",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "মডেল বৃষ্টিপাত",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "03b6f55943cea711489ddf6926a806812696e707e5435a8dcfa2ce11111aaf43": {
+    "source": "Tripura (Max 24h)",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "ত্রিপুরা (সর্বোচ্চ ২৪ ঘণ্টা)",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "6b21fbd224cb3215d670ae067ad37b6ce2a4728f9f054150a4b572c53cc9e22c": {
+    "source": "0.7 mm",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "0.7 mm",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "cc4eb8a6a8641b3cd538bd870f1cb0c46fe30b36ae13b90d0b2d1a711a0defd8": {
+    "source": "12 Active Rain Sectors",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "১২টি সক্রিয় বৃষ্টির ক্ষেত্র",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "6d8ed17477a11ad67253bcbdc615d3b74c3646fc906ed5e5772b260e543ca0da": {
+    "source": "RAIN OBSERVATIONS",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "বৃষ্টিপাত পর্যবেক্ষণ",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "518b856dac97df2b76fae9f48f3385c92d383e5b9b2d7544ec346ef9f936e782": {
+    "source": "Pan-India Barometric Mean",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সর্বভারতীয় ব্যারোমেট্রিক গড়",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "05609fa68e1298c42905af5b202c436470b0060e449abe36551f438ac054b4a2": {
+    "source": "942 hPa",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "942 hPa",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "2b7239d413c18696d4a7fc4ceea74bd19229d909fdfb3525fa90017e38d299d0": {
+    "source": "Mean Surface Barometric Pressure (NWP)",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "গড় ভূপৃষ্ঠের ব্যারোমেট্রিক চাপ (NWP)",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "bcce8e41c47ae4e6b1706534fba417ca21515d6de08ef12e1e8db829996785cd": {
+    "source": "BAROMETRIC INTEL",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "ব্যারোমেট্রিক গোয়েন্দা তথ্য",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "94e21f38a245bf7882d910703b40bc01916ce5b01458393179a17d65eedb03cd": {
+    "source": "2M AIR TEMPERATURE",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "২ মিটার এয়ার তাপমাত্রা",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "30ce353eb859938e61bbfd11a6740729ff66e34c80d70cfa1ad3c1aea97fe16b": {
+    "source": "Pan-India Continental Mean",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সর্বভারতীয় কন্টিনেন্টাল গড়",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "54b897d6d08baef2e41338694f87213abbf41371891f6eb41c7b1f18d35d6713": {
+    "source": "28.2 °C",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "28.2 °C",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "a4e05d10cc4368f4406c8d9e082ac04673857255d1471a223245426f978af67c": {
+    "source": "2m Above Ground NWP Telemetry",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "মাটির ২ মিটার উপরে NWP টেলিমেট্রি",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "dd258277e5677dd80df784bf6564d23740b17f939cdc77c9378a34467cd78fb2": {
+    "source": "TEMP MATRIX",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "তাপমাত্রার ম্যাট্রিক্স",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "6973542f54f107e9092475915afc28200cca5280dd1205fa7d5d0f2927a8c45e": {
+    "source": "All Indian Basins Monitored",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সমস্ত ভারতীয় নদী অববাহিকা পর্যবেক্ষণ করা হয়েছে",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "bd0332bbdd9e871b3298dc96b41c3612faa912da26f9be6e452e625493482afb": {
+    "source": "Coordinates: NOT VERIFIED • Observation: NOT VERIFIED",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "স্থানাঙ্ক: যাচাই করা হয়নি • পর্যবেক্ষণ: যাচাই করা হয়নি",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "9e892d776d0e50b94b55a3abed4e265f9360c15acfcda13ee1287cbacba9d89a": {
+    "source": "INSAT-3DS SURVEILLANCE",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "INSAT-3DS নজরদারি",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "2599edb93c48c30fc730af19687f9d90f5658e6a00c6e4a4e13960ccf6732a0f": {
+    "source": "South Asia & Indian Ocean Sector",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "দক্ষিণ এশিয়া এবং ভারত মহাসাগর ক্ষেত্র",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "81072f45d8f2d1f3508f6cbf0f3e4805bd344b2c1f4f762eee66b94aa27c6bdb": {
+    "source": "8 PRODUCTS ONLINE",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "৮টি পণ্য অনলাইনে উপলব্ধ",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "e3e5495cdac9621a8b6c398bc68223889d3203ad6ce3055a457bc8d17ab71990": {
+    "source": "IR1, VIS, WV, SWIR, MP, CTT, Rapid Scan & Bulletin",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "IR1, VIS, WV, SWIR, MP, CTT, দ্রুত স্ক্যান এবং বুলেটিন",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "a4a14f8993e53e21aa0cf705ad0518826f9288184b70c3ef57269741e4af9dc9": {
+    "source": "OPEN SATELLITE",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "খোলা উপগ্রহ",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "e9f3842c9c496d7913b6ead64d423d69c4b884941edfaa9e8e84f7d3a328ab8b": {
+    "source": "SYNOPTIC ALERTS & WARNINGS",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সিনপটিক সতর্কতা এবং বিজ্ঞপ্তি",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "1c8d5d2866be47c06c4c78d4296b3312a28be23be71a82f025f02f15b4425680": {
+    "source": "Central India, Gangetic Plain & Adjoining Riverine Basins",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "মধ্য ভারত, গাঙ্গেয় সমভূমি এবং সংলগ্ন নদী অববাহিকা",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "bc8166d09f260d3cb9476b8d0ccbeeb69a5f21437def8bebcbbca260ba8b4bf1": {
+    "source": "4 Active Bulletin Notices",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "৪টি সক্রিয় বুলেটিন বিজ্ঞপ্তি",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "077e3d793f7c14e2095797a475874fef7d33a4cb2a8dcf8dce55629c1ce69667": {
+    "source": "VIEW WARNINGS",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সতর্কতা দেখুন",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "2c508da566c68114f0967042ca21a82f7efe841cd1373b91c31b7ca635fb3851": {
+    "source": "Marine Weather Bulletin for Coastal Waters of Odisha & West Bengal",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "ওড়িশা ও পশ্চিমবঙ্গ উপকূলীয় জলের জন্য সামুদ্রিক আবহাওয়া বুলেটিন",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "204f7c322f800536056919b24b22edbec26b27c17341cd633fb60c811edce477": {
+    "source": "Coastal Odisha, Coastal West Bengal & North Bay of Bengal",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "উপকূলীয় ওড়িশা, উপকূলীয় পশ্চিমবঙ্গ এবং উত্তর বঙ্গোপসাগর",
+    "created_at": "2026-09-30T09:34:35.090251+00:00"
+  },
+  "775a4c15ec24d6051afb8626b8033e1817296ee07119be0a939147593a65e3bb": {
+    "source": "All India Daily Weather Summary & Synoptic Features",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "সর্বভারতীয় দৈনিক আবহাওয়া সারাংশ এবং সিনোপটিক বৈশিষ্ট্য",
+    "created_at": "2026-09-30T09:34:36.715182+00:00"
+  },
+  "6eb3be47ab67f15143ee6c5eaa054586c7795c74051b7ddd2ed66541a5fa586e": {
+    "source": "Indian Subcontinent & Oceanic Basins",
+    "target_language": "bn",
+    "context": "Screen Translation",
+    "translated": "ভারতীয় উপমহাদেশ ও সামুদ্রিক অববাহিকা",
+    "created_at": "2026-09-30T09:34:36.715182+00:00"
   }
 }
